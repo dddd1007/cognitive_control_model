@@ -3,6 +3,7 @@
 import numpy as np
 import pymc3 as pm
 import pandas as pd
+import numba
 import math
 
 class decision_maker:
@@ -39,29 +40,28 @@ class bayesian_lerner:
         tag = {'con':1, 'inc':0}
         bar = [tag[x] for x in foo['contigency']]
 
-        k_hat = [1]
-        v_hat = [1]
-        r_hat = [0.5]
+        k_list = [np.array(0)]
+        v_list = [np.array(0)]
+        r_list = [np.array(0.5)]
+
+        k_hat = []
+        v_hat = []
 
         for observed_data in bar:
             with pm.Model() as bayesian_lerner_model:
-                k = pm.Normal("k", mu = k_hat[-1], sigma = 1)
-                k_ = pm.Deterministic('k_', pm.math.exp(k))
-                v = pm.Normal("v", mu = v_hat[-1], sigma = k_)
-                v_ = pm.Deterministic('v_', pm.math.exp(v))
-                r = pm.Beta("r", mu = r_hat[-1], sd = v_)
-                y = pm.Bernoulli("y", p = r, observed = observed_data)#shape = self.shape, observed = self.observation)
+                k = pm.Normal("k", mu = k_list[-1], sigma = 1)
+                k_ = pm.Deterministic('k_hat', pm.math.exp(k))
+                v = pm.Normal("v", mu = v_list[-1], sigma = k_)
+                v_ = pm.Deterministic('v_hat', pm.math.exp(v))
+                BoundNormal = pm.Bound(pm.Normal, lower=0.0, upper = 1.0)
+                r = BoundNormal("r", mu = r_list[-1], sigma =v_)
+                # TODO: Still Need to find out how can I use Beta distribution
+                y = pm.Bernoulli("y", p = r, observed = observed_data) #, shape = self.dim)
 
-                trace = pm.sample()
+                point_estimate = pm.find_MAP()
 
-                estimate_result = pm.sample_posterior_predictive(trace)
 
-            bayesian_lerner_model.check_test_point()
+            k_hat.append(point_estimate['k_hat'])
+            v_hat.append(point_estimate['v_hat'])
+            r_list.append(point_estimate['r'])
 
-            k_hat.append(estimate_result['k'].mean(axis = 0))
-            v_hat.append(estimate_result['v'].mean(axis = 0))
-            r_hat.append(estimate_result['r'].mean(axis = 0))
-
-        print(bayesian_lerner_model.basic_RVs)
-
-        bayesian_lerner_model.sample()
