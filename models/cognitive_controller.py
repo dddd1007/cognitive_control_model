@@ -36,12 +36,12 @@ class bayesian_lerner:
         self.dim = dim # The number of dimensions of the value estimated in brain
 
     def fit(self):
-        foo = pd.read_csv("/Users/dddd1007/project2git/cognitive_control_model/data/sub01_Yangmiao_s.csv")
+        foo = pd.read_csv("/Users/dddd1007/project2git/cognitive_control_model/data/sub01_Yangmiao_v.csv")
         tag = {'con':1, 'inc':0}
         bar = [tag[x] for x in foo['contigency']]
 
-        k_list = [np.array(0)]
-        v_list = [np.array(0)]
+        k_list = [np.array(0.5)]
+        v_list = [np.array(0.5)]
         r_list = [np.array(0.5)]
 
         k_hat = []
@@ -53,15 +53,16 @@ class bayesian_lerner:
                 k_ = pm.Deterministic('k_hat', pm.math.exp(k))
                 v = pm.Normal("v", mu = v_list[-1], sigma = k_)
                 v_ = pm.Deterministic('v_hat', pm.math.exp(v))
-                BoundNormal = pm.Bound(pm.Normal, lower=0.0, upper = 1.0)
-                r = BoundNormal("r", mu = r_list[-1], sigma =v_)
-                # TODO: Still Need to find out how can I use Beta distribution
+                r = pm.Beta("r", mu = r_list[-1], sigma =v_)
                 y = pm.Bernoulli("y", p = r, observed = observed_data) #, shape = self.dim)
 
                 point_estimate = pm.find_MAP()
 
+            k_list.append(point_estimate['k'])
+            v_list.append(point_estimate['v'])
+            r_list.append(point_estimate['r'])
 
             k_hat.append(point_estimate['k_hat'])
             v_hat.append(point_estimate['v_hat'])
-            r_list.append(point_estimate['r'])
+
 
