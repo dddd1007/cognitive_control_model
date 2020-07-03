@@ -35,34 +35,40 @@ class bayesian_lerner:
         self.observation = observation
         self.dim = dim # The number of dimensions of the value estimated in brain
 
+    @property
     def fit(self):
-        foo = pd.read_csv("/Users/dddd1007/project2git/cognitive_control_model/data/sub01_Yangmiao_v.csv")
-        tag = {'con':1, 'inc':0}
-        bar = [tag[x] for x in foo['contigency']]
+        k_list = [1]
+        v_list = [1]
+        r_list = [0.5]
 
-        k_list = [np.array(0.5)]
-        v_list = [np.array(0.5)]
-        r_list = [np.array(0.5)]
+        k_cap = []
+        v_cap = []
 
-        k_hat = []
-        v_hat = []
-
-        for observed_data in bar:
+        for observed_data in self.observation:
             with pm.Model() as bayesian_lerner_model:
-                k = pm.Normal("k", mu = k_list[-1], sigma = 1)
-                k_ = pm.Deterministic('k_hat', pm.math.exp(k))
+                k = pm.Normal("k", mu = k_list[-1], sigma = 1000)
+                k_ = pm.Deterministic('k_cap', pm.math.exp(k))
                 v = pm.Normal("v", mu = v_list[-1], sigma = k_)
-                v_ = pm.Deterministic('v_hat', pm.math.exp(v))
-                r = pm.Beta("r", mu = r_list[-1], sigma =v_)
+                v_ = pm.Deterministic('v_cap', pm.math.exp(v))
+                r = pm.Beta("r", alpha = (r_list[-1] / v_), beta = ((1-r_list[-1]) / v_))
                 y = pm.Bernoulli("y", p = r, observed = observed_data) #, shape = self.dim)
 
-                point_estimate = pm.find_MAP()
+                trace = pm.sample()
 
-            k_list.append(point_estimate['k'])
-            v_list.append(point_estimate['v'])
-            r_list.append(point_estimate['r'])
+            k_list.append(trace['k'].mean())
+            v_list.append(trace['v'].mean())
+            r_list.append(trace['r'].mean())
+            k_cap.append(trace['k_cap'].mean())
+            v_cap.append(trace['v_cap'].mean())
 
-            k_hat.append(point_estimate['k_hat'])
-            v_hat.append(point_estimate['v_hat'])
+        del(k_list[0])
+        del(v_list[0])
+        del(r_list[0])
+
+        parameters_dict = {'k_list': k_list, 'v_list': v_list, 'r_list': r_list,
+                           'k_cap': k_cap, 'v_cap': v_cap}
+
+        return parameters_dict
+                
 
 
