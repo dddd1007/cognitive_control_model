@@ -3,7 +3,7 @@ import numpy as np
 import pymc3 as pm
 import pandas as pd
 
-foo = pd.read_csv("/Users/dddd1007/project2git/cognitive_control_model/data/sub01_Yangmiao_v.csv")
+foo = pd.read_csv("/home/dddd1007/cognitive_control_model/data/sub01_Yangmiao_s.csv")
 
 tag = {'con':1, 'inc':0}
 contigency = [tag[x] for x in foo['contigency']]
@@ -43,7 +43,7 @@ for observed_data in list(zipped_data):
         y1 = pm.Bernoulli("y_loc", p = r1, observed = observed_data[0])
         y2 = pm.Bernoulli("y_beh", p = r2, observed = observed_data[1])
 
-        trace = pm.sample(cores=6)
+        trace = pm.sample(cores=6, tune=1000)
 
     k_list.append(trace['k'].mean())
     v_list.append(trace['v'].mean())
@@ -62,4 +62,4 @@ results_model3 = {'k_list': k_list, 'v_list': v_list,
                   'k_cap': k_cap, "v_cap": v_cap}
 
 results_model3_table = pd.DataFrame(results_model3)
-results_model3_table.to_csv()
+results_model3_table.to_csv("/home/dddd1007/cognitive_control_model/data/output/multi_dim_bayesian_learner/model3.csv")
