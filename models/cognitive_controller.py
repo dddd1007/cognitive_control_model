@@ -3,8 +3,12 @@
 import numpy as np
 import pymc3 as pm
 import pandas as pd
-import numba
 import math
+
+# TODO 编写提取数据的类
+
+class data_reader:
+    def __init__(self):
 
 class decision_maker:
     def receive_values(self, value_vector, subject_choice_option, total_options, tau, trial_index):
@@ -30,13 +34,12 @@ class decision_maker:
         else:
             return self.p_softmax
 
-class bayesian_lerner:
-    def __init__(self, observation, dim):
+class bayesian_learner:
+    def __init__(self, observation, stim_loc):
         self.observation = observation
-        self.dim = dim # The number of dimensions of the value estimated in brain
 
-    @property
-    def fit(self):
+class bayesian_abstract_learner(bayesian_learner):
+    def bayesian_lerner_abstract(self):
         k_list = [1]
         v_list = [1]
         r_list = [0.5]
@@ -51,7 +54,7 @@ class bayesian_lerner:
                 v = pm.Normal("v", mu = v_list[-1], sigma = k_)
                 v_ = pm.Deterministic('v_cap', pm.math.exp(v))
                 r = pm.Beta("r", alpha = (r_list[-1] / v_), beta = ((1-r_list[-1]) / v_))
-                y = pm.Bernoulli("y", p = r, observed = observed_data) #, shape = self.dim)
+                y = pm.Bernoulli("y", p = r, observed = observed_data)
 
                 trace = pm.sample()
 
@@ -60,7 +63,7 @@ class bayesian_lerner:
             r_list.append(trace['r'].mean())
             k_cap.append(trace['k_cap'].mean())
             v_cap.append(trace['v_cap'].mean())
-
+            # TODO 增加 decay 部分， 趋近于 0.5
         del(k_list[0])
         del(v_list[0])
         del(r_list[0])
