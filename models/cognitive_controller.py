@@ -1,14 +1,40 @@
 # TODO 需要让 session 2 的计算继承 session 1 的估计结果
 
+# TODO 使用 Numpy 来优化一下程序中涉及到的列表
+
 import numpy as np
 import pymc3 as pm
 import pandas as pd
-import math
 
 # TODO 编写提取数据的类
 
 class data_reader:
-    def __init__(self):
+    """Convert the csv data to np.array to be used in model estimation
+
+    Attributes:
+          data: A pandas DataFrame contain all useful data
+          data_dict: A dict describe the relation between the item name what you want
+                     and the true name in csv table which you import
+    """
+    def __init__(self, csv_file, data_dict):
+        self.data = pd.read_csv(csv_file)
+        self.data_dict = data_dict
+
+    def extract_data(self, *item:str) -> dict:
+        """Generate a dict contain all data needed in next step
+
+        Args:
+            *item: The data name you want to extract. It must be a key in data_dict (The para used
+                   to create an instance)
+
+        Returns:
+            result_dict: A dict contained all data you need. Every element is a np.array
+        """
+        result_dict = {}
+        for i in item:
+            result_dict[i] = np.array(self.data[self.data_dict[item]])
+
+        return result_dict
 
 class decision_maker:
     def receive_values(self, value_vector, subject_choice_option, total_options, tau, trial_index):
@@ -63,7 +89,7 @@ class bayesian_abstract_learner(bayesian_learner):
             r_list.append(trace['r'].mean())
             k_cap.append(trace['k_cap'].mean())
             v_cap.append(trace['v_cap'].mean())
-            # TODO 增加 decay 部分， 趋近于 0.5
+            # TODO 增加 decay 部分， 每次更新趋近于 0.5
         del(k_list[0])
         del(v_list[0])
         del(r_list[0])
