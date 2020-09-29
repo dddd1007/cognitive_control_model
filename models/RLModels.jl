@@ -1,5 +1,5 @@
 #=
-Reinforcement Learning Model for Lingwang's lab
+Reinforcement Learning Models for Lingwang's lab
 
 Author: Xiaokai Xia (xia@xiaokai.me)
 Date: 2020-09-28
@@ -32,3 +32,6 @@ There are two models with four different methods:
     - Both
 =#
 
+module RLModels
+
+# 设置导入后的信息显示
