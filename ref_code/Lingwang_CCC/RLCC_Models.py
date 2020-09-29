@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[4]:
-
-
-import numpy as np
+️import numpy as np
 import pandas as pd
 import sys
 from numba import jit
+
 class RLCCModels(object):
     def __init__(self, model_type, data):
         # 3 (Observer, Oprator, Operator_error)* 2 (same alpha for all blocks, diffent alpha for different blocks) * 2 (abstract learning or S-R learning)

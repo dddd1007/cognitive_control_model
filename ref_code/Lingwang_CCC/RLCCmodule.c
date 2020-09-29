@@ -1,3 +1,12 @@
+/*
+
+C implementation of the RLCC model invoked by Python
+
+Date: 2020-09-10
+Author: Ling Wang, lingwang@m.scnu.edu.cn
+
+*/
+
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
@@ -291,10 +300,13 @@ static PyObject* AB_Learning(PyObject* self, PyObject* args)
 		i_congruency = PyLong_AsLong(PyList_GetItem(congruency, i)); //0, congruent; 1, incongruent
 		i_correction = PyLong_AsLong(PyList_GetItem(correction, i)); //0, error; 1, correct
 
-		if (i_congruency == 1)
+		//Note: P means the probability of the actual response
+		if ((i_congruency == 1 && i_correction == 1) || (i_congruency == 0 && i_correction == 0))  //correct incongruent or incorrect congruent (actual incongruent)
 			P = exp(beta_temp * Q) / (exp(beta_temp * Q) + exp(beta_temp * (1 - Q)));
-		else
+		else if ((i_congruency == 0 && i_correction == 1) || (i_congruency == 1 && i_correction == 0)) //correct congruent or incorrect incongruent (actual congruent)
 			P = exp(beta_temp * (1 - Q)) / (exp(beta_temp * Q) + exp(beta_temp * (1 - Q)));
+		else
+			return NULL;
 
 		//store P, Q
 		P_current = PyFloat_FromDouble(P);
