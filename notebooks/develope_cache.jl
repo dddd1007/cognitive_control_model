@@ -22,12 +22,12 @@ md"## DataImporter模块"
 The **experiment environment** which the learner will to learn.
 """
 struct ExpEnv
-    stim_color::Array{Int64}
-    stim_loc::Array{Int64}
-    stim_correct_action::Array{Int64}
-    stim_action_congruency::Array{Float64,1}
-    subtag::String
-    envtype::Array{String}
+    stim_color::Array{Int64,1}
+    stim_loc::Array{Int64,1}
+    stim_correct_action::Array{Int64,1}
+    stim_action_congruency::Array{Int64,1}
+    env_type::Array{String,1}
+    sub_tag::Array{String,1}
 end
 
 # ╔═╡ 4963a7fa-060e-11eb-31b5-65118c468abc
@@ -37,10 +37,10 @@ end
 All of the actions the **real subject** have done.
 """
 struct RealSub
-    respons::Array{Int64}
-    RT::Array{Float64}
-    corrections::Array{Int64}
-    subtag::String
+    response::Array{Int64,1}
+    RT::Array{Float64,1}
+    corrections::Array{Int64,1}
+    sub_tag::Array{String,1}
 end
 
 # ╔═╡ 496dc474-060e-11eb-179c-67211ab71736
@@ -56,54 +56,110 @@ Convert the string tag into binary format.
 ```julia
 # Define the trasnform rule
 begin
-    code_rule = Dict("con" => "1", "inc" => "0")
-    Type_rule = Dict("hit" => "1", "incorrect" => "0")
-    transform_rule = Dict("contigency" => code_rule, 
-                          "Type" => Type_rule)
+	code_rule = Dict("red" => "0" , "green" => "1")
+	contigency = Dict("con" => "1", "inc" => "0")
+	Type_rule = Dict("hit" => "1", "incorrect" => "0")
+	location = Dict("left" => "0", "right" => "1")
+	transform_rule = Dict("color" => code_rule, "Type" => Type_rule, 
+		                  "location" => location, "contigency" => contigency)
 end
-
 # Excute the transform
 transform_data!(experiment_data, transform_rule)
 ```
 """
-function transform_data!(raw_data, transform_rule)
+function transform_data!(raw_data::DataFrame, transform_rule::Dict)
 	for rules in transform_rule
         colname = rules.first
 		replace_rules = rules.second
 		for replace_pair in replace_rules
 			replace!(raw_data[!, colname], replace_pair)
 		end
-		raw_data[!, colname] = parse.(Int,raw_data[!, colname])
+		
+		if !isa(raw_data[!, colname],Array{Int64})
+			raw_data[!, colname] = parse.(Int,raw_data[!, colname])
+		end
 	end
 end
 
 # ╔═╡ 91240684-060e-11eb-3e4a-d1c1878d8c3a
 # Define the trasnform rule
 begin
-	code_rule = Dict("con" => "1", "inc" => "0")
+	code_rule = Dict("red" => "0" , "green" => "1")
+	contigency = Dict("con" => "1", "inc" => "0")
 	Type_rule = Dict("hit" => "1", "incorrect" => "0")
-	transform_rule = Dict("contigency" => code_rule, "Type" => Type_rule)
+	location = Dict("left" => "0", "right" => "1")
+	transform_rule = Dict("color" => code_rule, "Type" => Type_rule, 
+		                  "location" => location, "contigency" => contigency)
 end
 
 # ╔═╡ 0f7c7282-060f-11eb-0bc0-6f2d4aeedf3a
 transform_data!(foo1, transform_rule)
 
-# ╔═╡ 44c6ff22-061c-11eb-0f55-fb95273336b5
+# ╔═╡ f5b413a8-0642-11eb-3674-4d229350dba2
+transformed_data = foo1
+
+# ╔═╡ 8360a24a-062d-11eb-2ae2-891d1573864c
 begin
-	x = [1,2,3]
-	y = [2,3,4]
-	function f(x, y, a)
-		for i in x
-			for z in y
-				eval(:(println(a)))
-			end
-		end
-	end
-	f(x, y, "a")
+    env_idx_dict = Dict("stim_color" => "color", "stim_loc" => "location", 
+		                "stim_action_congruency" => "contigency", 
+		                "env_type" => "condition", "sub_tag" => "Subject")
+	sub_idx_dict = Dict("response" => "Response", "RT" => "RT", 
+		                "corrections" => "Type", "sub_tag" => "Subject")
+	task_rule = Dict(0 => 0, 1 => 1)
 end
 
-# ╔═╡ 5e62a886-061d-11eb-1dc6-6368bd08a0d5
-foo1
+# ╔═╡ 2a07bfd8-0639-11eb-0250-ddfd340341f7
+"""
+    transform_sub!(transformed_data::DataFrame, env_idx_dict::Dict, 
+		                  sub_idx_dict::Dict, task_rule::Dict)
+
+Init the env and subject objects for simulation.
+
+# Examples
+```julia
+# Define the trasnform rule
+begin
+    env_idx_dict = Dict("stim_color" => "color", "stim_loc" => "location", 
+		                "stim_action_congruency" => "contigency", 
+		                "env_type" => "condition", "sub_tag" => "Subject")
+	sub_idx_dict = Dict("response" => "Response", "RT" => "RT", 
+		                "corrections" => "Type", "sub_tag" => "Subject")
+	task_rule = Dict(0 => 0, 1 => 1)
+end
+# Excute the transform
+env, sub = init_env_realsub(transformed_data, env_idx_dict, sub_idx_dict, task_rule)
+```
+"""
+function init_env_sub(transformed_data::DataFrame, env_idx_dict::Dict, 
+		                  sub_idx_dict::Dict, task_rule::Dict)
+	# Generate right reaction
+	begin
+		right_action = transformed_data[!, env_idx_dict["stim_color"]]
+		for rule in task_rule
+			replace!(right_action, rule)
+		end
+	end
+	
+	exp_env = ExpEnv(transformed_data[!, env_idx_dict["stim_color"]],
+		             transformed_data[!, env_idx_dict["stim_loc"]],
+		             right_action, 
+		             transformed_data[!, env_idx_dict["stim_action_congruency"]],
+		             transformed_data[!, env_idx_dict["env_type"]],
+		             transformed_data[!, env_idx_dict["sub_tag"]])
+	real_sub = RealSub(transformed_data[!, sub_idx_dict["response"]],
+		               transformed_data[!, sub_idx_dict["RT"]],
+		               transformed_data[!, sub_idx_dict["corrections"]],
+		               transformed_data[!, sub_idx_dict["sub_tag"]])
+	println("The env and sub info of " * transformed_data[!, env_idx_dict["sub_tag"]][1] * " is generated")
+	
+	return (exp_env, real_sub)
+end	
+
+# ╔═╡ f0f5125a-063c-11eb-2062-79ff1d203126
+env, sub = init_env_realsub(transformed_data, env_idx_dict, sub_idx_dict, task_rule)
+
+# ╔═╡ 30a9fb66-0644-11eb-08d7-310a38336154
+typeof(transformed_data[!, env_idx_dict["stim_color"]])
 
 # ╔═╡ Cell order:
 # ╠═a60d9102-060a-11eb-1c04-fdb0ce5006ac
@@ -115,5 +171,8 @@ foo1
 # ╠═4964815c-060e-11eb-278e-618c1f91b32e
 # ╠═91240684-060e-11eb-3e4a-d1c1878d8c3a
 # ╠═0f7c7282-060f-11eb-0bc0-6f2d4aeedf3a
-# ╠═44c6ff22-061c-11eb-0f55-fb95273336b5
-# ╠═5e62a886-061d-11eb-1dc6-6368bd08a0d5
+# ╠═f5b413a8-0642-11eb-3674-4d229350dba2
+# ╠═8360a24a-062d-11eb-2ae2-891d1573864c
+# ╠═2a07bfd8-0639-11eb-0250-ddfd340341f7
+# ╠═f0f5125a-063c-11eb-2062-79ff1d203126
+# ╠═30a9fb66-0644-11eb-08d7-310a38336154
