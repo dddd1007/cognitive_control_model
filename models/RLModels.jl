@@ -32,6 +32,14 @@ There are two models with four different methods:
     - Both
 =#
 
-module RLModels
+# Init Class system
 
-# 设置导入后的信息显示
+"""
+    RlLearner
+
+A learner which learnt parameters from the experiment environment.
+"""
+mutable struct RlLearner
+    α::Array{Float64}
+    β::Array{Float64}
+end

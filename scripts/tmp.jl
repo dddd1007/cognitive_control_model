@@ -1,4 +1,3 @@
-using Test
 import CSV
 
 include("../models/DataImporter.jl")
@@ -13,3 +12,7 @@ foo
 code_rule = Dict("con" => "1", "inc" => "0")
 Type_rule = Dict("hit" => "1", "miss" => "0")
 transform_rule = Dict("Code" => code_rule, "Type" => Type_rule)
+
+transform_rule.keys
+
+code_rule.keys
