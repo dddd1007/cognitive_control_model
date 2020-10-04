@@ -9,7 +9,8 @@ Version: 0.0.009
 尝试使用UTF8命名函数和类型系统, 便于阅读者理解(划掉, 便于装逼)
 =#
 
-import DataFrames, DataFramesMeta, CSV
+using DataFrames, DataFramesMeta
+import CSV
 
 # Init Class system
 
@@ -19,10 +20,10 @@ import DataFrames, DataFramesMeta, CSV
 The **experiment environment** which the learner will to learn.
 """
 struct ExpEnv
-    stim_color::Array{Int64}
-    stim_loc::Array{Int64}
-    stim_correct_action::Array{Int64}
-    stim_action_congruency::Array{Float64,1}
+    stim_color::Array{Int}
+    stim_loc::Array{Int}
+    stim_correct_action::Array{Int}
+    stim_action_congruency::Array{Float}
     subtag::String
     envtype::Array{String}
 end
@@ -33,20 +34,52 @@ end
 All of the actions the **real subject** have done.
 """
 struct RealSub
-    respons::Array{Int64}
-    RT::Array{Float64}
-    corrections::Array{Int64}
+    respons::Array{Int}
+    RT::Array{Float}
+    corrections::Array{Int}
     subtag::String
 end
 
 # Define functions
+"""
+    transform_data!(raw_data, transform_rule)
 
-function transform_data(raw_data, translation_rule::Dict)
-    
+Convert the string tag into binary format.
+
+# Examples
+```julia
+# Define the trasnform rule
+begin
+    code_rule = Dict("con" => "1", "inc" => "0")
+    Type_rule = Dict("hit" => "1", "incorrect" => "0")
+    transform_rule = Dict("contigency" => code_rule, "Type" => Type_rule)
+end
+
+# Excute the transform
+transform_data!(experiment_data, transform_rule)
+```
+"""
+function transform_data!(raw_data, transform_rule)
+	for rules in transform_rule
+        colname = rules.first
+		replace_rules = rules.second
+		for replace_pair in replace_rules
+			replace!(raw_data[!, colname], replace_pair)
+		end
+		raw_data[!, colname] = parse.(Int,raw_data[!, colname])
+	end
+end
+function transform_data!(raw_data, transform_rule)
+	for rules in transform_rule
+        colname = rules.first
+		replace_rules = rules.second
+		for replace_pair in replace_rules
+			replace!(raw_data[!, colname], replace_pair)
+		end
+		raw_data[!, colname] = parse.(Int,raw_data[!, colname])
+	end
 end
 
 function init_expenv_realsub(transformed_data)
     
 end
-
-foo = CSV.read("/Users/dddd1007/project2git/cognitive_control_model/data/unit_test/sub01_Yangmiao_s.csv")
