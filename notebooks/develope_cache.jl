@@ -81,20 +81,6 @@ function transform_data!(raw_data::DataFrame, transform_rule::Dict)
 	end
 end
 
-# ╔═╡ 91240684-060e-11eb-3e4a-d1c1878d8c3a
-# Define the trasnform rule
-begin
-	code_rule = Dict("red" => "0" , "green" => "1")
-	contigency = Dict("con" => "1", "inc" => "0")
-	Type_rule = Dict("hit" => "1", "incorrect" => "0")
-	location = Dict("left" => "0", "right" => "1")
-	transform_rule = Dict("color" => code_rule, "Type" => Type_rule, 
-		                  "location" => location, "contigency" => contigency)
-end
-
-# ╔═╡ 0f7c7282-060f-11eb-0bc0-6f2d4aeedf3a
-transform_data!(foo1, transform_rule)
-
 # ╔═╡ f5b413a8-0642-11eb-3674-4d229350dba2
 transformed_data = foo1
 
@@ -156,10 +142,39 @@ function init_env_sub(transformed_data::DataFrame, env_idx_dict::Dict,
 end	
 
 # ╔═╡ f0f5125a-063c-11eb-2062-79ff1d203126
-env, sub = init_env_realsub(transformed_data, env_idx_dict, sub_idx_dict, task_rule)
+env, sub = init_env_sub(transformed_data, env_idx_dict, sub_idx_dict, task_rule)
 
 # ╔═╡ 30a9fb66-0644-11eb-08d7-310a38336154
-typeof(transformed_data[!, env_idx_dict["stim_color"]])
+#导入一个被试的数据开始分析
+all_data = CSV.read("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_sub_data_with_Guo_model_add_pe.csv")
+
+# ╔═╡ 0f7c7282-060f-11eb-0bc0-6f2d4aeedf3a
+transform_data!(foo1, transform_rule)
+
+# ╔═╡ a4f8b8c6-0715-11eb-3453-9d4442e54113
+
+
+# ╔═╡ 91240684-060e-11eb-3e4a-d1c1878d8c3a
+# Define the trasnform rule
+begin
+	code_rule = Dict("red" => "0" , "green" => "1")
+	contigency = Dict("con" => "1", "inc" => "0")
+	Type_rule = Dict("hit" => "1", "incorrect" => "0")
+	location = Dict("left" => "0", "right" => "1")
+	transform_rule = Dict("color" => code_rule, "Type" => Type_rule, 
+		                  "location" => location, "contigency" => contigency)
+end
+
+# ╔═╡ ab4f8e22-0715-11eb-3e7f-d5300a6f5d3c
+# Define the trasnform rule
+begin
+	code_rule = Dict("red" => "0" , "green" => "1")
+	contigency = Dict("con" => "1", "inc" => "0")
+	Type_rule = Dict("hit" => "1", "incorrect" => "0")
+	location = Dict("left" => "0", "right" => "1")
+	transform_rule = Dict("color" => code_rule, "Type" => Type_rule, 
+		                  "location" => location, "contigency" => contigency)
+end
 
 # ╔═╡ Cell order:
 # ╠═a60d9102-060a-11eb-1c04-fdb0ce5006ac
@@ -176,3 +191,5 @@ typeof(transformed_data[!, env_idx_dict["stim_color"]])
 # ╠═2a07bfd8-0639-11eb-0250-ddfd340341f7
 # ╠═f0f5125a-063c-11eb-2062-79ff1d203126
 # ╠═30a9fb66-0644-11eb-08d7-310a38336154
+# ╠═ab4f8e22-0715-11eb-3e7f-d5300a6f5d3c
+# ╠═a4f8b8c6-0715-11eb-3453-9d4442e54113

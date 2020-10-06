@@ -126,7 +126,7 @@ function init_env_sub(
     println(
         "The env and sub info of " *
         transformed_data[!, env_idx_dict["sub_tag"]][1] *
-        " is generated",
+        " is generated!",
     )
 
     return (exp_env, real_sub)
