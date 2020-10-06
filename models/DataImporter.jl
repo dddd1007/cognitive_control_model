@@ -76,7 +76,7 @@ end
 
 """
     transform_sub!(transformed_data::DataFrame, env_idx_dict::Dict, 
-		                  sub_idx_dict::Dict, task_rule::Dict)
+		                  sub_idx_dict::Dict)
 
 Init the env and subject objects for simulation.
 
@@ -89,7 +89,6 @@ begin
 		                "env_type" => "condition", "sub_tag" => "Subject")
 	sub_idx_dict = Dict("response" => "Response", "RT" => "RT", 
 		                "corrections" => "Type", "sub_tag" => "Subject")
-	task_rule = Dict(0 => 0, 1 => 1)
 end
 # Excute the transform
 env, sub = init_env_realsub(transformed_data, env_idx_dict, sub_idx_dict, task_rule)
@@ -98,28 +97,22 @@ env, sub = init_env_realsub(transformed_data, env_idx_dict, sub_idx_dict, task_r
 function init_env_sub(
     transformed_data::DataFrame,
     env_idx_dict::Dict,
-    sub_idx_dict::Dict,
-    task_rule::Dict,
+    sub_idx_dict::Dict
 )
-    # Generate right reaction
-    begin
-        right_action = transformed_data[!, env_idx_dict["stim_task_related"]]
-        for rule in task_rule
-            replace!(right_action, rule)
-        end
-    end
 
     exp_env = ExpEnv(
         transformed_data[!, env_idx_dict["stim_task_related"]],
         transformed_data[!, env_idx_dict["stim_task_unrelated"]],
-        right_action,
+        transformed_data[!, env_idx_dict["correct_action"]],
         transformed_data[!, env_idx_dict["stim_action_congruency"]],
         transformed_data[!, env_idx_dict["env_type"]],
         transformed_data[!, env_idx_dict["sub_tag"]],
     )
     real_sub = RealSub(
-        transformed_data[!, sub_idx_dict["response"]],
-        transformed_data[!, sub_idx_dict["RT"]],
+        # Because of the miss action, we need the tryparse() 
+        # to parse "miss" to "nothing"
+        tryparse.(Float64, transformed_data[!, sub_idx_dict["response"]]),
+        tryparse.(Float64, transformed_data[!, sub_idx_dict["RT"]]),
         transformed_data[!, sub_idx_dict["corrections"]],
         transformed_data[!, sub_idx_dict["sub_tag"]],
     )
