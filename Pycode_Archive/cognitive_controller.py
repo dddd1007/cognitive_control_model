@@ -1,6 +1,3 @@
-# TODO 需要让 session 2 的计算继承 session 1 的估计结果
-
-# TODO 使用 Numpy 来优化一下程序中涉及到的列表
 
 import numpy as np
 import pymc3 as pm
@@ -102,7 +99,6 @@ class Bayesian_ac_learner(Bayesian_learner):
           observations : A dict must contain congruence information
     """
 
-    # TODO 根据类的继承关系重新编写函数
     def fit(self, congruency_key: str):
         k_list = [1]
         v_list = [1]
@@ -127,7 +123,6 @@ class Bayesian_ac_learner(Bayesian_learner):
             r_list.append(trace['r'].mean())
             k_cap.append(trace['k_cap'].mean())
             v_cap.append(trace['v_cap'].mean())
-            # TODO 增加 decay 部分， 每次更新趋近于 0.5
         del (k_list[0])
         del (v_list[0])
         del (r_list[0])
