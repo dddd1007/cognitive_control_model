@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.1
 
 using Markdown
 using InteractiveUtils
@@ -56,6 +56,127 @@ end
 # ╔═╡ a4f8b8c6-0715-11eb-3453-9d4442e54113
 sub1_env, sub1_subinfo = init_env_sub(sub1_data, env_idx_dict, sub_idx_dict)
 
+# ╔═╡ 622e58a4-087f-11eb-12aa-c9e85acc2d8e
+md"## 开始定义强化学习的对象"
+
+# ╔═╡ 7434237e-087f-11eb-02fd-75fd84662051
+# 学习抽象概念的基本对象
+struct SRLearner_basic_decay
+	α_v::Float64
+	β_v::Float64
+	α_s::Float64
+	β_s::Float64
+	decay::Float64
+end
+
+# ╔═╡ 776783b6-089c-11eb-2e3c-fb91cb8808fe
+# 定义SR学习中的SoftMax
+function sr_softmax(options_vector::Array{Float64,1}, β::Float64, 
+		true_selection::Tuple, debug=false)
+	options_matrix = reshape(options_vector, 2, 2)'
+
+	op_selection_idx = CartesianIndex(true_selection[1], abs(true_selection[2] - 1)) + CartesianIndex(1,1)
+	true_selection_idx = CartesianIndex(true_selection) + CartesianIndex(1,1)
+	
+	if debug
+		println(options_matrix)
+	 	println("True selection is " * repr(options_matrix[true_selection_idx]))
+	 	println("Op selection is " * repr(options_matrix[op_selection_idx]))
+	end
+	
+	exp(β * options_matrix[true_selection_idx])/
+	(exp(β * options_matrix[true_selection_idx]) + exp(β * options_matrix[op_selection_idx]))
+end
+
+# ╔═╡ 85686c42-08a5-11eb-24b7-3598b5697559
+# 定义更新 Weight 的矩阵
+function update_options_weight_matrix(weight_vector::Array{Float64,1}, α::Float64, 
+		decay::Float64, correct_selection::Tuple, dodecay=true, debug=false)
+	weight_matrix = reshape(weight_vector, 2, 2)'
+	correct_selection_idx = CartesianIndex(correct_selection) + CartesianIndex(1,1)
+	op_selection_idx = abs(correct_selection[1] - 1) + 1
+	
+	if debug
+		println("True selection is " * repr(correct_selection_idx))
+		println("The value is " * repr(weight_matrix[correct_selection_idx]))
+	end
+	
+	weight_matrix[correct_selection_idx] = weight_matrix[correct_selection_idx] + α * (1-weight_matrix[correct_selection_idx])
+	
+	if dodecay
+		weight_matrix[op_selection_idx,:] .*= decay
+	end
+	
+	return weight_matrix
+end
+
+# ╔═╡ 47e4d094-0892-11eb-320b-739a0a7cc364
+# 定义强化学习函数
+function rl_learning(env::ExpEnv, agent::SRLearner_basic_decay, realsub::RealSub; 
+		verbose = false)
+	
+	# init learning parameters list
+	total_trials_num = length(env.stim_task_unrelated)
+	options_weight_matrix = zeros(Float64, (total_trials_num + 1, 4))
+	options_weight_matrix[1,:] = [0.5,0.5,0.5,0.5]
+	p_softmax_history = zeros(Float64, total_trials_num)
+	α = 0.0
+	β = 0.0
+	decay = agent.decay
+	
+	# Start learning
+	for idx in 1:total_trials_num
+		
+		if env.env_type[idx] == "v"
+			β = agent.β_v
+			α = agent.α_v
+		elseif env.env_type[idx] == "s"
+			β = agent.β_s
+			α = agent.β_s
+		end
+		
+		## Decision
+		p_softmax_history[idx] = sr_softmax(options_weight_matrix[idx,:], β, 
+				(env.stim_task_unrelated[idx], realsub.response[idx]))
+			
+		## Update 
+		options_weight_matrix[idx+1,:] = 
+			update_options_weight_matrix(options_weight_matrix[idx,:], α,decay, 
+				(env.stim_task_unrelated[idx], env.stim_correct_action[idx]))'
+	end
+	
+	# Evaluate result
+	mse = sum(abs2.(realsub.RT .- p_softmax_history))
+	
+	if !verbose
+		result = [agent.α_v, agent.β_v, agent.α_s, agent.β_s, mse]
+		return result
+	elseif verbose
+		return options_weight_matrix[total_trials_num, :]
+	end
+end
+
+# ╔═╡ e53f76ee-08ad-11eb-00fd-8b7ea211b136
+begin
+	number_iterations = 1000000
+	result_table = zeros(Float64, (number_iterations,5))
+	Threads.@threads for i in 1:number_iterations
+		α_v = rand([0.1:0.01:1.0;])
+		β_v = rand([0.1:0.01:1.0;])
+		α_s = rand([0.1:0.01:1.0;])
+		β_s = rand([0.1:0.01:1.0;])
+		decay = rand([0.1:0.01:1.0;])
+		sub1_agent = SRLearner_basic_decay(α_v, β_v, α_s, β_s, decay)
+		result_table[i,:] = rl_learning(sub1_env, sub1_agent, sub1_subinfo)
+	end
+end
+
+# ╔═╡ eb390f58-0914-11eb-17cc-577d1e3f6f25
+import StatsBase
+
+# ╔═╡ 620406d4-0914-11eb-11ba-1153bec7e3d5
+StatsBase.summarystats(result_table[:,5])
+
 # ╔═╡ Cell order:
 # ╠═a60d9102-060a-11eb-1c04-fdb0ce5006ac
 # ╠═ec09183e-060a-11eb-2690-c9aa2c7e2a31
@@ -69,3 +190,11 @@ sub1_env, sub1_subinfo = init_env_sub(sub1_data, env_idx_dict, sub_idx_dict)
 # ╠═da4a7022-07e0-11eb-2231-cd7ee67d5287
 # ╠═8360a24a-062d-11eb-2ae2-891d1573864c
 # ╠═a4f8b8c6-0715-11eb-3453-9d4442e54113
+# ╠═622e58a4-087f-11eb-12aa-c9e85acc2d8e
+# ╠═7434237e-087f-11eb-02fd-75fd84662051
+# ╠═776783b6-089c-11eb-2e3c-fb91cb8808fe
+# ╠═85686c42-08a5-11eb-24b7-3598b5697559
+# ╠═47e4d094-0892-11eb-320b-739a0a7cc364
+# ╠═e53f76ee-08ad-11eb-00fd-8b7ea211b136
+# ╠═eb390f58-0914-11eb-17cc-577d1e3f6f25
+# ╠═620406d4-0914-11eb-11ba-1153bec7e3d5
