@@ -1,0 +1,1524 @@
+Scenario - s2_part3
+Logfile written - 04/02/2019 11:56:41
+
+Subject	Trial	Event Type	Code	Time	TTime	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur	Stim Type	Pair Index
+
+sub14_MaKexin	0	Pulse	30	89915	89915	0
+sub14_MaKexin	0	Pulse	30	109915	109915	0
+sub14_MaKexin	0	Pulse	30	129916	129916	0
+sub14_MaKexin	0	Pulse	30	149994	149994	0
+sub14_MaKexin	1	Picture	fixation	150153	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	1	Picture	red_right	154319	4166	1	4833	1	4000	resp	hit	7
+sub14_MaKexin	1	Response	11	159116	8963	0
+sub14_MaKexin	1	Pulse	30	169993	19841	0
+sub14_MaKexin	2	Picture	jitter	170318	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	2	Pulse	30	189993	19675	0
+sub14_MaKexin	3	Picture	fixation	200982	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	3	Picture	green_left	205148	4166	1	3500	1	4000	resp	hit	13
+sub14_MaKexin	3	Response	12	208633	7651	0
+sub14_MaKexin	3	Pulse	30	209993	9011	0
+sub14_MaKexin	4	Picture	jitter	221147	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	4	Pulse	30	229993	8847	0
+sub14_MaKexin	5	Picture	fixation	249311	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	5	Pulse	30	249992	681	0
+sub14_MaKexin	5	Picture	red_left	253477	4166	1	4000	1	4000	resp	hit	20
+sub14_MaKexin	5	Response	11	257432	8121	0
+sub14_MaKexin	6	Picture	jitter	269476	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	6	Pulse	30	269912	436	0
+sub14_MaKexin	6	Pulse	30	289911	20435	0
+sub14_MaKexin	7	Picture	fixation	297640	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	7	Picture	green_left	301806	4166	1	4166	1	4000	resp	hit	26
+sub14_MaKexin	7	Response	12	305830	8190	0
+sub14_MaKexin	7	Response	2	307111	9471	0
+sub14_MaKexin	7	Pulse	30	309911	12271	0
+sub14_MaKexin	8	Picture	jitter	317805	0	1	23165	1	0	50000	other	0
+sub14_MaKexin	8	Pulse	30	329910	12105	0
+sub14_MaKexin	9	Picture	fixation	340970	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	9	Picture	green_left	345136	4166	1	4000	1	4000	resp	hit	33
+sub14_MaKexin	9	Response	12	349030	8060	0
+sub14_MaKexin	9	Pulse	30	349910	8940	0
+sub14_MaKexin	10	Picture	jitter	361135	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	10	Pulse	30	369909	8774	0
+sub14_MaKexin	11	Picture	fixation	389299	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	11	Pulse	30	389909	610	0
+sub14_MaKexin	11	Picture	red_right	393465	4166	1	4333	1	4000	resp	hit	40
+sub14_MaKexin	11	Response	11	397668	8369	0
+sub14_MaKexin	12	Picture	jitter	409463	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	12	Pulse	30	409910	447	0
+sub14_MaKexin	12	Pulse	30	429908	20445	0
+sub14_MaKexin	13	Picture	fixation	440127	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	13	Picture	green_right	444294	4166	1	4333	1	4000	resp	hit	46
+sub14_MaKexin	13	Response	12	448547	8420	0
+sub14_MaKexin	13	Pulse	30	449827	9700	0
+sub14_MaKexin	14	Picture	jitter	460292	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	14	Pulse	30	469828	9535	0
+sub14_MaKexin	15	Picture	fixation	488457	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	15	Pulse	30	489826	1370	0
+sub14_MaKexin	15	Picture	red_left	492623	4166	1	4666	1	4000	resp	hit	53
+sub14_MaKexin	15	Response	11	497186	8729	0
+sub14_MaKexin	16	Picture	jitter	508621	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	16	Pulse	30	509986	1364	0
+sub14_MaKexin	16	Pulse	30	529987	21366	0
+sub14_MaKexin	17	Picture	fixation	539285	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	17	Picture	red_left	543452	4166	1	4833	1	4000	resp	hit	59
+sub14_MaKexin	17	Response	11	548225	8940	0
+sub14_MaKexin	17	Pulse	30	549904	10619	0
+sub14_MaKexin	18	Picture	jitter	559450	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	18	Pulse	30	569905	10455	0
+sub14_MaKexin	18	Pulse	30	589904	30453	0
+sub14_MaKexin	19	Picture	fixation	590114	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	19	Picture	green_right	594281	4166	1	3666	1	4000	resp	hit	66
+sub14_MaKexin	19	Response	12	597824	7710	0
+sub14_MaKexin	19	Pulse	30	609905	19790	0
+sub14_MaKexin	20	Picture	jitter	610279	0	1	25664	1	0	50000	other	0
+sub14_MaKexin	20	Pulse	30	629903	19624	0
+sub14_MaKexin	21	Picture	fixation	635944	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	21	Picture	red_right	640110	4166	1	4166	1	4000	resp	hit	72
+sub14_MaKexin	21	Response	11	644143	8199	0
+sub14_MaKexin	21	Pulse	30	649902	13958	0
+sub14_MaKexin	22	Picture	jitter	656108	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	22	Pulse	30	669902	13794	0
+sub14_MaKexin	23	Picture	fixation	686772	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	23	Pulse	30	689902	3129	0
+sub14_MaKexin	23	Picture	green_left	690939	4166	1	4000	1	4000	resp	hit	79
+sub14_MaKexin	23	Response	12	694861	8089	0
+sub14_MaKexin	24	Picture	jitter	706937	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	24	Pulse	30	709901	2964	0
+sub14_MaKexin	24	Pulse	30	729902	22965	0
+sub14_MaKexin	25	Picture	fixation	737601	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	25	Picture	green_left	741767	4166	1	4500	1	4000	resp	hit	85
+sub14_MaKexin	25	Response	12	746220	8619	0
+sub14_MaKexin	25	Pulse	30	749820	12219	0
+sub14_MaKexin	26	Picture	jitter	757766	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	26	Pulse	30	769979	12213	0
+sub14_MaKexin	27	Picture	fixation	785930	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	27	Pulse	30	789979	4049	0
+sub14_MaKexin	27	Picture	red_right	790097	4166	1	4333	1	4000	resp	hit	92
+sub14_MaKexin	27	Response	11	794380	8450	0
+sub14_MaKexin	28	Picture	jitter	806095	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	28	Pulse	30	809979	3884	0
+sub14_MaKexin	28	Pulse	30	829978	23883	0
+sub14_MaKexin	29	Picture	fixation	836759	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	29	Picture	red_right	840925	4166	1	3333	1	4000	resp	hit	98
+sub14_MaKexin	29	Response	11	844218	7459	0
+sub14_MaKexin	29	Pulse	30	849897	13138	0
+sub14_MaKexin	30	Picture	jitter	856924	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	30	Pulse	30	869977	13053	0
+sub14_MaKexin	31	Picture	fixation	887588	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	31	Pulse	30	889977	2389	0
+sub14_MaKexin	31	Picture	red_right	891754	4166	1	4333	1	4000	resp	hit	105
+sub14_MaKexin	31	Response	11	896057	8469	0
+sub14_MaKexin	32	Picture	jitter	907753	0	1	18165	1	0	50000	other	0
+sub14_MaKexin	32	Pulse	30	909977	2224	0
+sub14_MaKexin	33	Picture	fixation	925918	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	33	Pulse	30	929976	4058	0
+sub14_MaKexin	33	Picture	red_left	930084	4166	1	5000	1	4000	resp	hit	111
+sub14_MaKexin	33	Response	11	934936	9018	0
+sub14_MaKexin	34	Picture	jitter	946083	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	34	Pulse	30	949896	3813	0
+sub14_MaKexin	34	Pulse	30	969895	23813	0
+sub14_MaKexin	35	Picture	fixation	974247	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	35	Picture	green_left	978413	4166	1	9666	1	4000	resp	hit	117
+sub14_MaKexin	35	Response	12	987975	13728	0
+sub14_MaKexin	35	Pulse	30	989895	15648	0
+sub14_MaKexin	36	Picture	jitter	994412	0	1	20665	1	0	50000	other	0
+sub14_MaKexin	36	Pulse	30	1009895	15483	0
+sub14_MaKexin	37	Picture	fixation	1015077	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	37	Picture	red_right	1019243	4166	1	4166	1	4000	resp	hit	123
+sub14_MaKexin	37	Response	11	1023334	8257	0
+sub14_MaKexin	37	Pulse	30	1029894	14817	0
+sub14_MaKexin	38	Picture	jitter	1035241	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	38	Pulse	30	1049893	14652	0
+sub14_MaKexin	39	Picture	fixation	1065905	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	39	Pulse	30	1069893	3988	0
+sub14_MaKexin	39	Picture	green_left	1070072	4166	1	4833	1	4000	resp	hit	130
+sub14_MaKexin	39	Response	12	1074852	8947	0
+sub14_MaKexin	40	Picture	jitter	1086070	0	1	20665	1	0	50000	other	0
+sub14_MaKexin	40	Pulse	30	1089892	3822	0
+sub14_MaKexin	41	Picture	fixation	1106735	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	41	Pulse	30	1109892	3157	0
+sub14_MaKexin	41	Picture	green_left	1110901	4166	1	4666	1	4000	resp	hit	136
+sub14_MaKexin	41	Response	12	1115491	8756	0
+sub14_MaKexin	42	Picture	jitter	1126900	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	42	Pulse	30	1129891	2991	0
+sub14_MaKexin	42	Pulse	30	1149892	22992	0
+sub14_MaKexin	43	Picture	fixation	1155064	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	43	Picture	red_right	1159231	4166	1	4500	1	4000	resp	hit	142
+sub14_MaKexin	43	Response	11	1163650	8586	0
+sub14_MaKexin	43	Pulse	30	1169810	14746	0
+sub14_MaKexin	44	Picture	jitter	1175229	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	44	Pulse	30	1189810	14581	0
+sub14_MaKexin	45	Picture	fixation	1205893	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	45	Pulse	30	1209809	3916	0
+sub14_MaKexin	45	Picture	green_left	1210059	4166	1	4500	1	4000	resp	hit	149
+sub14_MaKexin	45	Response	12	1214449	8556	0
+sub14_MaKexin	46	Picture	jitter	1226058	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	46	Pulse	30	1229809	3751	0
+sub14_MaKexin	46	Pulse	30	1249810	23752	0
+sub14_MaKexin	47	Picture	fixation	1256722	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	47	Picture	green_left	1260888	4166	1	4666	1	4000	resp	hit	155
+sub14_MaKexin	47	Response	12	1265409	8687	0
+sub14_MaKexin	47	Pulse	30	1269968	13246	0
+sub14_MaKexin	48	Picture	jitter	1276887	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	48	Pulse	30	1289887	13000	0
+sub14_MaKexin	49	Picture	fixation	1307551	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	49	Pulse	30	1309887	2336	0
+sub14_MaKexin	49	Picture	green_left	1311717	4166	1	4500	1	4000	resp	hit	162
+sub14_MaKexin	49	Response	12	1316127	8576	0
+sub14_MaKexin	50	Picture	jitter	1327716	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	50	Pulse	30	1329887	2171	0
+sub14_MaKexin	50	Pulse	30	1349886	22170	0
+sub14_MaKexin	51	Picture	fixation	1358380	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	51	Picture	red_right	1362546	4166	1	4666	1	4000	resp	hit	168
+sub14_MaKexin	51	Response	11	1367086	8706	0
+sub14_MaKexin	51	Pulse	30	1369886	11506	0
+sub14_MaKexin	52	Picture	jitter	1378545	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	52	Pulse	30	1389886	11342	0
+sub14_MaKexin	53	Picture	fixation	1409209	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	53	Pulse	30	1409886	678	0
+sub14_MaKexin	53	Picture	red_right	1413375	4166	1	4833	1	4000	resp	hit	175
+sub14_MaKexin	53	Response	11	1418045	8836	0
+sub14_MaKexin	54	Picture	jitter	1429373	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	54	Pulse	30	1429885	512	0
+sub14_MaKexin	54	Pulse	30	1449883	20510	0
+sub14_MaKexin	55	Picture	fixation	1457538	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	55	Picture	red_right	1461704	4166	1	4500	1	4000	resp	hit	181
+sub14_MaKexin	55	Response	11	1466044	8506	0
+sub14_MaKexin	55	Pulse	30	1469803	12266	0
+sub14_MaKexin	56	Picture	jitter	1477702	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	56	Pulse	30	1489803	12101	0
+sub14_MaKexin	57	Picture	fixation	1505867	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	57	Pulse	30	1509802	3936	0
+sub14_MaKexin	57	Picture	green_left	1510033	4166	1	4666	1	4000	resp	hit	188
+sub14_MaKexin	57	Response	12	1514602	8735	0
+sub14_MaKexin	57	Response	2	1515642	9775	0
+sub14_MaKexin	58	Picture	jitter	1526031	0	1	25664	1	0	50000	other	0
+sub14_MaKexin	58	Pulse	30	1529962	3930	0
+sub14_MaKexin	58	Pulse	30	1549962	23930	0
+sub14_MaKexin	59	Picture	fixation	1551696	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	59	Picture	green_left	1555862	4166	1	4500	1	4000	resp	hit	195
+sub14_MaKexin	59	Response	12	1560201	8505	0
+sub14_MaKexin	59	Pulse	30	1569962	18266	0
+sub14_MaKexin	60	Picture	jitter	1571861	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	60	Pulse	30	1589881	18021	0
+sub14_MaKexin	61	Picture	fixation	1602525	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	61	Picture	red_right	1606691	4166	1	4333	1	4000	resp	hit	202
+sub14_MaKexin	61	Pulse	30	1609880	7355	0
+sub14_MaKexin	61	Response	11	1611001	8476	0
+sub14_MaKexin	62	Picture	jitter	1622690	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	62	Pulse	30	1629879	7190	0
+sub14_MaKexin	62	Pulse	30	1649880	27191	0
+sub14_MaKexin	63	Picture	fixation	1653354	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	63	Picture	red_right	1657520	4166	1	4333	1	4000	resp	hit	208
+sub14_MaKexin	63	Response	11	1661719	8365	0
+sub14_MaKexin	63	Pulse	30	1669878	16525	0
+sub14_MaKexin	64	Picture	jitter	1673518	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	64	Pulse	30	1689879	16360	0
+sub14_MaKexin	65	Picture	fixation	1704182	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	65	Picture	green_right	1708349	4166	1	4500	1	4000	resp	incorrect	215
+sub14_MaKexin	65	Pulse	30	1709878	5695	0
+sub14_MaKexin	65	Response	1	1712758	8575	0
+sub14_MaKexin	66	Picture	jitter	1724347	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	66	Pulse	30	1729878	5531	0
+sub14_MaKexin	66	Pulse	30	1749797	25450	0
+sub14_MaKexin	67	Picture	fixation	1755011	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	67	Picture	green_left	1759178	4166	1	4833	1	4000	resp	hit	221
+sub14_MaKexin	67	Response	12	1763958	8947	0
+sub14_MaKexin	67	Pulse	30	1769796	14785	0
+sub14_MaKexin	68	Picture	jitter	1775176	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	68	Pulse	30	1789796	14620	0
+sub14_MaKexin	69	Picture	fixation	1805840	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	69	Pulse	30	1809796	3955	0
+sub14_MaKexin	69	Picture	red_right	1810006	4166	1	3666	1	4000	resp	hit	228
+sub14_MaKexin	69	Response	11	1813556	7716	0
+sub14_MaKexin	70	Picture	jitter	1826005	0	1	23165	1	0	50000	other	0
+sub14_MaKexin	70	Pulse	30	1829796	3791	0
+sub14_MaKexin	71	Picture	fixation	1849170	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	71	Pulse	30	1849795	625	0
+sub14_MaKexin	71	Picture	green_left	1853336	4166	1	4000	1	4000	resp	hit	234
+sub14_MaKexin	71	Response	12	1857236	8066	0
+sub14_MaKexin	72	Picture	jitter	1869334	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	72	Pulse	30	1869874	540	0
+sub14_MaKexin	72	Pulse	30	1889874	20539	0
+sub14_MaKexin	73	Picture	fixation	1899998	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	73	Picture	red_right	1904165	4166	1	5333	1	4000	resp	hit	240
+sub14_MaKexin	73	Response	11	1909393	9394	0
+sub14_MaKexin	73	Pulse	30	1909876	9878	0
+sub14_MaKexin	74	Picture	jitter	1920163	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	74	Pulse	30	1929873	9709	0
+sub14_MaKexin	75	Picture	fixation	1948327	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	75	Pulse	30	1949872	1545	0
+sub14_MaKexin	75	Picture	red_right	1952494	4166	1	4833	1	4000	resp	hit	247
+sub14_MaKexin	75	Response	11	1957312	8985	0
+sub14_MaKexin	76	Picture	jitter	1968492	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	76	Pulse	30	1969872	1380	0
+sub14_MaKexin	76	Pulse	30	1989872	21380	0
+sub14_MaKexin	77	Picture	fixation	1996656	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	77	Picture	green_left	2000823	4166	1	4333	1	4000	resp	hit	253
+sub14_MaKexin	77	Response	12	2004991	8334	0
+sub14_MaKexin	77	Pulse	30	2009871	13214	0
+sub14_MaKexin	78	Picture	jitter	2016821	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	78	Pulse	30	2029870	13049	0
+sub14_MaKexin	79	Picture	fixation	2044986	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	79	Picture	green_right	2049152	4166	1	4666	1	4000	resp	hit	260
+sub14_MaKexin	79	Pulse	30	2049870	4884	0
+sub14_MaKexin	79	Response	12	2053710	8724	0
+sub14_MaKexin	80	Picture	jitter	2065150	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	80	Pulse	30	2069869	4719	0
+sub14_MaKexin	80	Pulse	30	2089790	24640	0
+sub14_MaKexin	81	Picture	fixation	2095814	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	81	Picture	green_right	2099981	4166	1	4666	1	4000	resp	hit	266
+sub14_MaKexin	81	Response	12	2104588	8774	0
+sub14_MaKexin	81	Pulse	30	2109788	13974	0
+sub14_MaKexin	82	Picture	jitter	2115979	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	82	Pulse	30	2129788	13808	0
+sub14_MaKexin	83	Picture	fixation	2146643	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	83	Pulse	30	2149787	3144	0
+sub14_MaKexin	83	Picture	green_right	2150810	4166	1	4000	1	4000	resp	hit	273
+sub14_MaKexin	83	Response	12	2154667	8024	0
+sub14_MaKexin	84	Picture	jitter	2166808	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	84	Pulse	30	2169787	2979	0
+sub14_MaKexin	84	Pulse	30	2189787	22979	0
+sub14_MaKexin	85	Picture	fixation	2197472	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	85	Picture	green_right	2201638	4166	1	4833	1	4000	resp	hit	279
+sub14_MaKexin	85	Response	12	2206347	8875	0
+sub14_MaKexin	85	Pulse	30	2209786	12314	0
+sub14_MaKexin	86	Picture	jitter	2217637	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	86	Pulse	30	2229786	12149	0
+sub14_MaKexin	87	Picture	fixation	2248301	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	87	Pulse	30	2249785	1484	0
+sub14_MaKexin	87	Picture	red_left	2252467	4166	1	4666	1	4000	resp	hit	286
+sub14_MaKexin	87	Response	11	2257065	8764	0
+sub14_MaKexin	88	Picture	jitter	2268466	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	88	Pulse	30	2269865	1399	0
+sub14_MaKexin	88	Pulse	30	2289864	21399	0
+sub14_MaKexin	89	Picture	fixation	2299130	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	89	Picture	red_left	2303296	4166	1	4000	1	4000	resp	hit	292
+sub14_MaKexin	89	Response	11	2307224	8095	0
+sub14_MaKexin	89	Pulse	30	2309864	10735	0
+sub14_MaKexin	90	Picture	jitter	2319295	0	1	20665	1	0	50000	other	0
+sub14_MaKexin	90	Pulse	30	2329785	10491	0
+sub14_MaKexin	91	Picture	fixation	2339960	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	91	Picture	green_right	2344126	4166	1	4333	1	4000	resp	hit	298
+sub14_MaKexin	91	Response	12	2348423	8463	0
+sub14_MaKexin	91	Pulse	30	2349783	9823	0
+sub14_MaKexin	92	Picture	jitter	2360124	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	92	Pulse	30	2369782	9658	0
+sub14_MaKexin	93	Picture	fixation	2388289	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	93	Pulse	30	2389781	1493	0
+sub14_MaKexin	93	Picture	red_right	2392455	4166	1	3666	1	4000	resp	hit	305
+sub14_MaKexin	93	Response	11	2396021	7733	0
+sub14_MaKexin	94	Picture	jitter	2408453	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	94	Pulse	30	2409781	1328	0
+sub14_MaKexin	94	Pulse	30	2429783	21329	0
+sub14_MaKexin	95	Picture	fixation	2439117	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	95	Picture	green_right	2443284	4166	1	4000	1	4000	resp	hit	311
+sub14_MaKexin	95	Response	12	2447220	8103	0
+sub14_MaKexin	95	Pulse	30	2449780	10663	0
+sub14_MaKexin	96	Picture	jitter	2459282	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	96	Pulse	30	2469781	10498	0
+sub14_MaKexin	96	Pulse	30	2489779	30497	0
+sub14_MaKexin	97	Picture	fixation	2489946	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	97	Picture	red_right	2494112	4166	1	5166	1	4000	resp	hit	318
+sub14_MaKexin	97	Response	11	2499139	9193	0
+sub14_MaKexin	97	Pulse	30	2509859	19913	0
+sub14_MaKexin	98	Picture	jitter	2510111	0	1	25664	1	0	50000	other	0
+sub14_MaKexin	98	Pulse	30	2529859	19748	0
+sub14_MaKexin	99	Picture	fixation	2535776	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	99	Picture	red_left	2539942	4166	1	4333	1	4000	resp	hit	324
+sub14_MaKexin	99	Response	11	2544259	8483	0
+sub14_MaKexin	99	Pulse	30	2549858	14083	0
+sub14_MaKexin	100	Picture	jitter	2555940	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	100	Pulse	30	2569858	13917	0
+sub14_MaKexin	101	Picture	fixation	2586604	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	101	Pulse	30	2589857	3253	0
+sub14_MaKexin	101	Picture	green_left	2590771	4166	1	4333	1	4000	resp	hit	331
+sub14_MaKexin	101	Response	12	2594978	8374	0
+sub14_MaKexin	102	Picture	jitter	2606769	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	102	Pulse	30	2609777	3008	0
+sub14_MaKexin	102	Pulse	30	2629776	23007	0
+sub14_MaKexin	103	Picture	fixation	2634933	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	103	Picture	green_right	2639099	4166	1	5500	1	4000	resp	hit	337
+sub14_MaKexin	103	Response	12	2644576	9642	0
+sub14_MaKexin	103	Pulse	30	2649776	14843	0
+sub14_MaKexin	104	Picture	jitter	2655098	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	104	Pulse	30	2669776	14678	0
+sub14_MaKexin	105	Picture	fixation	2683262	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	105	Picture	red_left	2687429	4166	1	3833	1	4000	resp	hit	344
+sub14_MaKexin	105	Pulse	30	2689775	6513	0
+sub14_MaKexin	105	Response	11	2691135	7873	0
+sub14_MaKexin	106	Picture	jitter	2703427	0	1	20665	1	0	50000	other	0
+sub14_MaKexin	106	Pulse	30	2709774	6347	0
+sub14_MaKexin	107	Picture	fixation	2724092	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	107	Picture	green_left	2728258	4166	1	4500	1	4000	resp	hit	350
+sub14_MaKexin	107	Pulse	30	2729775	5683	0
+sub14_MaKexin	107	Response	12	2732735	8643	0
+sub14_MaKexin	108	Picture	jitter	2744257	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	108	Pulse	30	2749773	5516	0
+sub14_MaKexin	108	Pulse	30	2769855	25598	0
+sub14_MaKexin	109	Picture	fixation	2774921	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	109	Picture	red_left	2779087	4166	1	5833	1	4000	resp	hit	356
+sub14_MaKexin	109	Response	11	2784893	9972	0
+sub14_MaKexin	109	Pulse	30	2789853	14932	0
+sub14_MaKexin	110	Picture	jitter	2795086	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	110	Pulse	30	2809852	14767	0
+sub14_MaKexin	111	Picture	fixation	2823250	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	111	Picture	green_right	2827416	4166	1	3833	1	4000	resp	hit	363
+sub14_MaKexin	111	Pulse	30	2829852	6602	0
+sub14_MaKexin	111	Response	12	2831212	7962	0
+sub14_MaKexin	112	Picture	jitter	2843415	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	112	Pulse	30	2849853	6438	0
+sub14_MaKexin	112	Pulse	30	2869851	26436	0
+sub14_MaKexin	113	Picture	fixation	2874079	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	113	Picture	green_right	2878245	4166	1	4333	1	4000	resp	hit	369
+sub14_MaKexin	113	Response	12	2882412	8333	0
+sub14_MaKexin	113	Pulse	30	2889851	15772	0
+sub14_MaKexin	114	Picture	jitter	2894244	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	114	Pulse	30	2909770	15526	0
+sub14_MaKexin	115	Picture	fixation	2924908	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	115	Picture	green_right	2929074	4166	1	4000	1	4000	resp	hit	376
+sub14_MaKexin	115	Pulse	30	2929770	4862	0
+sub14_MaKexin	115	Response	12	2932969	8062	0
+sub14_MaKexin	116	Picture	jitter	2945073	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	116	Pulse	30	2949769	4696	0
+sub14_MaKexin	116	Pulse	30	2969769	24697	0
+sub14_MaKexin	117	Picture	fixation	2975737	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	117	Picture	green_right	2979903	4166	1	4166	1	4000	resp	hit	382
+sub14_MaKexin	117	Response	12	2984008	8272	0
+sub14_MaKexin	117	Pulse	30	2989769	14032	0
+sub14_MaKexin	118	Picture	jitter	2995901	0	1	23165	1	0	50000	other	0
+sub14_MaKexin	118	Pulse	30	3009768	13866	0
+sub14_MaKexin	119	Picture	fixation	3019066	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	119	Picture	green_right	3023232	4166	1	4333	1	4000	resp	hit	388
+sub14_MaKexin	119	Response	12	3027447	8381	0
+sub14_MaKexin	119	Pulse	30	3029767	10701	0
+sub14_MaKexin	120	Picture	jitter	3039231	0	1	23165	1	0	50000	other	0
+sub14_MaKexin	120	Pulse	30	3049767	10536	0
+sub14_MaKexin	121	Picture	fixation	3062396	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	121	Picture	red_left	3066562	4166	1	4333	1	4000	resp	hit	395
+sub14_MaKexin	121	Pulse	30	3069767	7371	0
+sub14_MaKexin	121	Response	11	3070727	8331	0
+sub14_MaKexin	122	Picture	jitter	3082560	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	122	Pulse	30	3089766	7206	0
+sub14_MaKexin	122	Pulse	30	3109765	27205	0
+sub14_MaKexin	123	Picture	fixation	3113224	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	123	Picture	green_left	3117391	4166	1	4500	1	4000	resp	hit	401
+sub14_MaKexin	123	Response	12	3121845	8620	0
+sub14_MaKexin	123	Pulse	30	3129845	16620	0
+sub14_MaKexin	124	Picture	jitter	3133389	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	124	Pulse	30	3149846	16456	0
+sub14_MaKexin	125	Picture	fixation	3164053	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	125	Picture	red_left	3168220	4166	1	4000	1	4000	resp	hit	408
+sub14_MaKexin	125	Pulse	30	3169844	5791	0
+sub14_MaKexin	125	Response	11	3172165	8111	0
+sub14_MaKexin	126	Picture	jitter	3184218	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	126	Pulse	30	3189843	5625	0
+sub14_MaKexin	126	Pulse	30	3209843	25625	0
+sub14_MaKexin	127	Picture	fixation	3212382	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	127	Picture	red_left	3216549	4166	1	4333	1	4000	resp	hit	414
+sub14_MaKexin	127	Response	11	3220804	8422	0
+sub14_MaKexin	127	Pulse	30	3229843	17461	0
+sub14_MaKexin	128	Picture	jitter	3232547	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	128	Pulse	30	3249841	17294	0
+sub14_MaKexin	129	Picture	fixation	3263211	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	129	Picture	green_right	3267377	4166	1	3833	1	4000	resp	hit	421
+sub14_MaKexin	129	Pulse	30	3269842	6631	0
+sub14_MaKexin	129	Response	12	3271122	7911	0
+sub14_MaKexin	130	Picture	jitter	3283376	0	1	18165	1	0	50000	other	0
+sub14_MaKexin	130	Pulse	30	3289761	6385	0
+sub14_MaKexin	131	Picture	fixation	3301541	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	131	Picture	red_right	3305707	4166	1	5000	1	4000	resp	hit	427
+sub14_MaKexin	131	Pulse	30	3309760	8219	0
+sub14_MaKexin	131	Response	11	3310642	9100	0
+sub14_MaKexin	132	Picture	jitter	3321706	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	132	Pulse	30	3329761	8055	0
+sub14_MaKexin	132	Pulse	30	3349761	28055	0
+sub14_MaKexin	133	Picture	fixation	3352370	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	133	Picture	red_left	3356536	4166	1	4000	1	4000	resp	hit	433
+sub14_MaKexin	133	Response	11	3360400	8030	0
+sub14_MaKexin	133	Pulse	30	3369760	17390	0
+sub14_MaKexin	134	Picture	jitter	3372535	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	134	Pulse	30	3389760	17225	0
+sub14_MaKexin	135	Picture	fixation	3400699	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	135	Picture	red_left	3404865	4166	1	4333	1	4000	resp	hit	439
+sub14_MaKexin	135	Response	11	3409040	8341	0
+sub14_MaKexin	135	Pulse	30	3409758	9059	0
+sub14_MaKexin	136	Picture	jitter	3420864	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	136	Pulse	30	3429838	8974	0
+sub14_MaKexin	137	Picture	fixation	3449028	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	137	Pulse	30	3449837	809	0
+sub14_MaKexin	137	Picture	green_right	3453194	4166	1	3666	1	4000	resp	hit	446
+sub14_MaKexin	137	Response	12	3456797	7769	0
+sub14_MaKexin	138	Picture	jitter	3469193	0	1	25664	1	0	50000	other	0
+sub14_MaKexin	138	Pulse	30	3469837	644	0
+sub14_MaKexin	138	Pulse	30	3489838	20645	0
+sub14_MaKexin	139	Picture	fixation	3494857	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	139	Picture	green_right	3499024	4166	1	4000	1	4000	resp	hit	452
+sub14_MaKexin	139	Response	12	3502877	8020	0
+sub14_MaKexin	139	Response	2	3504316	9459	0
+sub14_MaKexin	139	Pulse	30	3509755	14898	0
+sub14_MaKexin	140	Picture	jitter	3515022	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	140	Pulse	30	3529756	14734	0
+sub14_MaKexin	141	Picture	fixation	3545686	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	141	Pulse	30	3549755	4069	0
+sub14_MaKexin	141	Picture	red_left	3549852	4166	1	4000	1	4000	resp	hit	460
+sub14_MaKexin	141	Response	11	3553834	8148	0
+sub14_MaKexin	142	Picture	jitter	3565851	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	142	Pulse	30	3569754	3903	0
+sub14_MaKexin	142	Pulse	30	3589754	23903	0
+sub14_MaKexin	143	Picture	fixation	3594015	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	143	Picture	red_left	3598181	4166	1	4833	1	4000	resp	hit	466
+sub14_MaKexin	143	Response	11	3602954	8939	0
+sub14_MaKexin	143	Pulse	30	3609753	15738	0
+sub14_MaKexin	144	Picture	jitter	3614180	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	144	Pulse	30	3629754	15574	0
+sub14_MaKexin	145	Picture	fixation	3644844	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	145	Picture	red_left	3649010	4166	1	3833	1	4000	resp	hit	473
+sub14_MaKexin	145	Pulse	30	3649754	4910	0
+sub14_MaKexin	145	Response	11	3652712	7868	0
+sub14_MaKexin	146	Picture	jitter	3665009	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	146	Pulse	30	3669753	4744	0
+sub14_MaKexin	146	Pulse	30	3689753	24744	0
+sub14_MaKexin	147	Picture	fixation	3695673	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	147	Picture	red_left	3699839	4166	1	4333	1	4000	resp	hit	479
+sub14_MaKexin	147	Response	11	3704153	8480	0
+sub14_MaKexin	147	Pulse	30	3709750	14077	0
+sub14_MaKexin	148	Picture	jitter	3715838	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	148	Pulse	30	3729751	13913	0
+sub14_MaKexin	149	Picture	fixation	3746502	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	149	Pulse	30	3749750	3248	0
+sub14_MaKexin	149	Picture	green_left	3750668	4166	1	4666	1	4000	resp	hit	486
+sub14_MaKexin	149	Response	12	3755190	8688	0
+sub14_MaKexin	150	Picture	jitter	3766667	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	150	Pulse	30	3769670	3003	0
+sub14_MaKexin	150	Pulse	30	3789829	23163	0
+sub14_MaKexin	151	Picture	fixation	3794831	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	151	Picture	red_left	3798997	4166	1	5833	1	4000	resp	hit	492
+sub14_MaKexin	151	Response	11	3804789	9958	0
+sub14_MaKexin	151	Pulse	30	3809828	14997	0
+sub14_MaKexin	152	Picture	jitter	3814996	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	152	Pulse	30	3829828	14832	0
+sub14_MaKexin	153	Picture	fixation	3845660	0	1	4166	2	0	4000	other	0
+sub14_MaKexin	153	Picture	red_right	3849826	4166	1	7500	2	4000	resp	hit	499
+sub14_MaKexin	153	Pulse	30	3849829	4170	0
+sub14_MaKexin	153	Response	11	3857268	11608	0
+sub14_MaKexin	154	Picture	jitter	3865824	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	154	Pulse	30	3869747	3923	0
+sub14_MaKexin	154	Pulse	30	3889747	23923	0
+sub14_MaKexin	155	Picture	fixation	3893989	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	155	Picture	red_left	3898155	4166	1	5500	1	4000	resp	hit	505
+sub14_MaKexin	155	Response	11	3903587	9598	0
+sub14_MaKexin	155	Pulse	30	3909746	15758	0
+sub14_MaKexin	156	Picture	jitter	3914154	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	156	Pulse	30	3929746	15593	0
+sub14_MaKexin	157	Picture	fixation	3942318	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	157	Picture	green_right	3946484	4166	1	4166	1	4000	resp	hit	512
+sub14_MaKexin	157	Pulse	30	3949746	7428	0
+sub14_MaKexin	157	Response	12	3950626	8308	0
+sub14_MaKexin	158	Picture	jitter	3962483	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	158	Pulse	30	3969745	7263	0
+sub14_MaKexin	158	Pulse	30	3989745	27262	0
+sub14_MaKexin	159	Picture	fixation	3993147	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	159	Picture	green_right	3997313	4166	1	5166	1	4000	resp	hit	518
+sub14_MaKexin	159	Response	12	4002384	9238	0
+sub14_MaKexin	159	Pulse	30	4009744	16597	0
+sub14_MaKexin	160	Picture	jitter	4013311	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	160	Pulse	30	4029745	16433	0
+sub14_MaKexin	161	Picture	fixation	4041476	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	161	Picture	green_right	4045642	4166	1	3666	1	4000	resp	hit	524
+sub14_MaKexin	161	Response	12	4049263	7787	0
+sub14_MaKexin	161	Pulse	30	4049743	8268	0
+sub14_MaKexin	162	Picture	jitter	4061641	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	162	Pulse	30	4069744	8104	0
+sub14_MaKexin	162	Pulse	30	4089742	28102	0
+sub14_MaKexin	163	Picture	fixation	4092304	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	163	Picture	green_right	4096471	4166	1	3666	1	4000	resp	hit	531
+sub14_MaKexin	163	Response	12	4099982	7678	0
+sub14_MaKexin	163	Pulse	30	4109742	17437	0
+sub14_MaKexin	164	Picture	jitter	4112469	0	1	23165	1	0	50000	other	0
+sub14_MaKexin	164	Pulse	30	4129741	17272	0
+sub14_MaKexin	165	Picture	fixation	4135634	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	165	Picture	green_right	4139800	4166	1	4000	1	4000	resp	hit	537
+sub14_MaKexin	165	Response	12	4143661	8027	0
+sub14_MaKexin	165	Pulse	30	4149741	14107	0
+sub14_MaKexin	166	Picture	jitter	4155799	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	166	Pulse	30	4169741	13942	0
+sub14_MaKexin	167	Picture	fixation	4186463	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	167	Pulse	30	4189661	3198	0
+sub14_MaKexin	167	Picture	green_right	4190629	4166	1	4333	1	4000	resp	hit	544
+sub14_MaKexin	167	Response	12	4194940	8477	0
+sub14_MaKexin	168	Picture	jitter	4206628	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	168	Pulse	30	4209820	3192	0
+sub14_MaKexin	168	Pulse	30	4229820	23192	0
+sub14_MaKexin	169	Picture	fixation	4234792	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	169	Picture	green_right	4238958	4166	1	4500	1	4000	resp	hit	550
+sub14_MaKexin	169	Response	12	4243339	8547	0
+sub14_MaKexin	169	Pulse	30	4249738	14947	0
+sub14_MaKexin	170	Picture	jitter	4254957	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	170	Pulse	30	4269739	14783	0
+sub14_MaKexin	171	Picture	fixation	4285621	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	171	Pulse	30	4289739	4119	0
+sub14_MaKexin	171	Picture	green_right	4289787	4166	1	4000	1	4000	resp	hit	557
+sub14_MaKexin	171	Response	12	4293737	8117	0
+sub14_MaKexin	172	Picture	jitter	4305786	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	172	Pulse	30	4309737	3952	0
+sub14_MaKexin	172	Pulse	30	4329737	23952	0
+sub14_MaKexin	173	Picture	fixation	4333950	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	173	Picture	green_right	4338116	4166	1	4166	1	4000	resp	hit	563
+sub14_MaKexin	173	Response	12	4342137	8187	0
+sub14_MaKexin	173	Pulse	30	4349656	15706	0
+sub14_MaKexin	174	Picture	jitter	4354115	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	174	Pulse	30	4369817	15703	0
+sub14_MaKexin	175	Picture	fixation	4382279	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	175	Picture	red_left	4386445	4166	1	4500	1	4000	resp	hit	570
+sub14_MaKexin	175	Pulse	30	4389735	7457	0
+sub14_MaKexin	175	Response	11	4390776	8497	0
+sub14_MaKexin	176	Picture	jitter	4402444	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	176	Pulse	30	4409735	7291	0
+sub14_MaKexin	176	Pulse	30	4429736	27292	0
+sub14_MaKexin	177	Picture	fixation	4433108	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	177	Picture	red_left	4437274	4166	1	4500	1	4000	resp	hit	576
+sub14_MaKexin	177	Response	11	4441654	8547	0
+sub14_MaKexin	177	Pulse	30	4449734	16626	0
+sub14_MaKexin	178	Picture	jitter	4453272	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	178	Pulse	30	4469734	16461	0
+sub14_MaKexin	179	Picture	fixation	4483936	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	179	Picture	red_right	4488103	4166	1	3666	1	4000	resp	hit	583
+sub14_MaKexin	179	Pulse	30	4489653	5716	0
+sub14_MaKexin	179	Response	11	4491653	7716	0
+sub14_MaKexin	180	Picture	jitter	4504101	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	180	Pulse	30	4509652	5551	0
+sub14_MaKexin	180	Pulse	30	4529733	25632	0
+sub14_MaKexin	181	Picture	fixation	4532265	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	181	Picture	red_right	4536432	4166	1	3333	1	4000	resp	hit	589
+sub14_MaKexin	181	Response	11	4539732	7466	0
+sub14_MaKexin	181	Pulse	30	4549733	17467	0
+sub14_MaKexin	182	Picture	jitter	4552430	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	182	Pulse	30	4569731	17301	0
+sub14_MaKexin	183	Picture	fixation	4583094	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	183	Picture	red_left	4587261	4166	1	3833	1	4000	resp	hit	596
+sub14_MaKexin	183	Pulse	30	4589731	6636	0
+sub14_MaKexin	183	Response	11	4591011	7917	0
+sub14_MaKexin	184	Picture	jitter	4603259	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	184	Pulse	30	4609730	6471	0
+sub14_MaKexin	184	Pulse	30	4629729	26470	0
+sub14_MaKexin	185	Picture	fixation	4633923	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	185	Picture	red_left	4638089	4166	1	3666	1	4000	resp	hit	602
+sub14_MaKexin	185	Response	11	4641649	7726	0
+sub14_MaKexin	185	Pulse	30	4649649	15726	0
+sub14_MaKexin	186	Picture	jitter	4654088	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	186	Pulse	30	4669650	15562	0
+sub14_MaKexin	187	Picture	fixation	4684752	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	187	Picture	red_right	4688918	4166	1	4500	1	4000	resp	hit	609
+sub14_MaKexin	187	Pulse	30	4689649	4897	0
+sub14_MaKexin	187	Response	11	4693330	8578	0
+sub14_MaKexin	188	Picture	jitter	4704917	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	188	Pulse	30	4709808	4891	0
+sub14_MaKexin	188	Pulse	30	4729726	24809	0
+sub14_MaKexin	189	Picture	fixation	4735581	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	189	Picture	red_left	4739747	4166	1	3333	1	4000	resp	hit	615
+sub14_MaKexin	189	Response	11	4742928	7347	0
+sub14_MaKexin	189	Pulse	30	4749728	14147	0
+sub14_MaKexin	190	Picture	jitter	4755746	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	190	Pulse	30	4769726	13981	0
+sub14_MaKexin	191	Picture	fixation	4786410	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	191	Pulse	30	4789726	3316	0
+sub14_MaKexin	191	Picture	green_right	4790576	4166	1	4333	1	4000	resp	hit	622
+sub14_MaKexin	191	Response	12	4794846	8436	0
+sub14_MaKexin	192	Picture	jitter	4806575	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	192	Pulse	30	4809726	3151	0
+sub14_MaKexin	192	Pulse	30	4829725	23150	0
+sub14_MaKexin	193	Picture	fixation	4834739	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	193	Picture	green_right	4838905	4166	1	4333	1	4000	resp	hit	628
+sub14_MaKexin	193	Response	12	4843085	8346	0
+sub14_MaKexin	193	Pulse	30	4849725	14986	0
+sub14_MaKexin	194	Picture	jitter	4854904	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	194	Pulse	30	4869725	14821	0
+sub14_MaKexin	195	Picture	fixation	4883068	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	195	Picture	green_right	4887234	4166	1	4333	1	4000	resp	hit	635
+sub14_MaKexin	195	Pulse	30	4889724	6656	0
+sub14_MaKexin	195	Response	12	4891483	8415	0
+sub14_MaKexin	196	Picture	jitter	4903233	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	196	Pulse	30	4909644	6411	0
+sub14_MaKexin	196	Pulse	30	4929803	26570	0
+sub14_MaKexin	197	Picture	fixation	4931397	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	197	Picture	red_left	4935563	4166	1	3833	1	4000	resp	hit	641
+sub14_MaKexin	197	Response	11	4939242	7845	0
+sub14_MaKexin	197	Pulse	30	4949722	18325	0
+sub14_MaKexin	198	Picture	jitter	4951562	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	198	Pulse	30	4969722	18161	0
+sub14_MaKexin	199	Picture	fixation	4982226	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	199	Picture	red_left	4986392	4166	1	3666	1	4000	resp	hit	648
+sub14_MaKexin	199	Pulse	30	4989723	7497	0
+sub14_MaKexin	199	Response	11	4989882	7656	0
+sub14_MaKexin	200	Picture	jitter	5002391	0	1	18165	1	0	50000	other	0
+sub14_MaKexin	200	Pulse	30	5009721	7331	0
+sub14_MaKexin	201	Picture	fixation	5020556	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	201	Picture	red_left	5024722	4166	1	3666	1	4000	resp	hit	653
+sub14_MaKexin	201	Response	11	5028361	7805	0
+sub14_MaKexin	201	Pulse	30	5029720	9165	0
+sub14_MaKexin	202	Picture	jitter	5040721	0	1	20665	1	0	50000	other	0
+sub14_MaKexin	202	Pulse	30	5049720	9000	0
+sub14_MaKexin	203	Picture	fixation	5061385	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	203	Picture	red_right	5065552	4166	1	4333	1	4000	resp	hit	660
+sub14_MaKexin	203	Pulse	30	5069721	8336	0
+sub14_MaKexin	203	Response	11	5069800	8414	0
+sub14_MaKexin	204	Picture	jitter	5081550	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	204	Pulse	30	5089640	8090	0
+sub14_MaKexin	204	Pulse	30	5109640	28089	0
+sub14_MaKexin	205	Picture	fixation	5112214	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	205	Picture	red_left	5116381	4166	1	4000	1	4000	resp	hit	666
+sub14_MaKexin	205	Response	11	5120278	8064	0
+sub14_MaKexin	205	Pulse	30	5129638	17424	0
+sub14_MaKexin	206	Picture	jitter	5132379	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	206	Pulse	30	5149799	17420	0
+sub14_MaKexin	207	Picture	fixation	5163043	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	207	Picture	red_left	5167209	4166	1	4000	1	4000	resp	hit	673
+sub14_MaKexin	207	Pulse	30	5169717	6674	0
+sub14_MaKexin	207	Response	11	5171077	8034	0
+sub14_MaKexin	208	Picture	jitter	5183208	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	208	Pulse	30	5189718	6510	0
+sub14_MaKexin	208	Pulse	30	5209716	26508	0
+sub14_MaKexin	209	Picture	fixation	5213872	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	209	Picture	green_left	5218038	4166	1	5500	1	4000	resp	hit	679
+sub14_MaKexin	209	Response	12	5223396	9524	0
+sub14_MaKexin	209	Pulse	30	5229717	15845	0
+sub14_MaKexin	210	Picture	jitter	5234037	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	210	Pulse	30	5249715	15679	0
+sub14_MaKexin	211	Picture	fixation	5264701	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	211	Picture	green_right	5268867	4166	1	4666	1	4000	resp	hit	686
+sub14_MaKexin	211	Pulse	30	5269715	5014	0
+sub14_MaKexin	211	Response	12	5273394	8694	0
+sub14_MaKexin	212	Picture	jitter	5284866	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	212	Pulse	30	5289714	4849	0
+sub14_MaKexin	212	Pulse	30	5309714	24848	0
+sub14_MaKexin	213	Picture	fixation	5315530	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	213	Picture	red_left	5319696	4166	1	4333	1	4000	resp	hit	692
+sub14_MaKexin	213	Response	11	5323874	8344	0
+sub14_MaKexin	213	Pulse	30	5329714	14185	0
+sub14_MaKexin	214	Picture	jitter	5335694	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	214	Pulse	30	5349713	14019	0
+sub14_MaKexin	215	Picture	fixation	5363859	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	215	Picture	green_right	5368025	4166	1	4333	1	4000	resp	hit	699
+sub14_MaKexin	215	Pulse	30	5369712	5854	0
+sub14_MaKexin	215	Response	12	5372273	8415	0
+sub14_MaKexin	216	Picture	jitter	5384023	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	216	Pulse	30	5389634	5610	0
+sub14_MaKexin	216	Pulse	30	5409633	25609	0
+sub14_MaKexin	217	Picture	fixation	5412188	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	217	Picture	green_right	5416354	4166	1	5500	1	4000	resp	hit	705
+sub14_MaKexin	217	Response	12	5421711	9524	0
+sub14_MaKexin	217	Pulse	30	5429631	17443	0
+sub14_MaKexin	218	Picture	jitter	5432353	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	218	Pulse	30	5449632	17280	0
+sub14_MaKexin	219	Picture	fixation	5463017	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	219	Picture	red_left	5467183	4166	1	6000	1	4000	resp	hit	712
+sub14_MaKexin	219	Pulse	30	5469630	6614	0
+sub14_MaKexin	219	Response	11	5473071	10054	0
+sub14_MaKexin	220	Picture	jitter	5483181	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	220	Pulse	30	5489710	6528	0
+sub14_MaKexin	220	Pulse	30	5509631	26449	0
+sub14_MaKexin	221	Picture	fixation	5513845	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	221	Picture	green_left	5518012	4166	1	4500	1	4000	resp	hit	718
+sub14_MaKexin	221	Response	12	5522429	8584	0
+sub14_MaKexin	221	Pulse	30	5529709	15863	0
+sub14_MaKexin	222	Picture	jitter	5534010	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	222	Pulse	30	5549630	15619	0
+sub14_MaKexin	223	Picture	fixation	5564674	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	223	Picture	red_left	5568841	4166	1	4000	1	4000	resp	hit	725
+sub14_MaKexin	223	Pulse	30	5569628	4954	0
+sub14_MaKexin	223	Response	11	5572828	8154	0
+sub14_MaKexin	224	Picture	jitter	5584839	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	224	Pulse	30	5589628	4789	0
+sub14_MaKexin	224	Pulse	30	5609708	24869	0
+sub14_MaKexin	225	Picture	fixation	5613003	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	225	Picture	green_left	5617170	4166	1	4666	1	4000	resp	hit	731
+sub14_MaKexin	225	Response	12	5621786	8783	0
+sub14_MaKexin	225	Pulse	30	5629706	16703	0
+sub14_MaKexin	226	Picture	jitter	5633168	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	226	Pulse	30	5649706	16538	0
+sub14_MaKexin	227	Picture	fixation	5661332	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	227	Picture	red_left	5665499	4166	1	4166	1	4000	resp	hit	737
+sub14_MaKexin	227	Response	11	5669546	8214	0
+sub14_MaKexin	227	Pulse	30	5669706	8374	0
+sub14_MaKexin	228	Picture	jitter	5681497	0	1	20665	1	0	50000	other	0
+sub14_MaKexin	228	Pulse	30	5689707	8210	0
+sub14_MaKexin	229	Picture	fixation	5702162	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	229	Picture	green_right	5706328	4166	1	3500	1	4000	resp	hit	744
+sub14_MaKexin	229	Pulse	30	5709706	7544	0
+sub14_MaKexin	229	Response	12	5709708	7546	0
+sub14_MaKexin	230	Picture	jitter	5722327	0	1	23165	1	0	50000	other	0
+sub14_MaKexin	230	Pulse	30	5729704	7377	0
+sub14_MaKexin	231	Picture	fixation	5745491	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	231	Pulse	30	5749624	4133	0
+sub14_MaKexin	231	Picture	green_right	5749658	4166	1	3500	1	4000	resp	hit	750
+sub14_MaKexin	231	Response	12	5753064	7573	0
+sub14_MaKexin	232	Picture	jitter	5765656	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	232	Pulse	30	5769624	3968	0
+sub14_MaKexin	232	Pulse	30	5789623	23966	0
+sub14_MaKexin	233	Picture	fixation	5793821	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	233	Picture	green_left	5797987	4166	1	4500	1	4000	resp	hit	756
+sub14_MaKexin	233	Response	12	5802342	8522	0
+sub14_MaKexin	233	Pulse	30	5809622	15801	0
+sub14_MaKexin	234	Picture	jitter	5813985	0	1	25664	1	0	50000	other	0
+sub14_MaKexin	234	Pulse	30	5829622	15636	0
+sub14_MaKexin	235	Picture	fixation	5839650	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	235	Picture	red_left	5843816	4166	1	4333	1	4000	resp	hit	762
+sub14_MaKexin	235	Response	11	5848022	8372	0
+sub14_MaKexin	235	Pulse	30	5849622	9972	0
+sub14_MaKexin	236	Picture	jitter	5859815	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	236	Pulse	30	5869621	9807	0
+sub14_MaKexin	236	Pulse	30	5889622	29807	0
+sub14_MaKexin	237	Picture	fixation	5890479	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	237	Picture	red_left	5894645	4166	1	4833	1	4000	resp	hit	769
+sub14_MaKexin	237	Response	11	5899381	8902	0
+sub14_MaKexin	237	Pulse	30	5909619	19141	0
+sub14_MaKexin	238	Picture	jitter	5910644	0	1	25664	1	0	50000	other	0
+sub14_MaKexin	238	Pulse	30	5929620	18976	0
+sub14_MaKexin	239	Picture	fixation	5936308	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	239	Picture	green_right	5940474	4166	1	3666	1	4000	resp	hit	775
+sub14_MaKexin	239	Response	12	5944020	7712	0
+sub14_MaKexin	239	Pulse	30	5949700	13392	0
+sub14_MaKexin	240	Picture	jitter	5956473	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	240	Pulse	30	5969699	13226	0
+sub14_MaKexin	241	Picture	fixation	5987137	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	241	Pulse	30	5989699	2562	0
+sub14_MaKexin	241	Picture	green_right	5991303	4166	1	3666	1	4000	resp	hit	782
+sub14_MaKexin	241	Response	12	5994818	7681	0
+sub14_MaKexin	242	Picture	jitter	6007302	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	242	Pulse	30	6009698	2396	0
+sub14_MaKexin	242	Pulse	30	6029697	22395	0
+sub14_MaKexin	243	Picture	fixation	6035466	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	243	Picture	green_right	6039632	4166	1	3666	1	4000	resp	hit	788
+sub14_MaKexin	243	Response	12	6043218	7752	0
+sub14_MaKexin	243	Pulse	30	6049697	14231	0
+sub14_MaKexin	244	Picture	jitter	6055631	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	244	Pulse	30	6069697	14067	0
+sub14_MaKexin	245	Picture	fixation	6083795	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	245	Picture	red_left	6087961	4166	1	4000	1	4000	resp	hit	795
+sub14_MaKexin	245	Pulse	30	6089696	5902	0
+sub14_MaKexin	245	Response	11	6091855	8060	0
+sub14_MaKexin	246	Picture	jitter	6103960	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	246	Pulse	30	6109695	5736	0
+sub14_MaKexin	246	Pulse	30	6129695	25735	0
+sub14_MaKexin	247	Picture	fixation	6132124	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	247	Picture	green_right	6136290	4166	1	3833	1	4000	resp	hit	801
+sub14_MaKexin	247	Response	12	6140015	7891	0
+sub14_MaKexin	247	Pulse	30	6149694	17570	0
+sub14_MaKexin	248	Picture	jitter	6152289	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	248	Pulse	30	6169695	17406	0
+sub14_MaKexin	249	Picture	fixation	6180453	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	249	Picture	red_left	6184619	4166	1	4000	1	4000	resp	hit	807
+sub14_MaKexin	249	Response	11	6188573	8120	0
+sub14_MaKexin	249	Pulse	30	6189614	9161	0
+sub14_MaKexin	250	Picture	jitter	6200618	0	1	23165	1	0	50000	other	0
+sub14_MaKexin	250	Pulse	30	6209613	8995	0
+sub14_MaKexin	251	Picture	fixation	6223783	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	251	Picture	red_left	6227949	4166	1	4500	1	4000	resp	hit	814
+sub14_MaKexin	251	Pulse	30	6229613	5830	0
+sub14_MaKexin	251	Response	11	6232413	8630	0
+sub14_MaKexin	252	Picture	jitter	6243947	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	252	Pulse	30	6249612	5665	0
+sub14_MaKexin	252	Pulse	30	6269613	25665	0
+sub14_MaKexin	253	Picture	fixation	6274611	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	253	Picture	red_left	6278778	4166	1	3666	1	4000	resp	hit	820
+sub14_MaKexin	253	Response	11	6282331	7720	0
+sub14_MaKexin	253	Pulse	30	6289611	14999	0
+sub14_MaKexin	254	Picture	jitter	6294776	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	254	Pulse	30	6309611	14835	0
+sub14_MaKexin	255	Picture	fixation	6322940	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	255	Picture	red_right	6327107	4166	1	3833	1	4000	resp	hit	827
+sub14_MaKexin	255	Pulse	30	6329610	6669	0
+sub14_MaKexin	255	Response	11	6330890	7950	0
+sub14_MaKexin	256	Picture	jitter	6343105	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	256	Pulse	30	6349690	6584	0
+sub14_MaKexin	256	Pulse	30	6369689	26584	0
+sub14_MaKexin	257	Picture	fixation	6371269	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	257	Picture	green_left	6375436	4166	1	4833	1	4000	resp	hit	833
+sub14_MaKexin	257	Response	12	6380169	8900	0
+sub14_MaKexin	257	Pulse	30	6389689	18419	0
+sub14_MaKexin	258	Picture	jitter	6391434	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	258	Pulse	30	6409689	18255	0
+sub14_MaKexin	259	Picture	fixation	6422098	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	259	Picture	green_right	6426265	4166	1	7166	1	4000	resp	hit	840
+sub14_MaKexin	259	Pulse	30	6429688	7590	0
+sub14_MaKexin	259	Response	12	6433367	11269	0
+sub14_MaKexin	260	Picture	jitter	6442263	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	260	Pulse	30	6449687	7424	0
+sub14_MaKexin	260	Pulse	30	6469607	27344	0
+sub14_MaKexin	261	Picture	fixation	6472927	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	261	Picture	green_right	6477094	4166	1	3833	1	4000	resp	hit	846
+sub14_MaKexin	261	Response	12	6480807	7880	0
+sub14_MaKexin	261	Pulse	30	6489607	16680	0
+sub14_MaKexin	262	Picture	jitter	6493092	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	262	Pulse	30	6509607	16515	0
+sub14_MaKexin	263	Picture	fixation	6523756	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	263	Picture	red_left	6527922	4166	1	4166	1	4000	resp	hit	853
+sub14_MaKexin	263	Pulse	30	6529687	5931	0
+sub14_MaKexin	263	Response	11	6532006	8250	0
+sub14_MaKexin	264	Picture	jitter	6543921	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	264	Pulse	30	6549685	5764	0
+sub14_MaKexin	264	Pulse	30	6569685	25764	0
+sub14_MaKexin	265	Picture	fixation	6574585	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	265	Picture	red_left	6578751	4166	1	3996	5	4000	resp	hit	859
+sub14_MaKexin	265	Response	11	6582724	8140	0
+sub14_MaKexin	265	Pulse	30	6589684	15099	0
+sub14_MaKexin	266	Picture	jitter	6594750	0	1	18165	1	0	50000	other	0
+sub14_MaKexin	266	Pulse	30	6609685	14935	0
+sub14_MaKexin	267	Picture	fixation	6612915	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	267	Picture	green_left	6617081	4166	1	4000	1	4000	resp	hit	865
+sub14_MaKexin	267	Response	12	6620964	8049	0
+sub14_MaKexin	267	Pulse	30	6629603	16688	0
+sub14_MaKexin	268	Picture	jitter	6633080	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	268	Pulse	30	6649604	16524	0
+sub14_MaKexin	269	Picture	fixation	6663744	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	269	Picture	green_right	6667910	4166	1	3833	1	4000	resp	hit	872
+sub14_MaKexin	269	Pulse	30	6669604	5860	0
+sub14_MaKexin	269	Response	12	6671603	7859	0
+sub14_MaKexin	270	Picture	jitter	6683909	0	1	25664	1	0	50000	other	0
+sub14_MaKexin	270	Pulse	30	6689602	5693	0
+sub14_MaKexin	271	Picture	fixation	6709573	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	271	Pulse	30	6709601	29	0
+sub14_MaKexin	271	Picture	green_left	6713739	4166	1	4333	1	4000	resp	hit	878
+sub14_MaKexin	271	Response	12	6718001	8428	0
+sub14_MaKexin	271	Pulse	30	6729601	20028	0
+sub14_MaKexin	272	Picture	jitter	6729738	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	272	Pulse	30	6749601	19863	0
+sub14_MaKexin	273	Picture	fixation	6757902	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	273	Picture	red_left	6762068	4166	1	9832	1	4000	resp	hit	885
+sub14_MaKexin	273	Pulse	30	6769680	11778	0
+sub14_MaKexin	273	Response	11	6771840	13938	0
+sub14_MaKexin	274	Picture	jitter	6778067	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	274	Pulse	30	6789681	11614	0
+sub14_MaKexin	275	Picture	fixation	6806231	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	275	Pulse	30	6809680	3449	0
+sub14_MaKexin	275	Picture	green_right	6810397	4166	1	3833	1	4000	resp	hit	891
+sub14_MaKexin	275	Response	12	6814158	7927	0
+sub14_MaKexin	276	Picture	jitter	6826396	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	276	Pulse	30	6829599	3203	0
+sub14_MaKexin	276	Pulse	30	6849598	23202	0
+sub14_MaKexin	277	Picture	fixation	6854560	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	277	Picture	green_right	6858726	4166	1	6333	1	4000	resp	hit	897
+sub14_MaKexin	277	Response	12	6864959	10399	0
+sub14_MaKexin	277	Pulse	30	6869598	15038	0
+sub14_MaKexin	278	Picture	jitter	6874725	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	278	Pulse	30	6889597	14872	0
+sub14_MaKexin	279	Picture	fixation	6902889	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	279	Picture	red_right	6907055	4166	1	3833	1	4000	resp	hit	904
+sub14_MaKexin	279	Pulse	30	6909677	6788	0
+sub14_MaKexin	279	Response	11	6910877	7988	0
+sub14_MaKexin	280	Picture	jitter	6923054	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	280	Pulse	30	6929676	6622	0
+sub14_MaKexin	280	Pulse	30	6949676	26622	0
+sub14_MaKexin	281	Picture	fixation	6953718	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	281	Picture	red_left	6957884	4166	1	7999	1	4000	resp	hit	910
+sub14_MaKexin	281	Response	11	6965755	12037	0
+sub14_MaKexin	281	Pulse	30	6969596	15878	0
+sub14_MaKexin	282	Picture	jitter	6973883	0	1	20665	1	0	50000	other	0
+sub14_MaKexin	282	Pulse	30	6989595	15712	0
+sub14_MaKexin	283	Picture	fixation	6994548	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	283	Picture	red_left	6998714	4166	1	4500	1	4000	resp	hit	916
+sub14_MaKexin	283	Response	11	7003115	8567	0
+sub14_MaKexin	283	Pulse	30	7009594	15047	0
+sub14_MaKexin	284	Picture	jitter	7014713	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	284	Pulse	30	7029595	14882	0
+sub14_MaKexin	285	Picture	fixation	7045377	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	285	Pulse	30	7049513	4137	0
+sub14_MaKexin	285	Picture	red_left	7049543	4166	1	5166	1	4000	resp	hit	923
+sub14_MaKexin	285	Response	11	7054553	9177	0
+sub14_MaKexin	286	Picture	jitter	7065541	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	286	Pulse	30	7069673	4132	0
+sub14_MaKexin	286	Pulse	30	7089674	24132	0
+sub14_MaKexin	287	Picture	fixation	7093706	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	287	Picture	green_right	7097872	4166	1	3500	1	4000	resp	hit	929
+sub14_MaKexin	287	Response	12	7101352	7647	0
+sub14_MaKexin	287	Pulse	30	7109672	15966	0
+sub14_MaKexin	288	Picture	jitter	7113870	0	1	28164	1	0	50000	other	0
+sub14_MaKexin	288	Pulse	30	7129592	15721	0
+sub14_MaKexin	289	Picture	fixation	7142035	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	289	Picture	red_right	7146201	4166	1	8333	1	4000	resp	hit	936
+sub14_MaKexin	289	Pulse	30	7149591	7557	0
+sub14_MaKexin	289	Response	11	7154470	12436	0
+sub14_MaKexin	290	Picture	jitter	7162200	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	290	Pulse	30	7169591	7391	0
+sub14_MaKexin	290	Pulse	30	7189591	27392	0
+sub14_MaKexin	291	Picture	fixation	7192864	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	291	Picture	green_right	7197030	4166	1	4333	1	4000	resp	hit	942
+sub14_MaKexin	291	Response	12	7201190	8327	0
+sub14_MaKexin	291	Pulse	30	7209590	16726	0
+sub14_MaKexin	292	Picture	jitter	7213028	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	292	Pulse	30	7229590	16562	0
+sub14_MaKexin	293	Picture	fixation	7243692	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	293	Picture	green_right	7247859	4166	1	6333	1	4000	resp	hit	949
+sub14_MaKexin	293	Pulse	30	7249589	5897	0
+sub14_MaKexin	293	Response	12	7254148	10456	0
+sub14_MaKexin	294	Picture	jitter	7263857	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	294	Pulse	30	7269590	5733	0
+sub14_MaKexin	294	Pulse	30	7289589	25731	0
+sub14_MaKexin	295	Picture	fixation	7294521	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	295	Picture	red_left	7298687	4166	1	3166	1	4000	resp	hit	955
+sub14_MaKexin	295	Response	11	7301828	7307	0
+sub14_MaKexin	295	Pulse	30	7309507	14986	0
+sub14_MaKexin	296	Picture	jitter	7314686	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	296	Pulse	30	7329667	14981	0
+sub14_MaKexin	297	Picture	fixation	7345350	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	297	Picture	red_left	7349516	4166	1	5000	1	4000	resp	hit	962
+sub14_MaKexin	297	Pulse	30	7349667	4317	0
+sub14_MaKexin	297	Response	11	7354386	9036	0
+sub14_MaKexin	298	Picture	jitter	7365515	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	298	Pulse	30	7369587	4072	0
+sub14_MaKexin	298	Pulse	30	7389587	24072	0
+sub14_MaKexin	299	Picture	fixation	7396179	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	299	Picture	red_left	7400345	4166	1	3333	1	4000	resp	hit	968
+sub14_MaKexin	299	Response	11	7403505	7326	0
+sub14_MaKexin	299	Pulse	30	7409585	13406	0
+sub14_MaKexin	300	Picture	jitter	7416344	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	300	Pulse	30	7429584	13241	0
+sub14_MaKexin	301	Picture	fixation	7447008	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	301	Pulse	30	7449664	2657	0
+sub14_MaKexin	301	Picture	green_right	7451174	4166	1	4000	1	4000	resp	hit	975
+sub14_MaKexin	301	Response	12	7455104	8097	0
+sub14_MaKexin	302	Picture	jitter	7467173	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	302	Pulse	30	7469664	2491	0
+sub14_MaKexin	302	Pulse	30	7489585	22412	0
+sub14_MaKexin	303	Picture	fixation	7497837	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	303	Picture	green_right	7502003	4166	1	4000	1	4000	resp	hit	981
+sub14_MaKexin	303	Response	12	7505982	8146	0
+sub14_MaKexin	303	Pulse	30	7509583	11746	0
+sub14_MaKexin	304	Picture	jitter	7518001	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	304	Pulse	30	7529583	11581	0
+sub14_MaKexin	305	Picture	fixation	7548665	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	305	Pulse	30	7549582	917	0
+sub14_MaKexin	305	Picture	green_right	7552832	4166	1	4333	1	4000	resp	hit	988
+sub14_MaKexin	305	Response	12	7557102	8436	0
+sub14_MaKexin	306	Picture	jitter	7568830	0	1	25664	1	0	50000	other	0
+sub14_MaKexin	306	Pulse	30	7569501	671	0
+sub14_MaKexin	306	Pulse	30	7589661	20831	0
+sub14_MaKexin	307	Picture	fixation	7594495	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	307	Picture	green_right	7598661	4166	1	3833	1	4000	resp	hit	994
+sub14_MaKexin	307	Response	12	7602461	7966	0
+sub14_MaKexin	307	Pulse	30	7609660	15166	0
+sub14_MaKexin	308	Picture	jitter	7614659	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	308	Pulse	30	7629580	14921	0
+sub14_MaKexin	309	Picture	fixation	7645323	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	309	Picture	red_left	7649490	4166	1	3166	1	4000	resp	hit	1001
+sub14_MaKexin	309	Pulse	30	7649580	4256	0
+sub14_MaKexin	309	Response	11	7652620	7296	0
+sub14_MaKexin	310	Picture	jitter	7665488	0	1	23165	1	0	50000	other	0
+sub14_MaKexin	310	Pulse	30	7669581	4092	0
+sub14_MaKexin	311	Picture	fixation	7688653	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	311	Pulse	30	7689579	926	0
+sub14_MaKexin	311	Picture	red_right	7692819	4166	1	5833	1	4000	resp	hit	1007
+sub14_MaKexin	311	Response	11	7698538	9886	0
+sub14_MaKexin	312	Picture	jitter	7708818	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	312	Pulse	30	7709658	840	0
+sub14_MaKexin	312	Pulse	30	7729657	20839	0
+sub14_MaKexin	313	Picture	fixation	7739482	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	313	Picture	green_right	7743648	4166	1	4166	1	4000	resp	hit	1013
+sub14_MaKexin	313	Response	12	7747657	8176	0
+sub14_MaKexin	313	Pulse	30	7749578	10096	0
+sub14_MaKexin	314	Picture	jitter	7759647	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	314	Pulse	30	7769578	9931	0
+sub14_MaKexin	314	Pulse	30	7789576	29929	0
+sub14_MaKexin	315	Picture	fixation	7790311	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	315	Picture	green_left	7794477	4166	1	15999	1	4000	resp	miss	0
+sub14_MaKexin	315	Pulse	30	7809576	19265	0
+sub14_MaKexin	316	Picture	jitter	7810476	0	1	30664	1	0	50000	other	0
+sub14_MaKexin	316	Pulse	30	7829577	19101	0
+sub14_MaKexin	317	Picture	fixation	7841139	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	317	Picture	red_left	7845306	4166	1	4500	1	4000	resp	hit	1026
+sub14_MaKexin	317	Pulse	30	7849495	8356	0
+sub14_MaKexin	317	Response	11	7849657	8517	0
+sub14_MaKexin	318	Picture	jitter	7861304	0	1	20665	1	0	50000	other	0
+sub14_MaKexin	318	Pulse	30	7869656	8351	0
+sub14_MaKexin	319	Picture	fixation	7881969	0	1	4166	1	0	4000	other	0
+sub14_MaKexin	319	Picture	red_left	7886135	4166	1	3500	1	4000	resp	hit	1032
+sub14_MaKexin	319	Pulse	30	7889575	7606	0
+sub14_MaKexin	319	Response	11	7889577	7608	0
+sub14_MaKexin	320	Picture	jitter	7902134	0	1	34411	1	0	50000	other	0
+sub14_MaKexin	320	Pulse	30	7909575	7441	0
+sub14_MaKexin	320	Pulse	30	7929573	27439	0
+
+
+Event Type	Code	Type	Response	RT	RT Uncertainty	Time	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur
+
+Picture	fixation	other				150153	1	4166	1	0	4000
+Picture	red_right	hit	1	4796	1	154319	1	4833	1	4000	resp
+Picture	jitter	other				170318	1	30664	1	0	50000
+Picture	fixation	other				200982	1	4166	1	0	4000
+Picture	green_left	hit	2	3484	1	205148	1	3500	1	4000	resp
+Picture	jitter	other				221147	1	28164	1	0	50000
+Picture	fixation	other				249311	1	4166	1	0	4000
+Picture	red_left	hit	1	3954	1	253477	1	4000	1	4000	resp
+Picture	jitter	other				269476	1	28164	1	0	50000
+Picture	fixation	other				297640	1	4166	1	0	4000
+Picture	green_left	hit	2	4024	1	301806	1	4166	1	4000	resp
+Picture	jitter	other				317805	1	23165	1	0	50000
+Picture	fixation	other				340970	1	4166	1	0	4000
+Picture	green_left	hit	2	3894	1	345136	1	4000	1	4000	resp
+Picture	jitter	other				361135	1	28164	1	0	50000
+Picture	fixation	other				389299	1	4166	1	0	4000
+Picture	red_right	hit	1	4203	1	393465	1	4333	1	4000	resp
+Picture	jitter	other				409463	1	30664	1	0	50000
+Picture	fixation	other				440127	1	4166	1	0	4000
+Picture	green_right	hit	2	4254	1	444294	1	4333	1	4000	resp
+Picture	jitter	other				460292	1	28164	1	0	50000
+Picture	fixation	other				488457	1	4166	1	0	4000
+Picture	red_left	hit	1	4563	1	492623	1	4666	1	4000	resp
+Picture	jitter	other				508621	1	30664	1	0	50000
+Picture	fixation	other				539285	1	4166	1	0	4000
+Picture	red_left	hit	1	4774	1	543452	1	4833	1	4000	resp
+Picture	jitter	other				559450	1	30664	1	0	50000
+Picture	fixation	other				590114	1	4166	1	0	4000
+Picture	green_right	hit	2	3544	1	594281	1	3666	1	4000	resp
+Picture	jitter	other				610279	1	25664	1	0	50000
+Picture	fixation	other				635944	1	4166	1	0	4000
+Picture	red_right	hit	1	4033	1	640110	1	4166	1	4000	resp
+Picture	jitter	other				656108	1	30664	1	0	50000
+Picture	fixation	other				686772	1	4166	1	0	4000
+Picture	green_left	hit	2	3922	1	690939	1	4000	1	4000	resp
+Picture	jitter	other				706937	1	30664	1	0	50000
+Picture	fixation	other				737601	1	4166	1	0	4000
+Picture	green_left	hit	2	4453	1	741767	1	4500	1	4000	resp
+Picture	jitter	other				757766	1	28164	1	0	50000
+Picture	fixation	other				785930	1	4166	1	0	4000
+Picture	red_right	hit	1	4283	1	790097	1	4333	1	4000	resp
+Picture	jitter	other				806095	1	30664	1	0	50000
+Picture	fixation	other				836759	1	4166	1	0	4000
+Picture	red_right	hit	1	3293	1	840925	1	3333	1	4000	resp
+Picture	jitter	other				856924	1	30664	1	0	50000
+Picture	fixation	other				887588	1	4166	1	0	4000
+Picture	red_right	hit	1	4302	1	891754	1	4333	1	4000	resp
+Picture	jitter	other				907753	1	18165	1	0	50000
+Picture	fixation	other				925918	1	4166	1	0	4000
+Picture	red_left	hit	1	4851	1	930084	1	5000	1	4000	resp
+Picture	jitter	other				946083	1	28164	1	0	50000
+Picture	fixation	other				974247	1	4166	1	0	4000
+Picture	green_left	hit	2	9561	1	978413	1	9666	1	4000	resp
+Picture	jitter	other				994412	1	20665	1	0	50000
+Picture	fixation	other				1015077	1	4166	1	0	4000
+Picture	red_right	hit	1	4091	1	1019243	1	4166	1	4000	resp
+Picture	jitter	other				1035241	1	30664	1	0	50000
+Picture	fixation	other				1065905	1	4166	1	0	4000
+Picture	green_left	hit	2	4781	1	1070072	1	4833	1	4000	resp
+Picture	jitter	other				1086070	1	20665	1	0	50000
+Picture	fixation	other				1106735	1	4166	1	0	4000
+Picture	green_left	hit	2	4590	1	1110901	1	4666	1	4000	resp
+Picture	jitter	other				1126900	1	28164	1	0	50000
+Picture	fixation	other				1155064	1	4166	1	0	4000
+Picture	red_right	hit	1	4420	1	1159231	1	4500	1	4000	resp
+Picture	jitter	other				1175229	1	30664	1	0	50000
+Picture	fixation	other				1205893	1	4166	1	0	4000
+Picture	green_left	hit	2	4390	1	1210059	1	4500	1	4000	resp
+Picture	jitter	other				1226058	1	30664	1	0	50000
+Picture	fixation	other				1256722	1	4166	1	0	4000
+Picture	green_left	hit	2	4521	1	1260888	1	4666	1	4000	resp
+Picture	jitter	other				1276887	1	30664	1	0	50000
+Picture	fixation	other				1307551	1	4166	1	0	4000
+Picture	green_left	hit	2	4410	1	1311717	1	4500	1	4000	resp
+Picture	jitter	other				1327716	1	30664	1	0	50000
+Picture	fixation	other				1358380	1	4166	1	0	4000
+Picture	red_right	hit	1	4540	1	1362546	1	4666	1	4000	resp
+Picture	jitter	other				1378545	1	30664	1	0	50000
+Picture	fixation	other				1409209	1	4166	1	0	4000
+Picture	red_right	hit	1	4670	1	1413375	1	4833	1	4000	resp
+Picture	jitter	other				1429373	1	28164	1	0	50000
+Picture	fixation	other				1457538	1	4166	1	0	4000
+Picture	red_right	hit	1	4340	1	1461704	1	4500	1	4000	resp
+Picture	jitter	other				1477702	1	28164	1	0	50000
+Picture	fixation	other				1505867	1	4166	1	0	4000
+Picture	green_left	hit	2	4569	1	1510033	1	4666	1	4000	resp
+Picture	jitter	other				1526031	1	25664	1	0	50000
+Picture	fixation	other				1551696	1	4166	1	0	4000
+Picture	green_left	hit	2	4339	1	1555862	1	4500	1	4000	resp
+Picture	jitter	other				1571861	1	30664	1	0	50000
+Picture	fixation	other				1602525	1	4166	1	0	4000
+Picture	red_right	hit	1	4310	1	1606691	1	4333	1	4000	resp
+Picture	jitter	other				1622690	1	30664	1	0	50000
+Picture	fixation	other				1653354	1	4166	1	0	4000
+Picture	red_right	hit	1	4199	1	1657520	1	4333	1	4000	resp
+Picture	jitter	other				1673518	1	30664	1	0	50000
+Picture	fixation	other				1704182	1	4166	1	0	4000
+Picture	green_right	incorrect	1	4409	1	1708349	1	4500	1	4000	resp
+Picture	jitter	other				1724347	1	30664	1	0	50000
+Picture	fixation	other				1755011	1	4166	1	0	4000
+Picture	green_left	hit	2	4780	1	1759178	1	4833	1	4000	resp
+Picture	jitter	other				1775176	1	30664	1	0	50000
+Picture	fixation	other				1805840	1	4166	1	0	4000
+Picture	red_right	hit	1	3550	1	1810006	1	3666	1	4000	resp
+Picture	jitter	other				1826005	1	23165	1	0	50000
+Picture	fixation	other				1849170	1	4166	1	0	4000
+Picture	green_left	hit	2	3900	1	1853336	1	4000	1	4000	resp
+Picture	jitter	other				1869334	1	30664	1	0	50000
+Picture	fixation	other				1899998	1	4166	1	0	4000
+Picture	red_right	hit	1	5228	1	1904165	1	5333	1	4000	resp
+Picture	jitter	other				1920163	1	28164	1	0	50000
+Picture	fixation	other				1948327	1	4166	1	0	4000
+Picture	red_right	hit	1	4818	1	1952494	1	4833	1	4000	resp
+Picture	jitter	other				1968492	1	28164	1	0	50000
+Picture	fixation	other				1996656	1	4166	1	0	4000
+Picture	green_left	hit	2	4168	1	2000823	1	4333	1	4000	resp
+Picture	jitter	other				2016821	1	28164	1	0	50000
+Picture	fixation	other				2044986	1	4166	1	0	4000
+Picture	green_right	hit	2	4558	1	2049152	1	4666	1	4000	resp
+Picture	jitter	other				2065150	1	30664	1	0	50000
+Picture	fixation	other				2095814	1	4166	1	0	4000
+Picture	green_right	hit	2	4607	1	2099981	1	4666	1	4000	resp
+Picture	jitter	other				2115979	1	30664	1	0	50000
+Picture	fixation	other				2146643	1	4166	1	0	4000
+Picture	green_right	hit	2	3858	1	2150810	1	4000	1	4000	resp
+Picture	jitter	other				2166808	1	30664	1	0	50000
+Picture	fixation	other				2197472	1	4166	1	0	4000
+Picture	green_right	hit	2	4708	1	2201638	1	4833	1	4000	resp
+Picture	jitter	other				2217637	1	30664	1	0	50000
+Picture	fixation	other				2248301	1	4166	1	0	4000
+Picture	red_left	hit	1	4598	1	2252467	1	4666	1	4000	resp
+Picture	jitter	other				2268466	1	30664	1	0	50000
+Picture	fixation	other				2299130	1	4166	1	0	4000
+Picture	red_left	hit	1	3928	1	2303296	1	4000	1	4000	resp
+Picture	jitter	other				2319295	1	20665	1	0	50000
+Picture	fixation	other				2339960	1	4166	1	0	4000
+Picture	green_right	hit	2	4297	1	2344126	1	4333	1	4000	resp
+Picture	jitter	other				2360124	1	28164	1	0	50000
+Picture	fixation	other				2388289	1	4166	1	0	4000
+Picture	red_right	hit	1	3566	1	2392455	1	3666	1	4000	resp
+Picture	jitter	other				2408453	1	30664	1	0	50000
+Picture	fixation	other				2439117	1	4166	1	0	4000
+Picture	green_right	hit	2	3937	1	2443284	1	4000	1	4000	resp
+Picture	jitter	other				2459282	1	30664	1	0	50000
+Picture	fixation	other				2489946	1	4166	1	0	4000
+Picture	red_right	hit	1	5027	1	2494112	1	5166	1	4000	resp
+Picture	jitter	other				2510111	1	25664	1	0	50000
+Picture	fixation	other				2535776	1	4166	1	0	4000
+Picture	red_left	hit	1	4317	1	2539942	1	4333	1	4000	resp
+Picture	jitter	other				2555940	1	30664	1	0	50000
+Picture	fixation	other				2586604	1	4166	1	0	4000
+Picture	green_left	hit	2	4208	1	2590771	1	4333	1	4000	resp
+Picture	jitter	other				2606769	1	28164	1	0	50000
+Picture	fixation	other				2634933	1	4166	1	0	4000
+Picture	green_right	hit	2	5476	1	2639099	1	5500	1	4000	resp
+Picture	jitter	other				2655098	1	28164	1	0	50000
+Picture	fixation	other				2683262	1	4166	1	0	4000
+Picture	red_left	hit	1	3707	1	2687429	1	3833	1	4000	resp
+Picture	jitter	other				2703427	1	20665	1	0	50000
+Picture	fixation	other				2724092	1	4166	1	0	4000
+Picture	green_left	hit	2	4476	1	2728258	1	4500	1	4000	resp
+Picture	jitter	other				2744257	1	30664	1	0	50000
+Picture	fixation	other				2774921	1	4166	1	0	4000
+Picture	red_left	hit	1	5806	1	2779087	1	5833	1	4000	resp
+Picture	jitter	other				2795086	1	28164	1	0	50000
+Picture	fixation	other				2823250	1	4166	1	0	4000
+Picture	green_right	hit	2	3796	1	2827416	1	3833	1	4000	resp
+Picture	jitter	other				2843415	1	30664	1	0	50000
+Picture	fixation	other				2874079	1	4166	1	0	4000
+Picture	green_right	hit	2	4166	1	2878245	1	4333	1	4000	resp
+Picture	jitter	other				2894244	1	30664	1	0	50000
+Picture	fixation	other				2924908	1	4166	1	0	4000
+Picture	green_right	hit	2	3895	1	2929074	1	4000	1	4000	resp
+Picture	jitter	other				2945073	1	30664	1	0	50000
+Picture	fixation	other				2975737	1	4166	1	0	4000
+Picture	green_right	hit	2	4105	1	2979903	1	4166	1	4000	resp
+Picture	jitter	other				2995901	1	23165	1	0	50000
+Picture	fixation	other				3019066	1	4166	1	0	4000
+Picture	green_right	hit	2	4215	1	3023232	1	4333	1	4000	resp
+Picture	jitter	other				3039231	1	23165	1	0	50000
+Picture	fixation	other				3062396	1	4166	1	0	4000
+Picture	red_left	hit	1	4165	1	3066562	1	4333	1	4000	resp
+Picture	jitter	other				3082560	1	30664	1	0	50000
+Picture	fixation	other				3113224	1	4166	1	0	4000
+Picture	green_left	hit	2	4454	1	3117391	1	4500	1	4000	resp
+Picture	jitter	other				3133389	1	30664	1	0	50000
+Picture	fixation	other				3164053	1	4166	1	0	4000
+Picture	red_left	hit	1	3945	1	3168220	1	4000	1	4000	resp
+Picture	jitter	other				3184218	1	28164	1	0	50000
+Picture	fixation	other				3212382	1	4166	1	0	4000
+Picture	red_left	hit	1	4256	1	3216549	1	4333	1	4000	resp
+Picture	jitter	other				3232547	1	30664	1	0	50000
+Picture	fixation	other				3263211	1	4166	1	0	4000
+Picture	green_right	hit	2	3744	1	3267377	1	3833	1	4000	resp
+Picture	jitter	other				3283376	1	18165	1	0	50000
+Picture	fixation	other				3301541	1	4166	1	0	4000
+Picture	red_right	hit	1	4934	1	3305707	1	5000	1	4000	resp
+Picture	jitter	other				3321706	1	30664	1	0	50000
+Picture	fixation	other				3352370	1	4166	1	0	4000
+Picture	red_left	hit	1	3863	1	3356536	1	4000	1	4000	resp
+Picture	jitter	other				3372535	1	28164	1	0	50000
+Picture	fixation	other				3400699	1	4166	1	0	4000
+Picture	red_left	hit	1	4174	1	3404865	1	4333	1	4000	resp
+Picture	jitter	other				3420864	1	28164	1	0	50000
+Picture	fixation	other				3449028	1	4166	1	0	4000
+Picture	green_right	hit	2	3602	1	3453194	1	3666	1	4000	resp
+Picture	jitter	other				3469193	1	25664	1	0	50000
+Picture	fixation	other				3494857	1	4166	1	0	4000
+Picture	green_right	hit	2	3853	1	3499024	1	4000	1	4000	resp
+Picture	jitter	other				3515022	1	30664	1	0	50000
+Picture	fixation	other				3545686	1	4166	1	0	4000
+Picture	red_left	hit	1	3982	1	3549852	1	4000	1	4000	resp
+Picture	jitter	other				3565851	1	28164	1	0	50000
+Picture	fixation	other				3594015	1	4166	1	0	4000
+Picture	red_left	hit	1	4772	1	3598181	1	4833	1	4000	resp
+Picture	jitter	other				3614180	1	30664	1	0	50000
+Picture	fixation	other				3644844	1	4166	1	0	4000
+Picture	red_left	hit	1	3702	1	3649010	1	3833	1	4000	resp
+Picture	jitter	other				3665009	1	30664	1	0	50000
+Picture	fixation	other				3695673	1	4166	1	0	4000
+Picture	red_left	hit	1	4314	1	3699839	1	4333	1	4000	resp
+Picture	jitter	other				3715838	1	30664	1	0	50000
+Picture	fixation	other				3746502	1	4166	1	0	4000
+Picture	green_left	hit	2	4522	1	3750668	1	4666	1	4000	resp
+Picture	jitter	other				3766667	1	28164	1	0	50000
+Picture	fixation	other				3794831	1	4166	1	0	4000
+Picture	red_left	hit	1	5792	1	3798997	1	5833	1	4000	resp
+Picture	jitter	other				3814996	1	30664	1	0	50000
+Picture	fixation	other				3845660	1	4166	2	0	4000
+Picture	red_right	hit	1	7442	1	3849826	1	7500	2	4000	resp
+Picture	jitter	other				3865824	1	28164	1	0	50000
+Picture	fixation	other				3893989	1	4166	1	0	4000
+Picture	red_left	hit	1	5432	1	3898155	1	5500	1	4000	resp
+Picture	jitter	other				3914154	1	28164	1	0	50000
+Picture	fixation	other				3942318	1	4166	1	0	4000
+Picture	green_right	hit	2	4142	1	3946484	1	4166	1	4000	resp
+Picture	jitter	other				3962483	1	30664	1	0	50000
+Picture	fixation	other				3993147	1	4166	1	0	4000
+Picture	green_right	hit	2	5072	1	3997313	1	5166	1	4000	resp
+Picture	jitter	other				4013311	1	28164	1	0	50000
+Picture	fixation	other				4041476	1	4166	1	0	4000
+Picture	green_right	hit	2	3621	1	4045642	1	3666	1	4000	resp
+Picture	jitter	other				4061641	1	30664	1	0	50000
+Picture	fixation	other				4092304	1	4166	1	0	4000
+Picture	green_right	hit	2	3512	1	4096471	1	3666	1	4000	resp
+Picture	jitter	other				4112469	1	23165	1	0	50000
+Picture	fixation	other				4135634	1	4166	1	0	4000
+Picture	green_right	hit	2	3861	1	4139800	1	4000	1	4000	resp
+Picture	jitter	other				4155799	1	30664	1	0	50000
+Picture	fixation	other				4186463	1	4166	1	0	4000
+Picture	green_right	hit	2	4311	1	4190629	1	4333	1	4000	resp
+Picture	jitter	other				4206628	1	28164	1	0	50000
+Picture	fixation	other				4234792	1	4166	1	0	4000
+Picture	green_right	hit	2	4381	1	4238958	1	4500	1	4000	resp
+Picture	jitter	other				4254957	1	30664	1	0	50000
+Picture	fixation	other				4285621	1	4166	1	0	4000
+Picture	green_right	hit	2	3950	1	4289787	1	4000	1	4000	resp
+Picture	jitter	other				4305786	1	28164	1	0	50000
+Picture	fixation	other				4333950	1	4166	1	0	4000
+Picture	green_right	hit	2	4021	1	4338116	1	4166	1	4000	resp
+Picture	jitter	other				4354115	1	28164	1	0	50000
+Picture	fixation	other				4382279	1	4166	1	0	4000
+Picture	red_left	hit	1	4331	1	4386445	1	4500	1	4000	resp
+Picture	jitter	other				4402444	1	30664	1	0	50000
+Picture	fixation	other				4433108	1	4166	1	0	4000
+Picture	red_left	hit	1	4380	1	4437274	1	4500	1	4000	resp
+Picture	jitter	other				4453272	1	30664	1	0	50000
+Picture	fixation	other				4483936	1	4166	1	0	4000
+Picture	red_right	hit	1	3550	1	4488103	1	3666	1	4000	resp
+Picture	jitter	other				4504101	1	28164	1	0	50000
+Picture	fixation	other				4532265	1	4166	1	0	4000
+Picture	red_right	hit	1	3300	1	4536432	1	3333	1	4000	resp
+Picture	jitter	other				4552430	1	30664	1	0	50000
+Picture	fixation	other				4583094	1	4166	1	0	4000
+Picture	red_left	hit	1	3751	1	4587261	1	3833	1	4000	resp
+Picture	jitter	other				4603259	1	30664	1	0	50000
+Picture	fixation	other				4633923	1	4166	1	0	4000
+Picture	red_left	hit	1	3560	1	4638089	1	3666	1	4000	resp
+Picture	jitter	other				4654088	1	30664	1	0	50000
+Picture	fixation	other				4684752	1	4166	1	0	4000
+Picture	red_right	hit	1	4412	1	4688918	1	4500	1	4000	resp
+Picture	jitter	other				4704917	1	30664	1	0	50000
+Picture	fixation	other				4735581	1	4166	1	0	4000
+Picture	red_left	hit	1	3180	1	4739747	1	3333	1	4000	resp
+Picture	jitter	other				4755746	1	30664	1	0	50000
+Picture	fixation	other				4786410	1	4166	1	0	4000
+Picture	green_right	hit	2	4270	1	4790576	1	4333	1	4000	resp
+Picture	jitter	other				4806575	1	28164	1	0	50000
+Picture	fixation	other				4834739	1	4166	1	0	4000
+Picture	green_right	hit	2	4180	1	4838905	1	4333	1	4000	resp
+Picture	jitter	other				4854904	1	28164	1	0	50000
+Picture	fixation	other				4883068	1	4166	1	0	4000
+Picture	green_right	hit	2	4249	1	4887234	1	4333	1	4000	resp
+Picture	jitter	other				4903233	1	28164	1	0	50000
+Picture	fixation	other				4931397	1	4166	1	0	4000
+Picture	red_left	hit	1	3679	1	4935563	1	3833	1	4000	resp
+Picture	jitter	other				4951562	1	30664	1	0	50000
+Picture	fixation	other				4982226	1	4166	1	0	4000
+Picture	red_left	hit	1	3490	1	4986392	1	3666	1	4000	resp
+Picture	jitter	other				5002391	1	18165	1	0	50000
+Picture	fixation	other				5020556	1	4166	1	0	4000
+Picture	red_left	hit	1	3639	1	5024722	1	3666	1	4000	resp
+Picture	jitter	other				5040721	1	20665	1	0	50000
+Picture	fixation	other				5061385	1	4166	1	0	4000
+Picture	red_right	hit	1	4248	1	5065552	1	4333	1	4000	resp
+Picture	jitter	other				5081550	1	30664	1	0	50000
+Picture	fixation	other				5112214	1	4166	1	0	4000
+Picture	red_left	hit	1	3898	1	5116381	1	4000	1	4000	resp
+Picture	jitter	other				5132379	1	30664	1	0	50000
+Picture	fixation	other				5163043	1	4166	1	0	4000
+Picture	red_left	hit	1	3867	1	5167209	1	4000	1	4000	resp
+Picture	jitter	other				5183208	1	30664	1	0	50000
+Picture	fixation	other				5213872	1	4166	1	0	4000
+Picture	green_left	hit	2	5358	1	5218038	1	5500	1	4000	resp
+Picture	jitter	other				5234037	1	30664	1	0	50000
+Picture	fixation	other				5264701	1	4166	1	0	4000
+Picture	green_right	hit	2	4527	1	5268867	1	4666	1	4000	resp
+Picture	jitter	other				5284866	1	30664	1	0	50000
+Picture	fixation	other				5315530	1	4166	1	0	4000
+Picture	red_left	hit	1	4178	1	5319696	1	4333	1	4000	resp
+Picture	jitter	other				5335694	1	28164	1	0	50000
+Picture	fixation	other				5363859	1	4166	1	0	4000
+Picture	green_right	hit	2	4248	1	5368025	1	4333	1	4000	resp
+Picture	jitter	other				5384023	1	28164	1	0	50000
+Picture	fixation	other				5412188	1	4166	1	0	4000
+Picture	green_right	hit	2	5357	1	5416354	1	5500	1	4000	resp
+Picture	jitter	other				5432353	1	30664	1	0	50000
+Picture	fixation	other				5463017	1	4166	1	0	4000
+Picture	red_left	hit	1	5888	1	5467183	1	6000	1	4000	resp
+Picture	jitter	other				5483181	1	30664	1	0	50000
+Picture	fixation	other				5513845	1	4166	1	0	4000
+Picture	green_left	hit	2	4417	1	5518012	1	4500	1	4000	resp
+Picture	jitter	other				5534010	1	30664	1	0	50000
+Picture	fixation	other				5564674	1	4166	1	0	4000
+Picture	red_left	hit	1	3988	1	5568841	1	4000	1	4000	resp
+Picture	jitter	other				5584839	1	28164	1	0	50000
+Picture	fixation	other				5613003	1	4166	1	0	4000
+Picture	green_left	hit	2	4617	1	5617170	1	4666	1	4000	resp
+Picture	jitter	other				5633168	1	28164	1	0	50000
+Picture	fixation	other				5661332	1	4166	1	0	4000
+Picture	red_left	hit	1	4047	1	5665499	1	4166	1	4000	resp
+Picture	jitter	other				5681497	1	20665	1	0	50000
+Picture	fixation	other				5702162	1	4166	1	0	4000
+Picture	green_right	hit	2	3379	1	5706328	1	3500	1	4000	resp
+Picture	jitter	other				5722327	1	23165	1	0	50000
+Picture	fixation	other				5745491	1	4166	1	0	4000
+Picture	green_right	hit	2	3406	1	5749658	1	3500	1	4000	resp
+Picture	jitter	other				5765656	1	28164	1	0	50000
+Picture	fixation	other				5793821	1	4166	1	0	4000
+Picture	green_left	hit	2	4356	1	5797987	1	4500	1	4000	resp
+Picture	jitter	other				5813985	1	25664	1	0	50000
+Picture	fixation	other				5839650	1	4166	1	0	4000
+Picture	red_left	hit	1	4205	1	5843816	1	4333	1	4000	resp
+Picture	jitter	other				5859815	1	30664	1	0	50000
+Picture	fixation	other				5890479	1	4166	1	0	4000
+Picture	red_left	hit	1	4736	1	5894645	1	4833	1	4000	resp
+Picture	jitter	other				5910644	1	25664	1	0	50000
+Picture	fixation	other				5936308	1	4166	1	0	4000
+Picture	green_right	hit	2	3545	1	5940474	1	3666	1	4000	resp
+Picture	jitter	other				5956473	1	30664	1	0	50000
+Picture	fixation	other				5987137	1	4166	1	0	4000
+Picture	green_right	hit	2	3515	1	5991303	1	3666	1	4000	resp
+Picture	jitter	other				6007302	1	28164	1	0	50000
+Picture	fixation	other				6035466	1	4166	1	0	4000
+Picture	green_right	hit	2	3586	1	6039632	1	3666	1	4000	resp
+Picture	jitter	other				6055631	1	28164	1	0	50000
+Picture	fixation	other				6083795	1	4166	1	0	4000
+Picture	red_left	hit	1	3894	1	6087961	1	4000	1	4000	resp
+Picture	jitter	other				6103960	1	28164	1	0	50000
+Picture	fixation	other				6132124	1	4166	1	0	4000
+Picture	green_right	hit	2	3725	1	6136290	1	3833	1	4000	resp
+Picture	jitter	other				6152289	1	28164	1	0	50000
+Picture	fixation	other				6180453	1	4166	1	0	4000
+Picture	red_left	hit	1	3954	1	6184619	1	4000	1	4000	resp
+Picture	jitter	other				6200618	1	23165	1	0	50000
+Picture	fixation	other				6223783	1	4166	1	0	4000
+Picture	red_left	hit	1	4464	1	6227949	1	4500	1	4000	resp
+Picture	jitter	other				6243947	1	30664	1	0	50000
+Picture	fixation	other				6274611	1	4166	1	0	4000
+Picture	red_left	hit	1	3554	1	6278778	1	3666	1	4000	resp
+Picture	jitter	other				6294776	1	28164	1	0	50000
+Picture	fixation	other				6322940	1	4166	1	0	4000
+Picture	red_right	hit	1	3783	1	6327107	1	3833	1	4000	resp
+Picture	jitter	other				6343105	1	28164	1	0	50000
+Picture	fixation	other				6371269	1	4166	1	0	4000
+Picture	green_left	hit	2	4733	1	6375436	1	4833	1	4000	resp
+Picture	jitter	other				6391434	1	30664	1	0	50000
+Picture	fixation	other				6422098	1	4166	1	0	4000
+Picture	green_right	hit	2	7102	1	6426265	1	7166	1	4000	resp
+Picture	jitter	other				6442263	1	30664	1	0	50000
+Picture	fixation	other				6472927	1	4166	1	0	4000
+Picture	green_right	hit	2	3713	1	6477094	1	3833	1	4000	resp
+Picture	jitter	other				6493092	1	30664	1	0	50000
+Picture	fixation	other				6523756	1	4166	1	0	4000
+Picture	red_left	hit	1	4084	1	6527922	1	4166	1	4000	resp
+Picture	jitter	other				6543921	1	30664	1	0	50000
+Picture	fixation	other				6574585	1	4166	1	0	4000
+Picture	red_left	hit	1	3973	1	6578751	1	3996	5	4000	resp
+Picture	jitter	other				6594750	1	18165	1	0	50000
+Picture	fixation	other				6612915	1	4166	1	0	4000
+Picture	green_left	hit	2	3883	1	6617081	1	4000	1	4000	resp
+Picture	jitter	other				6633080	1	30664	1	0	50000
+Picture	fixation	other				6663744	1	4166	1	0	4000
+Picture	green_right	hit	2	3693	1	6667910	1	3833	1	4000	resp
+Picture	jitter	other				6683909	1	25664	1	0	50000
+Picture	fixation	other				6709573	1	4166	1	0	4000
+Picture	green_left	hit	2	4261	1	6713739	1	4333	1	4000	resp
+Picture	jitter	other				6729738	1	28164	1	0	50000
+Picture	fixation	other				6757902	1	4166	1	0	4000
+Picture	red_left	hit	1	9772	1	6762068	1	9832	1	4000	resp
+Picture	jitter	other				6778067	1	28164	1	0	50000
+Picture	fixation	other				6806231	1	4166	1	0	4000
+Picture	green_right	hit	2	3761	1	6810397	1	3833	1	4000	resp
+Picture	jitter	other				6826396	1	28164	1	0	50000
+Picture	fixation	other				6854560	1	4166	1	0	4000
+Picture	green_right	hit	2	6233	1	6858726	1	6333	1	4000	resp
+Picture	jitter	other				6874725	1	28164	1	0	50000
+Picture	fixation	other				6902889	1	4166	1	0	4000
+Picture	red_right	hit	1	3822	1	6907055	1	3833	1	4000	resp
+Picture	jitter	other				6923054	1	30664	1	0	50000
+Picture	fixation	other				6953718	1	4166	1	0	4000
+Picture	red_left	hit	1	7870	1	6957884	1	7999	1	4000	resp
+Picture	jitter	other				6973883	1	20665	1	0	50000
+Picture	fixation	other				6994548	1	4166	1	0	4000
+Picture	red_left	hit	1	4401	1	6998714	1	4500	1	4000	resp
+Picture	jitter	other				7014713	1	30664	1	0	50000
+Picture	fixation	other				7045377	1	4166	1	0	4000
+Picture	red_left	hit	1	5010	1	7049543	1	5166	1	4000	resp
+Picture	jitter	other				7065541	1	28164	1	0	50000
+Picture	fixation	other				7093706	1	4166	1	0	4000
+Picture	green_right	hit	2	3480	1	7097872	1	3500	1	4000	resp
+Picture	jitter	other				7113870	1	28164	1	0	50000
+Picture	fixation	other				7142035	1	4166	1	0	4000
+Picture	red_right	hit	1	8269	1	7146201	1	8333	1	4000	resp
+Picture	jitter	other				7162200	1	30664	1	0	50000
+Picture	fixation	other				7192864	1	4166	1	0	4000
+Picture	green_right	hit	2	4160	1	7197030	1	4333	1	4000	resp
+Picture	jitter	other				7213028	1	30664	1	0	50000
+Picture	fixation	other				7243692	1	4166	1	0	4000
+Picture	green_right	hit	2	6290	1	7247859	1	6333	1	4000	resp
+Picture	jitter	other				7263857	1	30664	1	0	50000
+Picture	fixation	other				7294521	1	4166	1	0	4000
+Picture	red_left	hit	1	3141	1	7298687	1	3166	1	4000	resp
+Picture	jitter	other				7314686	1	30664	1	0	50000
+Picture	fixation	other				7345350	1	4166	1	0	4000
+Picture	red_left	hit	1	4870	1	7349516	1	5000	1	4000	resp
+Picture	jitter	other				7365515	1	30664	1	0	50000
+Picture	fixation	other				7396179	1	4166	1	0	4000
+Picture	red_left	hit	1	3160	1	7400345	1	3333	1	4000	resp
+Picture	jitter	other				7416344	1	30664	1	0	50000
+Picture	fixation	other				7447008	1	4166	1	0	4000
+Picture	green_right	hit	2	3930	1	7451174	1	4000	1	4000	resp
+Picture	jitter	other				7467173	1	30664	1	0	50000
+Picture	fixation	other				7497837	1	4166	1	0	4000
+Picture	green_right	hit	2	3980	1	7502003	1	4000	1	4000	resp
+Picture	jitter	other				7518001	1	30664	1	0	50000
+Picture	fixation	other				7548665	1	4166	1	0	4000
+Picture	green_right	hit	2	4270	1	7552832	1	4333	1	4000	resp
+Picture	jitter	other				7568830	1	25664	1	0	50000
+Picture	fixation	other				7594495	1	4166	1	0	4000
+Picture	green_right	hit	2	3800	1	7598661	1	3833	1	4000	resp
+Picture	jitter	other				7614659	1	30664	1	0	50000
+Picture	fixation	other				7645323	1	4166	1	0	4000
+Picture	red_left	hit	1	3130	1	7649490	1	3166	1	4000	resp
+Picture	jitter	other				7665488	1	23165	1	0	50000
+Picture	fixation	other				7688653	1	4166	1	0	4000
+Picture	red_right	hit	1	5719	1	7692819	1	5833	1	4000	resp
+Picture	jitter	other				7708818	1	30664	1	0	50000
+Picture	fixation	other				7739482	1	4166	1	0	4000
+Picture	green_right	hit	2	4009	1	7743648	1	4166	1	4000	resp
+Picture	jitter	other				7759647	1	30664	1	0	50000
+Picture	fixation	other				7790311	1	4166	1	0	4000
+Picture	green_left	miss				7794477	1	15999	1	4000	resp
+Picture	jitter	other				7810476	1	30664	1	0	50000
+Picture	fixation	other				7841139	1	4166	1	0	4000
+Picture	red_left	hit	1	4351	1	7845306	1	4500	1	4000	resp
+Picture	jitter	other				7861304	1	20665	1	0	50000
+Picture	fixation	other				7881969	1	4166	1	0	4000
+Picture	red_left	hit	1	3442	1	7886135	1	3500	1	4000	resp
+Picture	jitter	other				7902134	1	34411	1	0	50000
