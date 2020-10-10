@@ -1,24 +1,24 @@
 ### A Pluto.jl notebook ###
-# v0.12.1
+# v0.12.3
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 383dd75c-060e-11eb-1fd1-85f6eb33a9af
-using DataFrames, DataFramesMeta, CSV
+using DataFrames, DataFramesMeta, CSV, Statistics
 
 # ╔═╡ 49632e92-060e-11eb-05a8-9b0fccf669bd
 include("/Users/dddd1007/project2git/cognitive_control_model/models/DataImporter.jl")
 
 # ╔═╡ a60d9102-060a-11eb-1c04-fdb0ce5006ac
-md"# 编写模型各功能的测试notebook"
+md"# 编写模型各功能"
 
 # ╔═╡ ec09183e-060a-11eb-2690-c9aa2c7e2a31
-md"## DataImporter模块"
+md"## 测试DataImporter模块； 导入数据"
 
 # ╔═╡ 30a9fb66-0644-11eb-08d7-310a38336154
 #导入一个被试的数据开始分析
-all_data = CSV.read("/Users/dddd1007/project2git/cognitive_control_model/data/input/pure_all_data.csv")
+all_data = CSV.read("/Users/dddd1007/project2git/cognitive_control_model/data/input/pure_all_data.csv");
 
 # ╔═╡ 64a66ae6-077d-11eb-2e8c-5bdbc301926d
 head(all_data)
@@ -37,7 +37,7 @@ end
 transform_data!(all_data, transform_rule)
 
 # ╔═╡ 5cb10ab4-07d8-11eb-323a-355d87f5075d
-sub1_data = @where(all_data, :Subject .== "sub01_Yangmiao")
+sub1_data = @where(all_data, :Subject .== "sub01_Yangmiao");
 
 # ╔═╡ da4a7022-07e0-11eb-2231-cd7ee67d5287
 tryparse.(Float64, sub1_data.RT)
@@ -57,11 +57,14 @@ end
 sub1_env, sub1_subinfo = init_env_sub(sub1_data, env_idx_dict, sub_idx_dict)
 
 # ╔═╡ 622e58a4-087f-11eb-12aa-c9e85acc2d8e
-md"## 开始定义强化学习的对象"
+md"## 强化学习模型"
+
+# ╔═╡ 9a0ce0ec-09db-11eb-3142-2d5c455cf2f8
+md"### 模型1 学习 S-R 联结的强化学习模型, 使用 SoftMax 决策, 带 Decay"
 
 # ╔═╡ 7434237e-087f-11eb-02fd-75fd84662051
 # 学习抽象概念的基本对象
-struct SRLearner_basic_decay
+struct SRLearner_basic
 	α_v::Float64
 	β_v::Float64
 	α_s::Float64
@@ -91,7 +94,7 @@ end
 # ╔═╡ 85686c42-08a5-11eb-24b7-3598b5697559
 # 定义更新 Weight 的矩阵
 function update_options_weight_matrix(weight_vector::Array{Float64,1}, α::Float64, 
-		decay::Float64, correct_selection::Tuple, dodecay=true, debug=false)
+		decay::Float64, correct_selection::Tuple; dodecay=true, debug=false)
 	weight_matrix = reshape(weight_vector, 2, 2)'
 	correct_selection_idx = CartesianIndex(correct_selection) + CartesianIndex(1,1)
 	op_selection_idx = abs(correct_selection[1] - 1) + 1
@@ -104,16 +107,27 @@ function update_options_weight_matrix(weight_vector::Array{Float64,1}, α::Float
 	weight_matrix[correct_selection_idx] = weight_matrix[correct_selection_idx] + α * (1-weight_matrix[correct_selection_idx])
 	
 	if dodecay
-		weight_matrix[op_selection_idx,:] .*= decay
+		weight_matrix[op_selection_idx,:] = weight_matrix[op_selection_idx,:] .+ 
+		0.5 .* (0.5.-weight_matrix[op_selection_idx,:])
 	end
 	
 	return weight_matrix
 end
 
+# ╔═╡ e22061a2-09f8-11eb-2db0-bfbe7004d73d
+# 定义评估变量相关性的函数
+function evaluate_relation(x, y, method)
+	if method == "mse"
+		return sum(abs2.(x .- y))
+	elseif method == "cor"
+		return cor(x, y)
+	end
+end
+
 # ╔═╡ 47e4d094-0892-11eb-320b-739a0a7cc364
 # 定义强化学习函数
-function rl_learning(env::ExpEnv, agent::SRLearner_basic_decay, realsub::RealSub; 
-		verbose = false)
+function rl_learning(env::ExpEnv, agent::SRLearner_basic, realsub::RealSub; 
+		eval_method = "mse" ,verbose = false)
 	
 	# init learning parameters list
 	total_trials_num = length(env.stim_task_unrelated)
@@ -141,15 +155,15 @@ function rl_learning(env::ExpEnv, agent::SRLearner_basic_decay, realsub::RealSub
 			
 		## Update 
 		options_weight_matrix[idx+1,:] = 
-			update_options_weight_matrix(options_weight_matrix[idx,:], α,decay, 
+			update_options_weight_matrix(options_weight_matrix[idx,:], α, decay, 
 				(env.stim_task_unrelated[idx], env.stim_correct_action[idx]))'
 	end
 	
 	# Evaluate result
-	mse = sum(abs2.(realsub.RT .- p_softmax_history))
+	eval_result = evaluate_relation(realsub.RT, p_softmax_history, eval_method)
 	
 	if !verbose
-		result = [agent.α_v, agent.β_v, agent.α_s, agent.β_s, mse]
+		result = [agent.α_v, agent.β_v, agent.α_s, agent.β_s, eval_result]
 		return result
 	elseif verbose
 		return options_weight_matrix[total_trials_num, :]
@@ -158,15 +172,15 @@ end
 
 # ╔═╡ e53f76ee-08ad-11eb-00fd-8b7ea211b136
 begin
-	number_iterations = 1000000
+	number_iterations = 10000
 	result_table = zeros(Float64, (number_iterations,5))
 	Threads.@threads for i in 1:number_iterations
 		α_v = rand([0.1:0.01:1.0;])
-		β_v = rand([0.1:0.01:1.0;])
+		β_v = rand([0.1:0.01:5.0;])
 		α_s = rand([0.1:0.01:1.0;])
-		β_s = rand([0.1:0.01:1.0;])
+		β_s = rand([0.1:0.01:5.0;])
 		decay = rand([0.1:0.01:1.0;])
-		sub1_agent = SRLearner_basic_decay(α_v, β_v, α_s, β_s, decay)
+		sub1_agent = SRLearner_basic(α_v, β_v, α_s, β_s, decay)
 		result_table[i,:] = rl_learning(sub1_env, sub1_agent, sub1_subinfo)
 	end
 end
@@ -177,9 +191,68 @@ import StatsBase
 # ╔═╡ 620406d4-0914-11eb-11ba-1153bec7e3d5
 StatsBase.summarystats(result_table[:,5])
 
+# ╔═╡ fb79a89c-09db-11eb-15e8-6d7305e1a0f2
+md"### 模型2 学习 S-R 联结的强化学习模型, 使用 SoftMax 决策, 错误试次下学习率不同"
+
+# ╔═╡ 6adf9fb6-09f0-11eb-26bb-77b2afd45c24
+# 学习抽象概念的基本对象
+struct SRLearner_witherror
+	basic_learner::SRLearner_basic
+	error_learner::SRLearner_basic
+end
+
+# ╔═╡ 00202a3c-09f6-11eb-0e87-d15923d0a8e4
+sub1_subinfo.corrections
+
+# ╔═╡ 2a26c3fa-09f5-11eb-3850-6dacc388c686
+# 定义强化学习函数
+function rl_learning(env::ExpEnv, agent::SRLearner_witherror, realsub::RealSub; 
+		verbose = false)
+	
+	# init learning parameters list
+	total_trials_num = length(env.stim_task_unrelated)
+	options_weight_matrix = zeros(Float64, (total_trials_num + 1, 4))
+	options_weight_matrix[1,:] = [0.5,0.5,0.5,0.5]
+	p_softmax_history = zeros(Float64, total_trials_num)
+	α = 0.0
+	β = 0.0
+	decay = agent.decay
+	
+	# Start learning
+	for idx in 1:total_trials_num
+		
+		if env.env_type[idx] == "v" & sub.
+			β = agent.β_v
+			α = agent.α_v
+		elseif env.env_type[idx] == "s"
+			β = agent.β_s
+			α = agent.β_s
+		end
+		
+		## Decision
+		p_softmax_history[idx] = sr_softmax(options_weight_matrix[idx,:], β, 
+				(env.stim_task_unrelated[idx], realsub.response[idx]))
+			
+		## Update 
+		options_weight_matrix[idx+1,:] = 
+			update_options_weight_matrix(options_weight_matrix[idx,:], α, decay, 
+				(env.stim_task_unrelated[idx], env.stim_correct_action[idx]))'
+	end
+	
+	# Evaluate result
+	eval_result = evaluate_relation(realsub.RT, p_softmax_history, eval_method)
+	
+	if !verbose
+		result = [agent.α_v, agent.β_v, agent.α_s, agent.β_s, mse]
+		return result
+	elseif verbose
+		return options_weight_matrix[total_trials_num, :]
+	end
+end
+
 # ╔═╡ Cell order:
 # ╠═a60d9102-060a-11eb-1c04-fdb0ce5006ac
-# ╠═ec09183e-060a-11eb-2690-c9aa2c7e2a31
+# ╟─ec09183e-060a-11eb-2690-c9aa2c7e2a31
 # ╠═383dd75c-060e-11eb-1fd1-85f6eb33a9af
 # ╠═49632e92-060e-11eb-05a8-9b0fccf669bd
 # ╠═30a9fb66-0644-11eb-08d7-310a38336154
@@ -191,10 +264,16 @@ StatsBase.summarystats(result_table[:,5])
 # ╠═8360a24a-062d-11eb-2ae2-891d1573864c
 # ╠═a4f8b8c6-0715-11eb-3453-9d4442e54113
 # ╠═622e58a4-087f-11eb-12aa-c9e85acc2d8e
+# ╠═9a0ce0ec-09db-11eb-3142-2d5c455cf2f8
 # ╠═7434237e-087f-11eb-02fd-75fd84662051
 # ╠═776783b6-089c-11eb-2e3c-fb91cb8808fe
 # ╠═85686c42-08a5-11eb-24b7-3598b5697559
+# ╠═e22061a2-09f8-11eb-2db0-bfbe7004d73d
 # ╠═47e4d094-0892-11eb-320b-739a0a7cc364
 # ╠═e53f76ee-08ad-11eb-00fd-8b7ea211b136
 # ╠═eb390f58-0914-11eb-17cc-577d1e3f6f25
 # ╠═620406d4-0914-11eb-11ba-1153bec7e3d5
+# ╠═fb79a89c-09db-11eb-15e8-6d7305e1a0f2
+# ╠═6adf9fb6-09f0-11eb-26bb-77b2afd45c24
+# ╠═00202a3c-09f6-11eb-0e87-d15923d0a8e4
+# ╠═2a26c3fa-09f5-11eb-3850-6dacc388c686

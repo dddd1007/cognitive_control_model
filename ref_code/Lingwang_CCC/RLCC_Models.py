@@ -1,546 +1,353 @@
-#!/usr/bin/env python
 # coding: utf-8
 
-️import numpy as np
+import numpy as np
 import pandas as pd
 import sys
-from numba import jit
+import transplant
+import obj_function
+
+if sys.platform == 'linux':
+    sys.path.append('./build/lib.linux-x86_64-3.7')
+elif sys.platform == 'win32':
+    sys.path.append('./build/lib.win-amd64-3.7')
+import RLCC
 
 class RLCCModels(object):
     def __init__(self, model_type, data):
-        # 3 (Observer, Oprator, Operator_error)* 2 (same alpha for all blocks, diffent alpha for different blocks) * 2 (abstract learning or S-R learning)
-        # OB_SAME_AB, OB_SAME_SR, OB_DIFF_AB, OB_DIFF_SR, OP_SAME_AB, OP_SAME_SR, OP_DIFF_AB, OP_DIFF_SR, OPerror_SAME_AB, OPerror_SAME_SR, OPerror_DIFF_AB, OPerror_DIFF_SR
+        self.subject = []
+        self.results_folder = []
         self.model_type = model_type
         self.data = data
+        self.data.columns = self.data.columns.str.strip()
         self.trialNum = data['trial_index'].size
         self.PResult, self.QResult, self.PEResult = [],[],[]
-        self.para_alpha = []
-        self.para_alpha_error = []
-        self.para_beta = []
-        self.para_decay = []
-        self.stimPosit = []
-        self.respPosit = []
+        self.Q_name = []
+        self.PE_name = []
+        self.model_para = []
+        self.model_para_names = []
+        self.parameter_size = []
 
-        self.ccc = []
+        self.parameter_x0 = []
+        self.alpha_bound =(0.0001, 1)
+        self.beta_bound = (0.0001, 200)
+        self.ccc_bound = (-0.999, 0)
 
+        self.fit_with_error = 0 # 0, GLM fit without error; 1, with error
+        self.fit_with_logRT = 0 # 0, GLM fit raw RT; 1, with np.log(RT)
+
+        self.fitted_x = []
+        self.fitted_mse = []
+
+        #AB model with beta
         if model_type == 'AB_Q':
             #alpha, beta
-            self.parameter_size=2
-        elif model_type == 'OB_SAME_SR':
-            #alpha, beta, decay
-            self.parameter_size=3
-        elif model_type == 'OB_SAME_SR_CCC':
-            #alpha, beta, decay, alpha_ccc, ccc
-            self.parameter_size=5
-        elif model_type == 'OB_SAME_SR_doubleUpdate':
-            #alpha, beta
-            self.parameter_size=2
-        elif model_type == 'OB_DIFF_AB':
-            #alpha[nblock], beta
-            self.parameter_size=4
-        elif model_type == 'OB_DIFF_SR':
-            #alpha[nblock], beta, decay
-            self.parameter_size=5
-            
-        if model_type == 'OP_SAME_AB':
-            #alpha, beta
-            #note: OP_SAME_AB is actually identical to OB_SAME_AB
-            self.parameter_size=2
-        elif model_type == 'OP_SAME_SR':
-            #alpha, beta, decay
-            self.parameter_size=3
-        elif model_type == 'OP_SAME_SR_CCC':
-            #alpha, beta, decay, alpha_ccc, ccc, alpha_error
-            self.parameter_size=6
-        elif model_type == 'OP_SAME_SR_doubleUpdate':
-            #alpha, beta
-            self.parameter_size=2
-        elif model_type == 'OP_DIFF_AB':
-            #alpha[nblock], beta
-            self.parameter_size=4
-        elif model_type == 'OP_DIFF_SR':
-            #alpha[nblock], beta, decay
-            self.parameter_size=5
-        
-        if model_type == 'OPerror_SAME_AB':
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha', 'beta']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'AB_Q_E':
             #alpha, beta, alpha_error
-            self.parameter_size=3 
-        elif model_type == 'OPerror_SAME_SR': 
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha', 'beta', 'alpha_error']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'AB_Q_E_alphaCCC':
+            #alpha, beta, alpha_error, ccc, alpha_ccc
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha', 'beta', 'alpha_error', 'ccc', 'alpha_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'AB_Q_E_betaCCC':
+            #alpha, beta, alpha_error, ccc, beta_ccc
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha', 'beta', 'alpha_error', 'ccc', 'beta_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.ccc_bound, self.beta_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'AB_Q_E_alphaCCC_betaCCC':
+            #alpha, beta, alpha_error, ccc, alpha_ccc, beta_ccc
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha', 'beta', 'alpha_error', 'ccc', 'alpha_ccc', 'beta_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound, self.beta_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'AB_Q_alphaCCC':
+            #alpha, beta, ccc, alpha_ccc
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha', 'beta', 'ccc', 'alpha_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.ccc_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'AB_Q_betaCCC':
+            #alpha, beta, ccc, beta_ccc
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha', 'beta', 'ccc', 'beta_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.ccc_bound, self.beta_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'AB_Q_alphaCCC_betaCCC':
+            #alpha, beta, ccc, alpha_ccc, beta_ccc
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha', 'beta', 'ccc', 'alpha_ccc', 'beta_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.ccc_bound, self.alpha_bound, self.beta_bound]
+            self.parameter_size = len(self.model_para_names)
+
+        # AB model without beta
+        if model_type == 'AB_Q_WOB':
+            # alpha
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha']
+            self.model_para_bounds = [self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'AB_Q_E_WOB':
+            # alpha, alpha_error
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha', 'alpha_error']
+            self.model_para_bounds = [self.alpha_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'AB_Q_E_alphaCCC_WOB':
+            # alpha, alpha_error, ccc, alpha_ccc
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha', 'alpha_error', 'ccc', 'alpha_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'AB_Q_alphaCCC_WOB':
+            # alpha, ccc, alpha_ccc
+            self.Q_name = ['Q']
+            self.PE_name = ['PE']
+            self.model_para_names = ['alpha',  'ccc', 'alpha_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.ccc_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+
+        #SR model with beta
+        if model_type == 'SR_Q':
+            #alpha, beta
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'beta']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound]
+            self.parameter_size=len(self.model_para_names)
+        elif model_type == 'SR_Q_D':
+            #alpha, beta, decay
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'beta', 'decay']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_E':
             #alpha, beta, decay, alpha_error
-            self.parameter_size=4
-        elif model_type == 'OPerror_SAME_SR_CCC':
-            #alpha, beta, decay, alpha_error
-            self.parameter_size=6
-        elif model_type == 'OPerror_SAME_SR_doubleUpdate': 
-            #alpha, beta, alpha_error
-            self.parameter_size=3
-        elif model_type == 'OPerror_DIFF_AB':
-            #alpha(nblock), beta, alpha_error[nblock]
-            self.parameter_size=7
-        elif model_type == 'OPerror_DIFF_SR':
-            #alpha(nblock), beta, decay, alpha_error[nblock]
-            self.parameter_size=8
-   
-    def incongruent_abstract_learning_observer(self, x, nblock=1):
-        alpha, beta = x[0], x[1]
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'beta', 'decay', 'alpha_error']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_E_alphaCCC':
+            #alpha, beta, decay, alpha_error, ccc, alpha_ccc
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'beta', 'decay', 'alpha_error', 'ccc', 'alpha_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_E_betaCCC':
+            #alpha, beta, decay, alpha_error, ccc, beta_ccc
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'beta', 'decay', 'alpha_error', 'ccc', 'beta_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.alpha_bound, self.ccc_bound, self.beta_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_E_alphaCCC_betaCCC':
+            #alpha, beta, decay, alpha_error, ccc, alpha_ccc, beta_ccc
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'beta', 'decay', 'alpha_error', 'ccc', 'alpha_ccc', 'beta_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound, self.beta_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_alphaCCC':
+            #alpha, beta, decay, ccc, alpha_ccc
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'beta', 'decay', 'ccc', 'alpha_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_betaCCC':
+            #alpha, beta, decay, ccc, beta_ccc
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'beta', 'decay',  'ccc', 'beta_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.ccc_bound, self.beta_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_alphaCCC_betaCCC':
+            #alpha, beta, decay, ccc, alpha_ccc, beta_ccc
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'beta', 'decay', 'ccc', 'alpha_ccc', 'beta_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound, self.beta_bound]
+            self.parameter_size = len(self.model_para_names)
 
-        if np.array(alpha).size != nblock:
-            print('numbers of alpha must equal to that of nblock')
-            sys.exit(1)
-       
-        Q = np.array(0.5)
-        self.para_alpha = alpha
-        self.para_beta = beta
-        self.PResult = []
-        self.QResult = pd.DataFrame()
-        self.PEResult = pd.DataFrame()
+        # SR model without beta
+        if model_type == 'SR_Q_WOB':
+            # alpha
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha']
+            self.model_para_bounds = [self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_WOB':
+            # alpha, decay
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'decay']
+            self.model_para_bounds = [self.alpha_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_E_WOB':
+            # alpha, decay, alpha_error
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'decay', 'alpha_error']
+            self.model_para_bounds = [self.alpha_bound, self.alpha_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_E_alphaCCC_WOB':
+            # alpha, decay, alpha_error, ccc, alpha_ccc
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'decay', 'alpha_error', 'ccc', 'alpha_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.alpha_bound, self.alpha_bound, self.ccc_bound,
+                                      self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_alphaCCC_WOB':
+            # alpha, decay, ccc, alpha_ccc
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = ['alpha', 'decay', 'ccc', 'alpha_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
 
-        for m in np.arange(0, self.trialNum):
-            #1: incongruent, 0:congruent
-            congruency = int(self.data['congruency'][m])
+    def SR_Learning(self, parameters):
 
-            #softmax
-            P = np.exp(beta * Q)/(np.exp(beta* Q) + np.exp(beta * (1 - Q)))
-            #update
-            pe = np.array(congruency - Q)           
-            
-            if nblock>1:
-                #mltipule learning rates for different blocks
-                block_num = int(self.data['nblock'][m])
-                Q = Q + alpha[block_num-1] * pe
-                           
-            else:
-                Q = Q + alpha * pe
-                           
-            self.PResult.append(P)
-            self.QResult = pd.concat([self.QResult, pd.DataFrame(Q.reshape(-1,Q.size))])
-            self.PEResult = pd.concat([self.PEResult, pd.DataFrame(pe.reshape(-1,pe.size))])
-                                  
-                           
-    
-    def incongruent_abstract_learning_observer_nblock(self, x, nblock=1):
-        alpha = x[0:nblock]
-        beta = x[nblock]
-        x0 = [alpha, beta]
-        self.incongruent_abstract_learning_observer(x0, nblock)                          
-                                  
-    def SR_learning_observer(self, x, nblock=1):
-        alpha, beta, decay = x[0], x[1], x[2]     
-                        
-        if np.array(alpha).size != nblock:
-            print('numbers of alpha must equal to that of nblock')
-            sys.exit(1)
-       
-        
-        self.para_alpha = alpha
-        self.para_beta = beta
-        self.para_decay = decay
-        Q = np.ones((2, 2), dtype=np.float64) * 0.5
-        self.QResult = pd.DataFrame()
-        self.PEResult = pd.DataFrame()
-        self.PResult = []
-        stimPosit, respPosit = [], []
-        for m in np.arange(0, self.trialNum):
-                       
-            #  0:left, 1:right             
-            stimPosit, respPosit = int(self.data['stimPosit'][m]), int(self.data['respPosit'][m])
-            oppAction = 1-respPosit
-           
-            #softmax               
-            P = np.exp(beta * Q[stimPosit, respPosit]) / (np.exp(beta * Q[stimPosit, respPosit]) + np.exp(beta * Q[stimPosit, oppAction]))
-           
-            #update
-            if nblock > 1:
-                #mltipule learning rates for different blocks
-                block_num = int(self.data['nblock'][m])
-                alpha_tmp=alpha[block_num-1]*P
-            else:
-                alpha_tmp=alpha*P
-                      
-                      
-            pe = np.ones((2, 2), dtype=np.float64) * 0
-            pe[stimPosit, respPosit] = 1 - Q[stimPosit, respPosit]
-            Q[stimPosit, respPosit] = Q[stimPosit, respPosit] + alpha_tmp * pe[stimPosit, respPosit]
-                           
-            pe[stimPosit, oppAction] = 0 - Q[stimPosit, oppAction]
-            Q[stimPosit, oppAction] = Q[stimPosit, oppAction] + alpha_tmp*pe[stimPosit, oppAction]
-           
-            # decay
-            opp_stimPosit = 1 - stimPosit
-            Q[opp_stimPosit, 0] = Q[opp_stimPosit, 0] + decay*(0.5 - Q[opp_stimPosit, 0])               
-            Q[opp_stimPosit, 1] = Q[opp_stimPosit, 1] + decay*(0.5 - Q[opp_stimPosit, 1])               
-           
-                           
-            self.PResult.append(P)
-            self.QResult = pd.concat([self.QResult, pd.DataFrame(Q.reshape(-1,Q.size))])
-            self.PEResult = pd.concat([self.PEResult, pd.DataFrame(pe.reshape(-1,pe.size))])
-            self.stimPosit.append(stimPosit)
-            self.respPosit.append(respPosit)
+        self.model_para = parameters
+        model_type = self.model_type
+        stimPosit, respPosit, correction = self.data['stimPosit'].tolist(), self.data['hand'].tolist(), \
+                                                       self.data['correction'].tolist()
+        if model_type[-3:] == 'WOB':
+            P, Q, pe = RLCC.SR_Learning_without_beta(model_type, parameters.tolist(), stimPosit, respPosit, correction)
+        else:
+            P, Q, pe = RLCC.SR_Learning(model_type, parameters.tolist(), stimPosit, respPosit, correction)
 
-    def SR_learning_ccc_observer(self, x, nblock=1):
-        alpha, beta, decay, alpha_ccc, ccc = x[0], x[1], x[2], x[3], x[4]
+        self.PResult = P
+        self.QResult = Q
+        self.PEResult = pe
 
-        if np.array(alpha).size != nblock:
-            print('numbers of alpha must equal to that of nblock')
-            sys.exit(1)
+    def AB_Learning(self, parameters):
 
-        self.para_alpha = alpha
-        self.para_beta = beta
-        self.para_decay = decay
+        self.model_para = parameters
+        model_type = self.model_type
+        congruency, correction = self.data['congruency'].tolist(), self.data['correction'].tolist()
 
-        self.para_alpha_ccc = alpha_ccc
-        self.para_ccc = ccc
+        if model_type[-3:] == 'WOB':
+            P, Q, pe = RLCC.AB_Learning_without_beta(model_type, parameters.tolist(), congruency, correction)
+        else:
+            P, Q, pe = RLCC.AB_Learning(model_type, parameters.tolist(), congruency, correction)
 
-        Q = np.ones((2, 2), dtype=np.float64) * 0.5
-        self.QResult = pd.DataFrame()
-        self.PEResult = pd.DataFrame()
-        self.PResult = []
-        self.stimPosit = []
-        self.respPosit = []
-        stimPosit, respPosit = [], []
-        for m in np.arange(0, self.trialNum):
+        self.PResult = P
+        self.QResult = Q
+        self.PEResult = pe
 
-            #  0:left, 1:right
-            stimPosit, respPosit = int(self.data['stimPosit'][m]), int(self.data['respPosit'][m])
-            oppAction = 1 - respPosit
+    def initial_x0(self):
 
-            # softmax
-            P = np.exp(beta * Q[stimPosit, respPosit]) / (
-                        np.exp(beta * Q[stimPosit, respPosit]) + np.exp(beta * Q[stimPosit, oppAction]))
+        len_x0 = len(self.model_para_bounds)
+        x0_tmp = np.zeros(len_x0)
 
-            # update
-            if nblock > 1:
-                # mltipule learning rates for different blocks
-                block_num = int(self.data['nblock'][m])
-                alpha_tmp = alpha[block_num - 1]
-            else:
-                alpha_tmp = alpha
+        for ix in range(len_x0):
+            x0_tmp[ix] = np.random.uniform(self.model_para_bounds[ix][0], self.model_para_bounds[ix][1])
 
-            conflict = 2 * P - 1
+        self.parameter_x0 = x0_tmp
 
-            if conflict < ccc:
-                alpha_tmp = alpha_ccc
-
-
-            pe = np.ones((2, 2), dtype=np.float64) * 0
-            pe[stimPosit, respPosit] = 1 - Q[stimPosit, respPosit]
-            Q[stimPosit, respPosit] = Q[stimPosit, respPosit] + alpha_tmp * pe[stimPosit, respPosit]
-
-            pe[stimPosit, oppAction] = 0 - Q[stimPosit, oppAction]
-            Q[stimPosit, oppAction] = Q[stimPosit, oppAction] + alpha_tmp * pe[stimPosit, oppAction]
-
-            # decay
-            opp_stimPosit = 1 - stimPosit
-            Q[opp_stimPosit, 0] = Q[opp_stimPosit, 0] + decay * (0.5 - Q[opp_stimPosit, 0])
-            Q[opp_stimPosit, 1] = Q[opp_stimPosit, 1] + decay * (0.5 - Q[opp_stimPosit, 1])
-
-            self.PResult.append(P)
-            self.QResult = pd.concat([self.QResult, pd.DataFrame(Q.reshape(-1, Q.size))])
-            self.PEResult = pd.concat([self.PEResult, pd.DataFrame(pe.reshape(-1, pe.size))])
-            self.stimPosit.append(stimPosit)
-            self.respPosit.append(respPosit)
-
-    def SR_learning_observer_nblock(self, x, nblock=1):
-        alpha = x[0:nblock]
-        beta = x[nblock]
-        decay = x[nblock+1]                          
-        x0 = [alpha, beta, decay]
-        self.SR_learning_observer(x0, nblock) 
-        
-    def SR_learning_observer_doubleUpdate(self, x):
-        alpha, beta = x[0], x[1]
-              
-        self.para_alpha = alpha
-        self.para_beta = beta
-        Q = np.ones((2, 2), dtype=np.float64) * 0.5
-        self.QResult = pd.DataFrame()
-        self.PEResult = pd.DataFrame()
-        self.PResult = []
-        stimPosit, respPosit = [], []
-        for m in np.arange(0, self.trialNum):
-                       
-            #  0:left, 1:right             
-            stimPosit, respPosit = int(self.data['stimPosit'][m]), int(self.data['respPosit'][m])
-            oppAction = 1-respPosit
-           
-            #softmax               
-            P = np.exp(beta * Q[stimPosit, respPosit]) / (np.exp(beta * Q[stimPosit, respPosit]) + np.exp(beta * Q[stimPosit, oppAction]))
-           
-            #update                    
-            pe = np.ones((2, 2), dtype=np.float64) * 0
-            pe[stimPosit, respPosit] = 1 -  Q[stimPosit, respPosit]
-            Q[stimPosit, respPosit] = Q[stimPosit, respPosit] + alpha * pe[stimPosit, respPosit]
-                           
-            pe[stimPosit, oppAction] = 0 - Q[stimPosit, oppAction]
-            Q[stimPosit, oppAction] = Q[stimPosit, oppAction]+ alpha*pe[stimPosit, oppAction]
-                          
-            self.PResult.append(P)
-            self.QResult = pd.concat([self.QResult, pd.DataFrame(Q.reshape(-1,Q.size))])
-            self.PEResult = pd.concat([self.PEResult, pd.DataFrame(pe.reshape(-1,pe.size))])
-            self.stimPosit.append(stimPosit)
-            self.respPosit.append(respPosit)                            
-                                                                    
-    def incongruent_abstract_learning_operator(self, x, x_error='', nblock=1):
-        alpha, beta = x[0], x[1]
-        alpha_error = x_error
-                      
-        if np.array(alpha).size != nblock:
-            print('numbers of alpha must equal to that of nblock')
-            sys.exit(1)
-       
-        Q = np.array(0.5)
-        self.para_alpha = alpha
-        self.para_alpha_error = alpha_error
-        self.para_beta = beta
-        
-        self.PResult = []
-        self.QResult = pd.DataFrame()
-        self.PEResult = pd.DataFrame()
-        
-        for m in np.arange(0, self.trialNum):
-            #1: incongruent, 0:congruent
-            congruency = int(self.data['congruency'][m])
-            correction = int(self.data['correction'][m])
-            
-            # note: cogruency is a actual action value
-            if correction == 1:
-                congruency = congruency
-            elif correction == 0:
-                congruency = 1 - congruency
-           
-            #softmax
-            P = np.exp(beta * Q)/(np.exp(beta* Q) + np.exp(beta * (1 - Q)))
-           
-            #update
-            pe = np.array(congruency - Q) 
-            
-            
-            if nblock>1:
-                #mltipule learning rates for different blocks
-                block_num = int(self.data['nblock'][m])
-               
-                #different learning rates for correct or incorrect resp if needed
-                if alpha_error != '':
-                    if correction == 1:
-                        Q = Q + alpha[block_num-1] * pe
-                    elif correction == 0:
-                        Q = Q + alpha_error[block_num-1] * pe
-                else:
-                    Q = Q + alpha[block_num-1] * pe 
-                          
-            else:
-                if alpha_error != '':
-                    if correction == 1:
-                        Q = Q + alpha * pe
-                    elif correction == 0:
-                        Q = Q + alpha_error * pe
-                else:
-                    Q = Q + alpha * pe
-                           
-                           
-            self.PResult.append(P)
-            self.QResult = pd.concat([self.QResult, pd.DataFrame(Q.reshape(-1,Q.size))])
-            self.PEResult = pd.concat([self.PEResult, pd.DataFrame(pe.reshape(-1,pe.size))])
-    
-                                  
-    def incongruent_abstract_learning_operator_nblock(self, x, x_error='', nblock=1):
-        alpha = x[0:nblock]
-        beta = x[nblock]  
-        x0 = [alpha, beta]
-        self.incongruent_abstract_learning_operator(x0, x_error, nblock)                              
-
-    def SR_learning_operator(self, x, x_error='', nblock=1):
-        alpha, beta, decay = x[0], x[1], x[2]     
-        alpha_error = x_error
-                           
-        if np.array(alpha).size != nblock:
-            print('numbers of alpha must equal to that of nblock')
-            sys.exit(1)
-       
-        Q = np.ones((2, 2), dtype=np.float64) * 0.5
-        self.para_alpha = alpha
-        self.para_alpha_error = alpha_error
-        self.para_beta = beta
-        self.para_decay = decay
-        
-        self.PResult = []
-        self.QResult = []
-        self.PEResult = []
-        self.stimPosit, self.respPosit = [], []
-        
-        for m in np.arange(0, self.trialNum):
-           
-            #  0:left, 1:right
-            # respPosit is actual response location
-            stimPosit, respPosit = int(self.data['stimPosit'][m]), int(self.data['hand'][m])
-            correction = int(self.data['correction'][m])
-            oppAction = 1-respPosit
-           
-            #softmax              
-            P = np.exp(beta * Q[stimPosit, respPosit])/ (np.exp(beta * Q[stimPosit, respPosit]) + np.exp(beta * Q[stimPosit, oppAction]))
-           
-            #update   
-            if nblock>1:
-                #mltipule learning rates for different blocks
-                block_num = int(self.data['nblock'][m])
-               
-                #different learning rates for correct or incorrect resp if needed
-                if alpha_error != '':
-                    if correction == 1:
-                        alpha_tmp = alpha[block_num-1]*P
-                    elif correction == 0:
-                        alpha_tmp = alpha_error[block_num-1]
-                else:
-                    alpha_tmp = alpha[block_num-1]*P 
-                          
-            else:
-                if alpha_error != '':
-                    if correction == 1:
-                        alpha_tmp = alpha*P
-                    elif correction == 0:
-                        alpha_tmp = alpha_error
-                else:
-                    alpha_tmp = alpha*P
-           
-            pe = np.ones((2, 2), dtype=np.float64) * 0
-            pe[stimPosit, respPosit] = correction -  Q[stimPosit, respPosit]
-            Q[stimPosit, respPosit] = Q[stimPosit, respPosit] + alpha_tmp * pe[stimPosit, respPosit]
-                           
-            pe[stimPosit, oppAction] = (1 - correction) - Q[stimPosit, oppAction]
-            Q[stimPosit, oppAction] = Q[stimPosit, oppAction]+ alpha_tmp*pe[stimPosit, oppAction]
-           
-            # decay
-            opp_stimPosit = 1 - stimPosit
-            Q[opp_stimPosit, 0] = Q[opp_stimPosit, 0] + decay*(0.5 - Q[opp_stimPosit, 0])               
-            Q[opp_stimPosit, 1] = Q[opp_stimPosit, 1] + decay*(0.5 - Q[opp_stimPosit, 1])               
-           
-                           
-            self.PResult.append(P)               
-            self.QResult.append(Q)
-            self.PEResult.append(pe)
-            self.stimPosit.append(stimPosit)
-            self.respPosit.append(respPosit)
-    
-    def SR_learning_operator_ccc(self, x, x_error='', nblock=1):
-        alpha, beta, decay, alpha_ccc, ccc = x[0], x[1], x[2], x[3], x[4]     
-        alpha_error = x_error
-                           
-        if np.array(alpha).size != nblock:
-            print('numbers of alpha must equal to that of nblock')
-            sys.exit(1)
-       
-        Q = np.ones((2, 2), dtype=np.float64) * 0.5
-        self.para_alpha = alpha
-        self.para_alpha_error = alpha_error
-        self.para_beta = beta
-        self.para_decay = decay
-        
-        self.PResult = []
-        self.QResult = pd.DataFrame()
-        self.PEResult = pd.DataFrame()
-        self.stimPosit, self.respPosit = [], []
-        
-        for m in np.arange(0, self.trialNum):
-           
-            #  0:left, 1:right
-            # respPosit is actual response location
-            stimPosit, respPosit = int(self.data['stimPosit'][m]), int(self.data['hand'][m])
-            correction = int(self.data['correction'][m])
-            oppAction = 1-respPosit
-           
-            #softmax              
-            P = np.exp(beta * Q[stimPosit, respPosit])/ (np.exp(beta * Q[stimPosit, respPosit]) + np.exp(beta * Q[stimPosit, oppAction]))
-            
-            conflict = 2 * P - 1
-            
-            # 0 is wrong
-            #update
-            if alpha_error != '':
-                if correction == 1:
-                    alpha_tmp = alpha
-                elif correction == 0:
-                    if conflict < ccc:
-                        alpha_tmp = alpha_ccc
-                    else:
-                        alpha_tmp = alpha_error
-            else:
-                alpha_tmp = alpha
-
-            pe = np.ones((2, 2), dtype=np.float64) * 0
-            pe[stimPosit, respPosit] = correction -  Q[stimPosit, respPosit]
-            Q[stimPosit, respPosit] = Q[stimPosit, respPosit] + alpha_tmp * pe[stimPosit, respPosit]
-                           
-            pe[stimPosit, oppAction] = (1 - correction) - Q[stimPosit, oppAction]
-            Q[stimPosit, oppAction] = Q[stimPosit, oppAction]+ alpha_tmp*pe[stimPosit, oppAction]
-           
-            # decay
-            opp_stimPosit = 1 - stimPosit
-            Q[opp_stimPosit, 0] = Q[opp_stimPosit, 0] + decay*(0.5 - Q[opp_stimPosit, 0])               
-            Q[opp_stimPosit, 1] = Q[opp_stimPosit, 1] + decay*(0.5 - Q[opp_stimPosit, 1])               
-                          
-            self.PResult.append(P)               
-            self.QResult = pd.concat([self.QResult, pd.DataFrame(Q.reshape(-1,Q.size))])
-            self.PEResult = pd.concat([self.PEResult, pd.DataFrame(pe.reshape(-1,pe.size))])
-            self.stimPosit.append(stimPosit)
-            self.respPosit.append(respPosit)
-    
-    
-    def SR_learning_operator_nblock(self, x, x_error='', nblock=1):
-        alpha = x[0:nblock]
-        beta = x[nblock] 
-        decay = x[nblock+1]
-        x0 = [alpha, beta, decay]
-        self.SR_learning_operator(x0, x_error, nblock)
-    def SR_learning_operator_doubleUpdate(self, x, x_error=''):
-        alpha, beta = x[0], x[1]   
-        alpha_error = x_error
-     
-        Q = np.ones((2, 2), dtype=np.float64) * 0.5
-        self.para_alpha = alpha
-        self.para_alpha_error = alpha_error
-        self.para_beta = beta
-        
-        self.PResult = []
-        self.QResult = pd.DataFrame()
-        self.PEResult = pd.DataFrame()
-        self.stimPosit, self.respPosit = [], []
-        
-        for m in np.arange(0, self.trialNum):
-           
-            #  0:left, 1:right
-            # respPosit is actual response location
-            stimPosit, respPosit = int(self.data['stimPosit'][m]), int(self.data['hand'][m])
-            correction = int(self.data['correction'][m])
-            oppAction = 1-respPosit
-           
-            #softmax              
-            P = np.exp(beta * Q[stimPosit, respPosit])/ (np.exp(beta * Q[stimPosit, respPosit]) + np.exp(beta * Q[stimPosit, oppAction]))
-           
-            #update                                        
-            if alpha_error != '':
-                if correction == 1:
-                    alpha_tmp = alpha
-                elif correction == 0:
-                    alpha_tmp = alpha_error
-            else:
-                alpha_tmp = alpha
-           
-            pe = np.ones((2, 2), dtype=np.float64) * 0
-            pe[stimPosit, respPosit] = correction -  Q[stimPosit, respPosit]
-            Q[stimPosit, respPosit] = Q[stimPosit, respPosit] + alpha_tmp * pe[stimPosit, respPosit]
-                           
-            pe[stimPosit, oppAction] = (1 - correction) - Q[stimPosit, oppAction]
-            Q[stimPosit, oppAction] = Q[stimPosit, oppAction]+ alpha_tmp*pe[stimPosit, oppAction]
-                                      
-            self.PResult.append(P)               
-            self.QResult = pd.concat([self.QResult, pd.DataFrame(Q.reshape(-1,Q.size))])
-            self.PEResult = pd.concat([self.PEResult, pd.DataFrame(pe.reshape(-1,pe.size))])
-            self.stimPosit.append(stimPosit)
-            self.respPosit.append(respPosit)
-    
     def save_data(self):
-        best_model_regression(self)
-        
-        
-                                  
+
+        PResult = pd.DataFrame(self.PResult)
+        PResult.columns = ['P']
+        QResult = pd.DataFrame(np.array(self.QResult).reshape(-1, np.array(self.QResult[0]).size))
+        QResult.reset_index(drop=True, inplace=True)
+        QResult.columns = self.Q_name
+        PEResult = pd.DataFrame(np.array(self.PEResult).reshape(-1, np.array(self.PEResult[0]).size))
+        PEResult.reset_index(drop=True, inplace=True)
+        PEResult.columns = self.PE_name
+        modelVars = pd.concat([PResult, QResult, PEResult], axis=1)
+
+        if self.fit_with_error == 0:
+            prefix_str = ''
+        else:
+            prefix_str = 'with_error_'
+
+        if self.fit_with_logRT == 0:
+            prefix_str = '' + prefix_str
+        else:
+            prefix_str = 'logRT_' + prefix_str
+
+        pd.concat([self.data, modelVars], axis=1).to_csv(self.results_folder + prefix_str + 'RLCC_model_results_' + self.model_type + '_' + self.subject + '.csv')
+
+        fitParas = obj_function.glm_fit(self, True)
+        fitParas['MSE'] = self.fitted_mse
+        fitParas['model'] = self.model_type
+        modelP = pd.DataFrame(self.fitted_x).T
+        modelP.columns = self.model_para_names
+        parasResults = pd.concat([fitParas, modelP], axis=1)
+        parasResults['subject'] = self.subject
+        parasResults.to_csv(self.results_folder + prefix_str + 'RLCC_parameter_results_' + self.model_type + '_' + self.subject + '.csv')
+
+    def group_parameter_results(self, subjects, model_types, prefix_str = '', subfix_str = ''):
+
+        rSquared_pd = pd.DataFrame()
+        LLH_pd = pd.DataFrame()
+        AIC_pd = pd.DataFrame()
+        BIC_pd = pd.DataFrame()
+        MSE_pd = pd.DataFrame()
+
+        for m, model_type in enumerate(model_types):
+            data_all = pd.DataFrame()
+            for s, subject in enumerate(subjects):
+                filename = self.results_folder + prefix_str + 'RLCC_parameter_results_' + model_type + '_' + subject + '.csv'
+                data = pd.read_csv(filename)
+                data_all = pd.concat([data_all, data], axis=0)
+
+            data_all = data_all.loc[:, ~data_all.columns.str.match('Unnamed: 0')]
+            data_all.to_csv(self.results_folder + 'Group_' + prefix_str + 'RLCC_parameter_results_' + model_type + '.csv', index=False)
+
+            rSquared_pd = pd.concat([rSquared_pd, data_all['rSquared']], axis=1)
+            rSquared_pd.columns.values[-1] = model_type
+
+            LLH_pd = pd.concat([LLH_pd, data_all['LLH']], axis=1)
+            LLH_pd.columns.values[-1] = model_type
+
+            AIC_pd = pd.concat([AIC_pd, data_all['AIC']], axis=1)
+            AIC_pd.columns.values[-1] = model_type
+
+            BIC_pd = pd.concat([BIC_pd, data_all['BIC']], axis=1)
+            BIC_pd.columns.values[-1] = model_type
+
+            MSE_pd = pd.concat([MSE_pd, data_all['MSE']], axis=1)
+            MSE_pd.columns.values[-1] = model_type
+
+        pd.concat([data_all['subject'], rSquared_pd], axis=1).to_csv(self.results_folder + 'Model_comparison_rSquared_' + prefix_str + 'RLCC_parameter_results' + subfix_str + '.csv', index=False)
+        pd.concat([data_all['subject'], LLH_pd], axis=1).to_csv(self.results_folder + 'Model_comparison_LLH_' + prefix_str + 'RLCC_parameter_results' + subfix_str + '.csv', index=False)
+        pd.concat([data_all['subject'], AIC_pd], axis=1).to_csv(self.results_folder + 'Model_comparison_AIC_' + prefix_str + 'RLCC_parameter_results' + subfix_str + '.csv', index=False)
+        pd.concat([data_all['subject'], BIC_pd], axis=1).to_csv(self.results_folder + 'Model_comparison_BIC_' + prefix_str + 'RLCC_parameter_results' + subfix_str + '.csv', index=False)
+        pd.concat([data_all['subject'], MSE_pd], axis=1).to_csv(self.results_folder + 'Model_comparison_MSE_' + prefix_str + 'RLCC_parameter_results' + subfix_str + '.csv', index=False)
+        print('end of group_parameter_results')
+
+    def model_selection(self, prefix_str = ''):
+        # filename = 'Model_comparison_AIC_' + prefix_str + 'RLCC_parameter_results' + '.csv'
+        # matlab = transplant.Matlab(jvm=False, desktop=False)
+        # matlab.model_selection(filename)
+        # matlab.exit()
+        print('\nrun model_selection(\'Model_comparison_AIC_"prefix_str"_RLCC_parameter_results.csv\') in Matlab')
+        print('“prefix_str” could be \'\', logRT, with_error, logRT_with_error')
+        print('the output is model_selection_"filename".csv in the folder of model_results')
 
