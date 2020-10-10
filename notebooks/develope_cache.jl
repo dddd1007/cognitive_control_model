@@ -95,7 +95,7 @@ StatsBase.summarystats(result_table[:,6])
 md"### 模型2 学习 S-R 联结的强化学习模型, 使用 SoftMax 决策, 错误试次下学习率不同"
 
 # ╔═╡ bc5253a8-0ad2-11eb-069e-a332aff4bb20
-
+sub1_subinfo.corrections
 
 # ╔═╡ Cell order:
 # ╠═a60d9102-060a-11eb-1c04-fdb0ce5006ac
