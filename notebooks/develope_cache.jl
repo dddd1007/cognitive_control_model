@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 383dd75c-060e-11eb-1fd1-85f6eb33a9af
-using DataFrames, DataFramesMeta, CSV, Statistics, StatsBase
+using DataFrames, DataFramesMeta, CSV, Statistics, StatsBase, GLM, Plots
 
 # ╔═╡ 49632e92-060e-11eb-05a8-9b0fccf669bd
 include("/Users/dddd1007/project2git/cognitive_control_model/models/DataImporter.jl")
@@ -70,32 +70,46 @@ begin
 	β_s = rand([0.1:0.01:5.0;])
 	decay = rand([0.1:0.01:1.0;])
 	sub1_agent = Learner_basic(α_v, β_v, α_s, β_s, decay)
-	rl_learning(sub1_env, sub1_agent, sub1_subinfo)
 end
 
-# ╔═╡ e53f76ee-08ad-11eb-00fd-8b7ea211b136
-begin
-	number_iterations = 10000
-	result_table = zeros(Float64, (number_iterations,6))
-	Threads.@threads for i in 1:number_iterations
-		α_v = rand([0.1:0.01:1.0;])
-		β_v = rand([0.1:0.01:5.0;])
-		α_s = rand([0.1:0.01:1.0;])
-		β_s = rand([0.1:0.01:5.0;])
-		decay = rand([0.1:0.01:1.0;])
-		sub1_agent = Learner_basic(α_v, β_v, α_s, β_s, decay)
-		result_table[i,:] = rl_learning(sub1_env, sub1_agent, sub1_subinfo)
-	end
-end
-
-# ╔═╡ 2412cc44-0ac3-11eb-337e-cd2299f61f01
-StatsBase.summarystats(result_table[:,6])
+# ╔═╡ e580923a-0c6a-11eb-1207-65691ca00888
+result1 = rl_learning_sr(sub1_env, sub1_agent, sub1_subinfo)
 
 # ╔═╡ fb79a89c-09db-11eb-15e8-6d7305e1a0f2
 md"### 模型2 学习 S-R 联结的强化学习模型, 使用 SoftMax 决策, 错误试次下学习率不同"
 
-# ╔═╡ bc5253a8-0ad2-11eb-069e-a332aff4bb20
-sub1_subinfo.corrections
+# ╔═╡ 87c3559e-0cfe-11eb-16db-7746f3add5e5
+md"## 编写模型诊断部分"
+
+# ╔═╡ 9422943a-0cfe-11eb-09de-438abdf68a93
+x = result1["p_softmax_history"]
+
+# ╔═╡ b7939784-0cfe-11eb-0977-5996c25272e9
+y = sub1_subinfo.RT
+
+# ╔═╡ bdebbde2-0d16-11eb-1059-f3d7784ba3f6
+data = DataFrame(x = x, y = y);
+
+# ╔═╡ bdb28b52-0cfe-11eb-2bd3-a5504eaa1f42
+probe = lm(@formula(y~x), data)
+
+# ╔═╡ 3d19c4d8-0d17-11eb-1f8f-53597a42ed2f
+plot(x,y,seriestype = :scatter)
+
+# ╔═╡ f1c31cdc-0d16-11eb-131d-4b112501e444
+aic(probe)
+
+# ╔═╡ 1e7a2ca2-0d17-11eb-205d-cf451ad6738f
+bic(probe)
+
+# ╔═╡ 17964e92-0d18-11eb-3562-b91129af4c89
+dof_residual(probe)
+
+# ╔═╡ 2af07aa8-0d18-11eb-1f23-ef8e8e1ff744
+coef(probe)[2]
+
+# ╔═╡ 8b09261a-0d18-11eb-14d5-c586f78204cd
+r2(probe)
 
 # ╔═╡ Cell order:
 # ╠═a60d9102-060a-11eb-1c04-fdb0ce5006ac
@@ -113,7 +127,16 @@ sub1_subinfo.corrections
 # ╠═622e58a4-087f-11eb-12aa-c9e85acc2d8e
 # ╠═9a0ce0ec-09db-11eb-3142-2d5c455cf2f8
 # ╠═46a7cac6-0acf-11eb-2ba8-a175c4a140e9
-# ╠═e53f76ee-08ad-11eb-00fd-8b7ea211b136
-# ╠═2412cc44-0ac3-11eb-337e-cd2299f61f01
+# ╠═e580923a-0c6a-11eb-1207-65691ca00888
 # ╠═fb79a89c-09db-11eb-15e8-6d7305e1a0f2
-# ╠═bc5253a8-0ad2-11eb-069e-a332aff4bb20
+# ╠═87c3559e-0cfe-11eb-16db-7746f3add5e5
+# ╠═9422943a-0cfe-11eb-09de-438abdf68a93
+# ╠═b7939784-0cfe-11eb-0977-5996c25272e9
+# ╠═bdebbde2-0d16-11eb-1059-f3d7784ba3f6
+# ╠═bdb28b52-0cfe-11eb-2bd3-a5504eaa1f42
+# ╠═3d19c4d8-0d17-11eb-1f8f-53597a42ed2f
+# ╠═f1c31cdc-0d16-11eb-131d-4b112501e444
+# ╠═1e7a2ca2-0d17-11eb-205d-cf451ad6738f
+# ╠═17964e92-0d18-11eb-3562-b91129af4c89
+# ╠═2af07aa8-0d18-11eb-1f23-ef8e8e1ff744
+# ╠═8b09261a-0d18-11eb-14d5-c586f78204cd
