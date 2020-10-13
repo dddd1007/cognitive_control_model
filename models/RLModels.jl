@@ -31,12 +31,13 @@ There are two models with four different methods:
     - Change Softmax model's Q-value
     - Both
 =#
+
 #============================================================================ 
 # Module1: Define RLModels with Softmax                                     #
 ============================================================================#
 module RLModels_with_Softmax
 
-using GLM, StatsBase, DataFrames, Main.DataImporter
+using DataFrames, Main.DataManipulate
 export Learner_basic, Learner_witherror, Learner_withCCC
 export rl_learning_sr
 
@@ -88,7 +89,7 @@ struct Learner_withCCC
 end
 
 #=
-Define the functions
+Define the data update functions
 =#
 
 # 定义SR学习中的决策过程
@@ -156,24 +157,6 @@ function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Tuple)
         CartesianIndex(correct_selection_idx[1], (abs(correct_selection[2] - 1) + 1))
 
     CCC = weight_matrix[correct_selection_idx] - weight_matrix[op_selection_idx]
-end
-
-# 定义评估变量相关性的函数
-function evaluate_relation(x, y, method = :regression)
-    if method == :mse
-        return sum(abs2.(x .- y))
-    elseif method == :cor
-        return cor(x, y)
-    elseif method == :regression
-        data = DataFrame(x = x, y = y);
-        reg_result = lm(@formula(y~x), data)
-        β = coef(reg_result)[2]
-        AIC = aic(reg_result)
-        BIC = bic(reg_result)
-        R2 = (reg_result)
-        result = Dict(:β => β, :AIC => AIC, :BIC => BIC, :R2 => r2)
-        return result
-    end
 end
 
 # 初始化更新价值矩阵和基本参数

@@ -12,9 +12,9 @@ Version: 0.0.009
 # Global: Define RLModels with Softmax                                      #
 ============================================================================#
 
-module DataImporter
+module DataManipulate
 
-using DataFrames, DataFramesMeta
+using DataFrames, DataFramesMeta, GLM
 import CSV
 export ExpEnv, RealSub, transformed_data!, init_env_sub
 # Init Class system
@@ -45,7 +45,7 @@ struct RealSub
     sub_tag::Array{String,1}
 end
 
-# Define functions
+#### 定义数据导入的函数
 """
     transform_data!(raw_data, transform_rule)
 
@@ -129,6 +129,26 @@ function init_env_sub(
     )
 
     return (exp_env, real_sub)
+end
+
+#### 定义工具性的计算函数
+
+# 定义评估变量相关性的函数
+function evaluate_relation(x, y, method = :regression)
+    if method == :mse
+        return sum(abs2.(x .- y))
+    elseif method == :cor
+        return cor(x, y)
+    elseif method == :regression
+        data = DataFrame(x = x, y = y);
+        reg_result = lm(@formula(y~x), data)
+        β = coef(reg_result)[2]
+        AIC = aic(reg_result)
+        BIC = bic(reg_result)
+        R2 = (reg_result)
+        result = Dict(:β => β, :AIC => AIC, :BIC => BIC, :R2 => r2)
+        return result
+    end
 end
 
 end
