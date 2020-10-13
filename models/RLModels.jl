@@ -31,103 +31,102 @@ There are two models with four different methods:
     - Change Softmax model's Q-value
     - Both
 =#
-
-#============================================================================ 
-# Module1: RLModels with Softmax                                            #
+#============================================================================
+# Module0: Basic calculate elements of RLModels                             #
 ============================================================================#
-module RLModels_with_Softmax
+module RLModels
 
-using DataFrames, DataManipulate
-export Learner_basic, Learner_witherror, Learner_withCCC
-export rl_learning_sr
+using DataFrames, DataFramesMeta, GLM
 
-#### Define the Class System
+export ExpEnv, RealSub
+export evaluate_relation, init_env_sub
+export update_options_weight_matrix, init_param
+export calc_CCC
+
+# Init Class system
+
 """
-    Learner_basic
+    ExpEnv
 
-A learner which learnt parameters from the experiment environment.
+The **experiment environment** which the learner will to learn.
 """
-# 环境中的学习者, 基本条件下
-struct Learner_basic
-    α_v::Float64
-    β_v::Float64
-    α_s::Float64
-    β_s::Float64
-    decay::Float64
+struct ExpEnv
+    stim_task_related::Array{Int64,1}
+    stim_task_unrelated::Array{Int64,1}
+    stim_correct_action::Array{Int64,1}
+    stim_action_congruency::Array{Int64,1}
+    env_type::Array{String,1}
+    sub_tag::Array{String,1}
 end
 
-# 环境中的学习者, 在错误试次下学习率不同
-struct Learner_witherror
-    α_v::Float64
-    β_v::Float64
-    α_s::Float64
-    β_s::Float64
+"""
+    RealSub
 
-    α_v_error::Float64
-    β_v_error::Float64
-    α_s_error::Float64
-    β_s_error::Float64
-
-    decay::Float64
+All of the actions the **real subject** have done.
+"""
+struct RealSub
+    response::Array{Int64,1}
+    RT::Array{Float64,1}
+    corrections::Array{Int64,1}
+    sub_tag::Array{String,1}
 end
 
-# 存在冲突控制的学习者
-struct Learner_withCCC
-    α_v::Float64
-    β_v::Float64
-    α_s::Float64
-    β_s::Float64
+#### Define the functions
 
-    α_v_error::Float64
-    β_v_error::Float64
-    α_s_error::Float64
-    β_s_error::Float64
+#### 定义初始化计算的函数
 
-    α_v_CCC::Float64
-    β_v_CCC::Float64
-    α_s_CCC::Float64
-    β_s_CCC::Float64
-
-    CCC::Float64
-    decay::Float64
-end
-
-#### Define the data update functions
-
-# 定义SR学习中的决策过程
-function sr_softmax(
-    options_vector::Array{Float64,1},
-    β::Float64,
-    true_selection::Tuple,
-    debug = false,
+"""
+init_env_sub(
+    transformed_data::DataFrame,
+    env_idx_dict::Dict,
+    sub_idx_dict::Dict
 )
-    options_matrix = reshape(options_vector, 2, 2)'
 
-    op_selection_idx =
-        CartesianIndex(true_selection[1], abs(true_selection[2] - 1)) + CartesianIndex(1, 1)
-    true_selection_idx = CartesianIndex(true_selection) + CartesianIndex(1, 1)
+Init the env and subject objects for simulation.
 
-    if debug
-        println(options_matrix)
-        println("True selection is " * repr(options_matrix[true_selection_idx]))
-        println("Op selection is " * repr(options_matrix[op_selection_idx]))
-    end
-
-    exp(β * options_matrix[true_selection_idx]) / (
-        exp(β * options_matrix[true_selection_idx]) +
-        exp(β * options_matrix[op_selection_idx])
-    )
+# Examples
+```julia
+# Define the trasnform rule
+begin
+    env_idx_dict = Dict("stim_task_related" => "color", "stim_task_unrelated" => "location", 
+		                "stim_action_congruency" => "contigency", 
+		                "env_type" => "condition", "sub_tag" => "Subject")
+	sub_idx_dict = Dict("response" => "Response", "RT" => "RT", 
+		                "corrections" => "Type", "sub_tag" => "Subject")
 end
+# Excute the transform
+env, sub = init_env_realsub(transformed_data, env_idx_dict, sub_idx_dict, task_rule)
+```
+"""
+function init_env_sub(
+    transformed_data::DataFrame,
+    env_idx_dict::Dict,
+    sub_idx_dict::Dict
+)
 
-# 定义计算冲突程度的函数
-function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Tuple)
-    weight_matrix = reshape(weight_vector, 2, 2)'
+    exp_env = ExpEnv(
+        transformed_data[!, env_idx_dict["stim_task_related"]],
+        transformed_data[!, env_idx_dict["stim_task_unrelated"]],
+        transformed_data[!, env_idx_dict["correct_action"]],
+        transformed_data[!, env_idx_dict["stim_action_congruency"]],
+        transformed_data[!, env_idx_dict["env_type"]],
+        transformed_data[!, env_idx_dict["sub_tag"]],
+    )
+    real_sub = RealSub(
+        # Because of the miss action, we need the tryparse() 
+        # to parse "miss" to "nothing"
+        tryparse.(Float64, transformed_data[!, sub_idx_dict["response"]]),
+        tryparse.(Float64, transformed_data[!, sub_idx_dict["RT"]]),
+        transformed_data[!, sub_idx_dict["corrections"]],
+        transformed_data[!, sub_idx_dict["sub_tag"]],
+    )
+    println(
+        "The env and sub info of " *
+        transformed_data[!, env_idx_dict["sub_tag"]][1] *
+        " is generated!",
+    )
 
-    correct_selection_idx = CartesianIndex(correct_selection) + CartesianIndex(1, 1)
-    op_selection_idx =
-        CartesianIndex(correct_selection_idx[1], (abs(correct_selection[2] - 1) + 1))
-
-    CCC = weight_matrix[correct_selection_idx] - weight_matrix[op_selection_idx]
+    return (exp_env, real_sub)
 end
 
 # 初始化更新价值矩阵和基本参数
@@ -144,253 +143,71 @@ function init_param(env, agent, learn_type = :sr)
     end
 
     p_softmax_history = zeros(Float64, total_trials_num)
-    α = 0.0
-    β = 0.0
     decay = agent.decay
 
-    return (total_trials_num, options_weight_matrix, p_softmax_history, α, β, decay)
+    return (total_trials_num, options_weight_matrix, p_softmax_history, decay)
 end
 
-# 定义强化学习相关函数
+#### 定义工具性的计算函数
 
-# 学习抽象概念的强化学习过程
-function rl_learning_sr(
-    env::ExpEnv,
-    agent::Learner_basic,
-    realsub::RealSub;
-    eval_method = "mse",
-    verbose = false,
-)
-
-    # Check the subtag
-    if env.sub_tag != realsub.sub_tag
-        return println("The env and sub_real_data not come from the same one!")
+# 定义评估变量相关性的函数
+function evaluate_relation(x, y, method = :regression)
+    if method == :mse
+        return sum(abs2.(x .- y))
+    elseif method == :cor
+        return cor(x, y)
+    elseif method == :regression
+        data = DataFrame(x = x, y = y);
+        reg_result = lm(@formula(y~x), data)
+        β = coef(reg_result)[2]
+        AIC = aic(reg_result)
+        BIC = bic(reg_result)
+        R2 = (reg_result)
+        result = Dict(:β => β, :AIC => AIC, :BIC => BIC, :R2 => r2)
+        return result
     end
-
-    # init learning parameters list
-    total_trials_num, options_weight_matrix, p_softmax_history, α, β, decay =
-        init_param(env, agent)
-
-    # Start learning
-    for idx = 1:total_trials_num
-        if env.env_type[idx] == "v"
-            β = agent.β_v
-            α = agent.α_v
-        elseif env.env_type[idx] == "s"
-            β = agent.β_s
-            α = agent.α_s
-        end
-
-        ## Update 
-        options_weight_matrix[idx+1, :] =
-            update_options_weight_matrix(
-                options_weight_matrix[idx, :],
-                α,
-                decay,
-                (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-            )
-
-        ## Decision
-        p_softmax_history[idx] = sr_softmax(
-            options_weight_matrix[idx+1, :],
-            β,
-            (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-        )
-    end
-
-    # Evaluate result
-    eval_result = evaluate_relation(realsub.RT, p_softmax_history, eval_method)
-
-    return Dict(
-        "options_weight_matrix" => options_weight_matrix,
-        "p_softmax_history" => p_softmax_history,
-    )
 end
 
-function rl_learning_sr(
-    env::ExpEnv,
-    agent::Learner_witherror,
-    realsub::RealSub;
-    eval_method = "mse",
-    verbose = false,
-)
-
-    # Check the subtag
-    if env.sub_tag != realsub.sub_tag
-        return println("The env and sub_real_data not come from the same one!")
-    end
-
-    # init learning parameters list
-    total_trials_num, options_weight_matrix, p_softmax_history, α, β, decay =
-        init_param(env, agent)
-
-    # Start learning
-    for idx = 1:total_trials_num
-        if env.env_type[idx] == "v"
-            if realsub.corrections[idx] == 1
-                β = agent.β_v
-                α = agent.α_v
-            elseif realsub.corrections[idx] == 0
-                β = agent.β_v_error
-                α = agent.α_v_error
-            end
-        elseif env.env_type[idx] == "s"
-            if realsub.corrections[idx] == 1
-                β = agent.β_s
-                α = agent.α_s
-            elseif realsub.corrections[idx] == 0
-                β = agent.β_s_error
-                α = agent.α_s_error
-            end
-        end
-
-        ## Update 
-        options_weight_matrix[idx+1, :] =
-            update_options_weight_matrix(
-                options_weight_matrix[idx, :],
-                α,
-                decay,
-                (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-            )
-
-        ## Decision
-        p_softmax_history[idx] = sr_softmax(
-            options_weight_matrix[idx+1, :],
-            β,
-            (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-        )
-    end
-
-    # Evaluate result
-    eval_result = evaluate_relation(realsub.RT, p_softmax_history, eval_method)
-
-    return Dict(
-        "options_weight_matrix" => options_weight_matrix,
-        "p_softmax_history" => p_softmax_history,
-    )
-end
-
-# 学习过程中存在认知控制影响学习的过程
-function rl_learning_sr(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub; eval_method = "mse", verbose = false)
-
-    # Check the subtag
-    if env.sub_tag != realsub.sub_tag
-        return println("The env and sub_real_data not come from the same one!")
-    end
-
-    # init learning parameters list
-    total_trials_num, options_weight_matrix, p_softmax_history, α, β, decay =
-    init_param(env, agent)
-    conflict = 0.0
-
-    # Start learning
-    for idx = 1:total_trials_num
-        conflict = calc(options_weight_matrix[idx,:], (env.stim_task_unrelated[idx], env.stim_correct_action[idx]))
-
-        if env.env_type[idx] == "v" 
-            if realsub.corrections[idx] == 1 & conflict < agent.CCC
-                β = agent.β_v
-                α = agent.α_v
-            elseif realsub.corrections[idx] == 1 & conflict > agent.CCC
-                β = agent.β_v_CCC
-                α = agent.α_v_CCC
-            elseif realsub.corrections[idx] == 0
-                β = agent.β_v_error
-                α = agent.α_v_error
-            end
-        elseif env.env_type[idx] == "s"
-            if realsub.corrections[idx] == 1 & conflict < agent.CCC
-                β = agent.β_s
-                α = agent.α_s
-            elseif realsub.corrections[idx] == 1 & conflict > agent.CCC
-                β = agent.β_s_CCC
-                α = agent.α_s_CCC
-            elseif realsub.corrections[idx] == 0
-                β = agent.β_s_error
-                α = agent.α_s_error
-            end
-        end
-
-        ## Update 
-        options_weight_matrix[idx+1, :] =
-            update_options_weight_matrix(
-                options_weight_matrix[idx, :],
-                α,
-                decay,
-                (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-            )
-
-        ## Decision
-        p_softmax_history[idx] = sr_softmax(
-            options_weight_matrix[idx+1, :],
-            β,
-            (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-        )
-    end
-
-    return Dict(
-        "options_weight_matrix" => options_weight_matrix,
-        "p_softmax_history" => p_softmax_history,
-    )
-end
-
-end
-
-#============================================================================ 
-# Module2: RLModels without Softmax                                         #
-============================================================================#
-module RLModels_no_Softmax
-
-#### Define the Class system
-# 环境中的学习者, 基本条件下
-struct Learner_basic
-    α_v::Float64
-    α_s::Float64
-    decay::Float64
-end
-
-# 环境中的学习者, 在错误试次下学习率不同
-struct Learner_witherror
-    α_v::Float64
-    α_s::Float64
-
-    α_v_error::Float64
-    α_s_error::Float64
-
-    decay::Float64
-end
-
-# 存在冲突控制的学习者
-struct Learner_withCCC
-    α_v::Float64
-    α_s::Float64
-
-    α_v_error::Float64
-    α_s_error::Float64
-
-    α_v_CCC::Float64
-    α_s_CCC::Float64
-
-    CCC::Float64
-    decay::Float64
-end
-
-#### Define the Functions
-# 定义SR学习中的决策过程
-function selection_value(
-    options_vector::Array{Float64,1},
-    true_selection::Tuple,
+# 定义更新价值矩阵的函数
+function update_options_weight_matrix(
+    weight_vector::Array{Float64,1},
+    α::Float64,
+    decay::Float64,
+    correct_selection::Tuple;
+    dodecay = true,
     debug = false,
 )
-    options_matrix = reshape(options_vector, 2, 2)'
-    true_selection_idx = CartesianIndex(true_selection) + CartesianIndex(1, 1)
-    
+    weight_matrix = reshape(weight_vector, 2, 2)'
+    correct_selection_idx = CartesianIndex(correct_selection) + CartesianIndex(1, 1)
+    op_selection_idx = abs(correct_selection[1] - 1) + 1
+
     if debug
-        println(true_selection_idx)
+        println("True selection is " * repr(correct_selection_idx))
+        println("The value is " * repr(weight_matrix[correct_selection_idx]))
     end
-    
-    return options_matrix[true_selection_idx]
+
+    weight_matrix[correct_selection_idx] =
+        weight_matrix[correct_selection_idx] +
+        α * (1 - weight_matrix[correct_selection_idx])
+
+    if dodecay
+        weight_matrix[op_selection_idx, :] =
+            weight_matrix[op_selection_idx, :] .+
+            decay .* (0.5 .- weight_matrix[op_selection_idx, :])
+    end
+
+    return reshape(weight_matrix', 1, 4)
 end
 
+# 定义计算冲突程度的函数
+function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Tuple)
+    weight_matrix = reshape(weight_vector, 2, 2)'
+
+    correct_selection_idx = CartesianIndex(correct_selection) + CartesianIndex(1, 1)
+    op_selection_idx =
+        CartesianIndex(correct_selection_idx[1], (abs(correct_selection[2] - 1) + 1))
+
+    CCC = weight_matrix[correct_selection_idx] - weight_matrix[op_selection_idx]
+end
 
 end
