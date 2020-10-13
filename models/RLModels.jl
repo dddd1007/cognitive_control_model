@@ -145,7 +145,7 @@ function update_options_weight_matrix(
             decay .* (0.5 .- weight_matrix[op_selection_idx, :])
     end
 
-    return weight_matrix
+    return reshape(weight_matrix', 1, 4)
 end
 
 # 定义计算冲突程度的函数
@@ -228,13 +228,6 @@ function rl_learning_sr(
             α = agent.α_s
         end
 
-        ## Decision
-        p_softmax_history[idx] = sr_softmax(
-            options_weight_matrix[idx, :],
-            β,
-            (env.stim_task_unrelated[idx], realsub.response[idx]),
-        )
-
         ## Update 
         options_weight_matrix[idx+1, :] =
             update_options_weight_matrix(
@@ -242,7 +235,14 @@ function rl_learning_sr(
                 α,
                 decay,
                 (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-            )'
+            )
+
+        ## Decision
+        p_softmax_history[idx] = sr_softmax(
+            options_weight_matrix[idx+1, :],
+            β,
+            (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
+        )
     end
 
     # Evaluate result
@@ -291,13 +291,6 @@ function rl_learning_sr(
             end
         end
 
-        ## Decision
-        p_softmax_history[idx] = sr_softmax(
-            options_weight_matrix[idx, :],
-            β,
-            (env.stim_task_unrelated[idx], realsub.response[idx]),
-        )
-
         ## Update 
         options_weight_matrix[idx+1, :] =
             update_options_weight_matrix(
@@ -305,7 +298,14 @@ function rl_learning_sr(
                 α,
                 decay,
                 (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-            )'
+            )
+
+        ## Decision
+        p_softmax_history[idx] = sr_softmax(
+            options_weight_matrix[idx+1, :],
+            β,
+            (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
+        )
     end
 
     # Evaluate result
@@ -357,13 +357,6 @@ function rl_learning_sr(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub; e
                 α = agent.α_s_error
             end
         end
-    
-        ## Decision
-        p_softmax_history[idx] = sr_softmax(
-            options_weight_matrix[idx, :],
-            β,
-            (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-        )
 
         ## Update 
         options_weight_matrix[idx+1, :] =
@@ -372,11 +365,15 @@ function rl_learning_sr(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub; e
                 α,
                 decay,
                 (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-            )'
-    end
+            )
 
-    # Evaluate result
-    eval_result = evaluate_relation(realsub.RT, p_softmax_history, eval_method)
+        ## Decision
+        p_softmax_history[idx] = sr_softmax(
+            options_weight_matrix[idx+1, :],
+            β,
+            (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
+        )
+    end
 
     return Dict(
         "options_weight_matrix" => options_weight_matrix,
