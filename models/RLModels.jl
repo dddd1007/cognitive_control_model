@@ -33,14 +33,15 @@ There are two models with four different methods:
 =#
 
 #============================================================================ 
-# Module1: Define RLModels with Softmax                                     #
+# Module1: RLModels with Softmax                                            #
 ============================================================================#
 module RLModels_with_Softmax
 
-using DataFrames, Main.DataManipulate
+using DataFrames, DataManipulate
 export Learner_basic, Learner_witherror, Learner_withCCC
 export rl_learning_sr
 
+#### Define the Class System
 """
     Learner_basic
 
@@ -61,13 +62,16 @@ struct Learner_witherror
     β_v::Float64
     α_s::Float64
     β_s::Float64
+
     α_v_error::Float64
     β_v_error::Float64
     α_s_error::Float64
     β_s_error::Float64
+
     decay::Float64
 end
 
+# 存在冲突控制的学习者
 struct Learner_withCCC
     α_v::Float64
     β_v::Float64
@@ -88,9 +92,7 @@ struct Learner_withCCC
     decay::Float64
 end
 
-#=
-Define the data update functions
-=#
+#### Define the data update functions
 
 # 定义SR学习中的决策过程
 function sr_softmax(
@@ -115,37 +117,6 @@ function sr_softmax(
         exp(β * options_matrix[true_selection_idx]) +
         exp(β * options_matrix[op_selection_idx])
     )
-end
-
-# 定义更新价值矩阵的函数
-function update_options_weight_matrix(
-    weight_vector::Array{Float64,1},
-    α::Float64,
-    decay::Float64,
-    correct_selection::Tuple;
-    dodecay = true,
-    debug = false,
-)
-    weight_matrix = reshape(weight_vector, 2, 2)'
-    correct_selection_idx = CartesianIndex(correct_selection) + CartesianIndex(1, 1)
-    op_selection_idx = abs(correct_selection[1] - 1) + 1
-
-    if debug
-        println("True selection is " * repr(correct_selection_idx))
-        println("The value is " * repr(weight_matrix[correct_selection_idx]))
-    end
-
-    weight_matrix[correct_selection_idx] =
-        weight_matrix[correct_selection_idx] +
-        α * (1 - weight_matrix[correct_selection_idx])
-
-    if dodecay
-        weight_matrix[op_selection_idx, :] =
-            weight_matrix[op_selection_idx, :] .+
-            decay .* (0.5 .- weight_matrix[op_selection_idx, :])
-    end
-
-    return reshape(weight_matrix', 1, 4)
 end
 
 # 定义计算冲突程度的函数
@@ -362,5 +333,64 @@ function rl_learning_sr(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub; e
         "p_softmax_history" => p_softmax_history,
     )
 end
+
+end
+
+#============================================================================ 
+# Module2: RLModels without Softmax                                         #
+============================================================================#
+module RLModels_no_Softmax
+
+#### Define the Class system
+# 环境中的学习者, 基本条件下
+struct Learner_basic
+    α_v::Float64
+    α_s::Float64
+    decay::Float64
+end
+
+# 环境中的学习者, 在错误试次下学习率不同
+struct Learner_witherror
+    α_v::Float64
+    α_s::Float64
+
+    α_v_error::Float64
+    α_s_error::Float64
+
+    decay::Float64
+end
+
+# 存在冲突控制的学习者
+struct Learner_withCCC
+    α_v::Float64
+    α_s::Float64
+
+    α_v_error::Float64
+    α_s_error::Float64
+
+    α_v_CCC::Float64
+    α_s_CCC::Float64
+
+    CCC::Float64
+    decay::Float64
+end
+
+#### Define the Functions
+# 定义SR学习中的决策过程
+function selection_value(
+    options_vector::Array{Float64,1},
+    true_selection::Tuple,
+    debug = false,
+)
+    options_matrix = reshape(options_vector, 2, 2)'
+    true_selection_idx = CartesianIndex(true_selection) + CartesianIndex(1, 1)
+    
+    if debug
+        println(true_selection_idx)
+    end
+    
+    return options_matrix[true_selection_idx]
+end
+
 
 end

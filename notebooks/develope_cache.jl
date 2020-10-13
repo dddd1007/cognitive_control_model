@@ -8,9 +8,9 @@ using InteractiveUtils
 using DataFrames, DataFramesMeta, CSV, Statistics, StatsBase, GLM, Plots
 
 # ╔═╡ 49632e92-060e-11eb-05a8-9b0fccf669bd
-include("/Users/dddd1007/project2git/cognitive_control_model/models/DataImporter.jl")
+include("/Users/dddd1007/project2git/cognitive_control_model/models/DataManipulate.jl")
 
-# ╔═╡ 97d7aa1e-0ad5-11eb-2713-23a719879a30
+# ╔═╡ 57f65b86-0d26-11eb-3de0-b5af36db7c1e
 include("/Users/dddd1007/project2git/cognitive_control_model/models/RLModels.jl")
 
 # ╔═╡ a60d9102-060a-11eb-1c04-fdb0ce5006ac
@@ -116,7 +116,7 @@ r2(probe)
 # ╟─ec09183e-060a-11eb-2690-c9aa2c7e2a31
 # ╠═383dd75c-060e-11eb-1fd1-85f6eb33a9af
 # ╠═49632e92-060e-11eb-05a8-9b0fccf669bd
-# ╠═97d7aa1e-0ad5-11eb-2713-23a719879a30
+# ╠═57f65b86-0d26-11eb-3de0-b5af36db7c1e
 # ╠═30a9fb66-0644-11eb-08d7-310a38336154
 # ╠═64a66ae6-077d-11eb-2e8c-5bdbc301926d
 # ╠═91240684-060e-11eb-3e4a-d1c1878d8c3a
