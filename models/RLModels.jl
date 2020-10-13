@@ -31,15 +31,14 @@ There are two models with four different methods:
     - Change Softmax model's Q-value
     - Both
 =#
+#============================================================================ 
+# Module1: Define RLModels with Softmax                                     #
+============================================================================#
+module RLModels_with_Softmax
 
-#=
-Import nessary library
-=#
-using GLM, StatsBase, DataFrames
-
-#= 
-Init Class system
-=#
+using GLM, StatsBase, DataFrames, Main.DataImporter
+export Learner_basic, Learner_witherror, Learner_withCCC
+export rl_learning_sr
 
 """
     Learner_basic
@@ -379,4 +378,6 @@ function rl_learning_sr(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub; e
         "options_weight_matrix" => options_weight_matrix,
         "p_softmax_history" => p_softmax_history,
     )
+end
+
 end

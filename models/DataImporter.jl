@@ -8,9 +8,15 @@ Version: 0.0.009
 导入研究数据并初始化学习环境
 =#
 
+#============================================================================ 
+# Global: Define RLModels with Softmax                                      #
+============================================================================#
+
+module DataImporter
+
 using DataFrames, DataFramesMeta
 import CSV
-
+export ExpEnv, RealSub, transformed_data!, init_env_sub
 # Init Class system
 
 """
@@ -123,4 +129,6 @@ function init_env_sub(
     )
 
     return (exp_env, real_sub)
+end
+
 end
