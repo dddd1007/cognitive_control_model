@@ -2,8 +2,8 @@ using Test, GLM, StatsBase
 import CSV
 
 push!(LOAD_PATH, "/Users/dddd1007/project2git/cognitive_control_model/models")
-using DataManipulate, RLModels, DataFramesMeta
-import RLModels_SoftMax
+using DataManipulate, RLModels_basic, DataFramesMeta
+import RLModels_SoftMax, RLModels_no_SoftMax
 
 # 生成测试数据
 begin
@@ -35,7 +35,10 @@ end
     
     # 冲突水平的计算
     test1 = [0.6;0.4;0.7;0.3]
-    @test RLModels_with_Softmax.calc_CCC(test1, (0,0)) ≈ 0.2
+    @test RLModels_basic.calc_CCC(test1, (0,0)) ≈ 0.2
+
+    test2 = [0.6, 0.4]
+    @test RLModels_basic.calc_CCC(test2, 0) ≈ 0.2
 
     # 价值矩阵更新
     weight_matrix = zeros(Float64, (2, 4))
@@ -47,6 +50,11 @@ end
     weight_matrix[1,:] = [0.5,0.5,0.6,0.6]
     weight_matrix[2,:] = update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0.9, (0,0))
     @test weight_matrix[2,:] == [0.75, 0.5, 0.51, 0.51]
+
+    weight_matrix = zeros(Float64, (2, 2))
+    weight_matrix[1,:] = [0.4, 0.6]
+    weight_matrix[2,:] = update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0)
+    @test weight_matrix[2,:] ≈ [0.7, 0.3]
 
 end
 
@@ -111,14 +119,11 @@ end
 # 简单模式下学习
 begin
     α_v = 0.1
-    β_v = 5
     α_s = 0.2
-    β_s = 10
-    decay = 0.9
 end
 
-agent = RLModels_SoftMax.Learner_basic(α_v, β_v, α_s, β_s, decay)
-result = RLModels_SoftMax.rl_learning_sr(sub1_env, agent, sub1_subinfo)
+agent = RLModels_no_SoftMax.Learner_basic(α_v, α_s, decay)
+result = RLModels_no_SoftMax.rl_learning_ab(sub1_env, agent, sub1_subinfo)
 
 begin
     α_v = 0.1
@@ -156,6 +161,3 @@ begin
     CCC = 0.5
     decay = 0.9
 end
-
-agent = RLModels_SoftMax.Learner_withCCC(α_v, β_v, α_s, β_s, α_v_error, β_v_error, α_s_error, β_s_error, α_v_CCC, β_v_CCC, α_s_CCC, β_s_CCC, CCC, decay)
-RLModels_SoftMax.rl_learning_sr(sub1_env, agent, sub1_subinfo)

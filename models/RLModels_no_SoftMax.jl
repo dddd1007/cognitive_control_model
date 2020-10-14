@@ -4,7 +4,7 @@
 ============================================================================#
 module RLModels_no_SoftMax
 
-using RLModels, GLM
+using RLModels_basic, GLM
 
 #### Define the Class System
 """
@@ -66,6 +66,20 @@ function selection_value(
     return options_matrix[true_selection_idx]
 end
 
+# 定义抽象概念学习的决策过程
+function selection_value(
+    options_vector::Array{Float64,1},
+    true_selection::Int,
+    debug = false,)
+    true_selection_idx = true_selection + 1
+    
+    if debug
+        println(true_selection_idx)
+    end 
+
+    return options_vector[true_selection_idx] 
+end
+
 function get_action_para(env::ExpEnv, agent::Learner_basic, realsub::RealSub, idx::Int)
     if env.env_type[idx] == "v"
         α = agent.α_v
@@ -120,22 +134,21 @@ end
 
 ##### 定义强化学习相关函数
 
-# 学习具体刺激反应联结概念的强化学习过程
+# 学习具体SR联结的强化学习过程
 function rl_learning_sr(
     env::ExpEnv,
     agent::Learner,
-    realsub::RealSub;
-    verbose = false,
+    realsub::RealSub
 )
 
     # Check the subtag
-    if env.sub_tag != realsub.sub_tag
+    if env.sub_tag ≠ realsub.sub_tag
         return println("The env and sub_real_data not come from the same one!")
     end
 
     # init learning parameters list
     total_trials_num, options_weight_matrix, p_selection_history =
-        init_param(env, agent)
+        init_param(env, :sr)
 
     # Start learning
     for idx = 1:total_trials_num
@@ -163,6 +176,43 @@ function rl_learning_sr(
             options_weight_matrix[idx+1, :],
             (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
         )
+    end
+
+    options_weight_result = options_weight_matrix[2:end, :]
+    return Dict(
+        :options_weight_history => options_weight_result,
+        :p_selection_history => p_selection_history,
+    )
+end
+
+# 学习抽象的 con/inc 概念的强化学习过程
+function rl_learning_ab(env::ExpEnv, agent::Learner, realsub::RealSub)
+
+    # Check the subtag
+    if env.sub_tag ≠ realsub.sub_tag
+        return println("The env and sub_real_data not come from the same one!")
+    end
+
+    # init learning parameters list
+    total_trials_num, options_weight_matrix, p_selection_history = 
+        init_param(env, :ab)
+
+    # Start learning
+    for idx = 1:total_trials_num
+
+        if isa(agent, Learner_withCCC)
+            conflict = calc_CCC(options_weight_matrix[idx,:], env.stim_action_congruency[idx])
+            α = get_action_para(env, agent, realsub, idx, conflict)
+        else
+            α = get_action_para(env, agent, realsub, idx)
+        end
+
+        ## Update
+        options_weight_matrix[idx+1, :] = update_options_weight_matrix(options_weight_matrix[idx, :], α, env.stim_action_congruency[idx])
+
+        ## Decision
+        p_selection_history[idx] = selection_value(options_weight_matrix[idx+1, :], env.stim_action_congruency[idx])
+    
     end
 
     options_weight_result = options_weight_matrix[2:end, :]

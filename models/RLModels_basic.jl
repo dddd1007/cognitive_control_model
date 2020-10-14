@@ -130,7 +130,7 @@ function init_env_sub(
 end
 
 # 初始化更新价值矩阵和基本参数
-function init_param(env, learn_type = :sr)
+function init_param(env, learn_type)
 
     total_trials_num = length(env.stim_task_unrelated)
 
@@ -168,6 +168,8 @@ function evaluate_relation(x, y, method = :regression)
 end
 
 # 定义更新价值矩阵的函数
+
+# 具体SR联结学习的价值更新函数
 function update_options_weight_matrix(
     weight_vector::Array{Float64,1},
     α::Float64,
@@ -198,6 +200,33 @@ function update_options_weight_matrix(
     return reshape(weight_matrix', 1, 4)
 end
 
+# 抽象概念的价值更新函数
+function update_options_weight_matrix(
+    weight_vector::Array{Float64,1},
+    α::Float64,
+    correct_selection::Int;
+    doreduce = true,
+    debug = false,
+)
+    correct_selection_idx = correct_selection + 1
+    op_selection_idx = 2 - correct_selection
+
+    if debug
+        println("True selection is " * repr(correct_selection_idx))
+        println("The value is " * repr(weight_vector[correct_selection_idx]))
+    end
+
+    weight_vector[correct_selection_idx] =
+        weight_vector[correct_selection_idx] +
+        α * (1 - weight_vector[correct_selection_idx])
+    
+    if doreduce
+        weight_vector[op_selection_idx] = 1 - weight_vector[correct_selection_idx]
+    end
+
+    return weight_vector
+end
+
 # 定义计算冲突程度的函数
 function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Tuple)
     weight_matrix = reshape(weight_vector, 2, 2)'
@@ -206,7 +235,14 @@ function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Tuple)
     op_selection_idx =
         CartesianIndex(correct_selection_idx[1], (abs(correct_selection[2] - 1) + 1))
 
-    CCC = weight_matrix[correct_selection_idx] - weight_matrix[op_selection_idx]
+    CCC = abs(weight_matrix[correct_selection_idx] - weight_matrix[op_selection_idx])
 end
 
+function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Int)
+    correct_selection_idx = correct_selection + 1
+    op_selection_idx = 2 - correct_selection
+
+    CCC = abs(weight_vector[correct_selection_idx] - weight_vector[op_selection_idx])
 end
+
+end # Module

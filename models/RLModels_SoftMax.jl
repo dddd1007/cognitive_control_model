@@ -4,7 +4,7 @@
 ============================================================================#
 module RLModels_SoftMax
 
-using RLModels, GLM
+using RLModels_basic, GLM
 
 #### Define the Class System
 """
@@ -154,12 +154,11 @@ end
 
 ##### 定义强化学习相关函数
 
-# 学习抽象概念的强化学习过程
+# 学习具体SR联结的强化学习过程
 function rl_learning_sr(
     env::ExpEnv,
     agent::Learner,
-    realsub::RealSub;
-    verbose = false,
+    realsub::RealSub
 )
 
     # Check the subtag
@@ -169,7 +168,7 @@ function rl_learning_sr(
 
     # init learning parameters list
     total_trials_num, options_weight_matrix, p_softmax_history =
-        init_param(env, agent)
+        init_param(env, :sr)
 
     # Start learning
     for idx = 1:total_trials_num
