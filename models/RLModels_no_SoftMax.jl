@@ -120,12 +120,11 @@ end
 
 ##### 定义强化学习相关函数
 
-# 学习抽象概念的强化学习过程
+# 学习具体刺激反应联结概念的强化学习过程
 function rl_learning_sr(
     env::ExpEnv,
     agent::Learner,
     realsub::RealSub;
-    eval_method = :regression,
     verbose = false,
 )
 
@@ -135,7 +134,7 @@ function rl_learning_sr(
     end
 
     # init learning parameters list
-    total_trials_num, options_weight_matrix, p_selection_history, decay =
+    total_trials_num, options_weight_matrix, p_selection_history =
         init_param(env, agent)
 
     # Start learning
@@ -148,12 +147,14 @@ function rl_learning_sr(
             α = get_action_para(env, agent, realsub, idx)
         end
         
-        ## Update 
+        ## Update
+        # Please note the first row of the value matrix 
+        # represent the preparedness of the subject!
         options_weight_matrix[idx+1, :] =
             update_options_weight_matrix(
                 options_weight_matrix[idx, :],
                 α,
-                decay,
+                agent.decay,
                 (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
             )
 
@@ -164,7 +165,6 @@ function rl_learning_sr(
         )
     end
 
-    # Evaluate result
     options_weight_result = options_weight_matrix[2:end, :]
     return Dict(
         :options_weight_history => options_weight_result,

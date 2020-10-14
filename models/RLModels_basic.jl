@@ -130,7 +130,7 @@ function init_env_sub(
 end
 
 # 初始化更新价值矩阵和基本参数
-function init_param(env, agent, learn_type = :sr)
+function init_param(env, learn_type = :sr)
 
     total_trials_num = length(env.stim_task_unrelated)
 
@@ -143,9 +143,8 @@ function init_param(env, agent, learn_type = :sr)
     end
 
     p_softmax_history = zeros(Float64, total_trials_num)
-    decay = agent.decay
 
-    return (total_trials_num, options_weight_matrix, p_softmax_history, decay)
+    return (total_trials_num, options_weight_matrix, p_softmax_history)
 end
 
 #### 定义工具性的计算函数

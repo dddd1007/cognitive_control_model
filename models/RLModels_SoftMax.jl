@@ -159,7 +159,6 @@ function rl_learning_sr(
     env::ExpEnv,
     agent::Learner,
     realsub::RealSub;
-    eval_method = :regression,
     verbose = false,
 )
 
@@ -169,7 +168,7 @@ function rl_learning_sr(
     end
 
     # init learning parameters list
-    total_trials_num, options_weight_matrix, p_softmax_history, decay =
+    total_trials_num, options_weight_matrix, p_softmax_history =
         init_param(env, agent)
 
     # Start learning
@@ -187,7 +186,7 @@ function rl_learning_sr(
             update_options_weight_matrix(
                 options_weight_matrix[idx, :],
                 α,
-                decay,
+                agent.decay,
                 (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
             )
 
@@ -199,7 +198,6 @@ function rl_learning_sr(
         )
     end
 
-    # Evaluate result
     options_weight_result = options_weight_matrix[2:end, :]
     return Dict(
         :options_weight_history => options_weight_result,
