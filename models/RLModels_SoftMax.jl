@@ -21,7 +21,7 @@ struct Learner_basic <: Learner
     β_v::Float64
     α_s::Float64
     β_s::Float64
-    decay::Float64
+    decay
 end
 
 # 环境中的学习者, 在错误试次下学习率不同
@@ -36,7 +36,7 @@ struct Learner_witherror <: Learner
     α_s_error::Float64
     β_s_error::Float64
 
-    decay::Float64
+    decay
 end
 
 # 存在冲突控制的学习者
@@ -57,7 +57,7 @@ struct Learner_withCCC <: Learner
     β_s_CCC::Float64
 
     CCC::Float64
-    decay::Float64
+    decay
 end
 
 #### Define the data update functions
@@ -65,7 +65,7 @@ end
 # 定义SR学习中的决策过程
 function sr_softmax(
     options_vector::Array{Float64,1},
-    β::Float64,
+    β,
     true_selection::Tuple,
     debug = false,
 )

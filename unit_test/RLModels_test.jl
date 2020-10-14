@@ -43,17 +43,17 @@ end
     # 价值矩阵更新
     weight_matrix = zeros(Float64, (2, 4))
     weight_matrix[1,:] = [0.5,0.5,0.5,0.5]
-    weight_matrix[2,:] = update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0.9, (0,0))
+    weight_matrix[2,:] = RLModels_no_SoftMax.update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0.9, (0,0))
     @test weight_matrix[2,:] == [0.75, 0.5, 0.5, 0.5]
     
     weight_matrix = zeros(Float64, (2, 4))
     weight_matrix[1,:] = [0.5,0.5,0.6,0.6]
-    weight_matrix[2,:] = update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0.9, (0,0))
+    weight_matrix[2,:] = RLModels_no_SoftMax.update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0.9, (0,0))
     @test weight_matrix[2,:] == [0.75, 0.5, 0.51, 0.51]
 
     weight_matrix = zeros(Float64, (2, 2))
     weight_matrix[1,:] = [0.4, 0.6]
-    weight_matrix[2,:] = update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0)
+    weight_matrix[2,:] = RLModels_no_SoftMax.update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0)
     @test weight_matrix[2,:] ≈ [0.7, 0.3]
 
 end
@@ -140,7 +140,7 @@ begin
 end
 
 agent = RLModels_SoftMax.Learner_witherror(α_v, β_v, α_s, β_s, α_v_error, β_v_error, α_s_error, β_s_error, decay)
-RLModels_SoftMax.rl_learning_sr(sub1_env, agent, sub1_subinfo)
+result = RLModels_SoftMax.rl_learning_sr(sub1_env, agent, sub1_subinfo)
 
 begin
     α_v = 0.1

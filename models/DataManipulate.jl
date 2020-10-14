@@ -14,7 +14,7 @@ module DataManipulate
 
 using DataFrames, DataFramesMeta, GLM
 import CSV
-export evaluate_relation, init_env_sub, update_options_weight_matrix, transform_data!
+export transform_data!
 
 
 #### 定义数据导入的函数

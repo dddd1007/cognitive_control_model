@@ -7,12 +7,15 @@ using InteractiveUtils
 # ╔═╡ 49632e92-060e-11eb-05a8-9b0fccf669bd
 begin
 	push!(LOAD_PATH, "/Users/dddd1007/project2git/cognitive_control_model/models")
-	using DataManipulate
-	include("/Users/dddd1007/project2git/cognitive_control_model/models/RLModels.jl")
+	using DataManipulate, RLModels_basic, DataFramesMeta, CSV, Statistics, StatsBase, GLM, Plots, DataFrames
+    import RLModels_SoftMax, RLModels_no_SoftMax
 end
 
-# ╔═╡ 383dd75c-060e-11eb-1fd1-85f6eb33a9af
-using DataFrames, DataFramesMeta, CSV, Statistics, StatsBase, GLM, Plots
+# ╔═╡ 2a5d7276-0df4-11eb-2eed-39e04e00e1e5
+using Flux
+
+# ╔═╡ ba570318-0e0c-11eb-2d0b-67a9242e2204
+using Hyperopt
 
 # ╔═╡ a60d9102-060a-11eb-1c04-fdb0ce5006ac
 md"# 编写模型各功能"
@@ -26,9 +29,6 @@ md"## 测试DataImporter模块； 导入数据"
 # ╔═╡ 30a9fb66-0644-11eb-08d7-310a38336154
 #导入一个被试的数据开始分析
 all_data = CSV.read("/Users/dddd1007/project2git/cognitive_control_model/data/input/pure_all_data.csv");
-
-# ╔═╡ 64a66ae6-077d-11eb-2e8c-5bdbc301926d
-head(all_data)
 
 # ╔═╡ 91240684-060e-11eb-3e4a-d1c1878d8c3a
 begin
@@ -66,63 +66,47 @@ md"## 强化学习模型"
 # ╔═╡ 9a0ce0ec-09db-11eb-3142-2d5c455cf2f8
 md"### 模型1 学习 S-R 联结的强化学习模型, 使用 SoftMax 决策, 带 Decay"
 
-# ╔═╡ 46a7cac6-0acf-11eb-2ba8-a175c4a140e9
+# ╔═╡ 1e690c28-0df4-11eb-254b-8b81eed2eff3
+md"## 编写最优化部分"
+
+# ╔═╡ 31efd0b2-0dfa-11eb-1e6b-c996cf6deecb
 begin
-	α_v = rand([0.1:0.01:1.0;])
-	β_v = rand([0.1:0.01:5.0;])
-	α_s = rand([0.1:0.01:1.0;])
-	β_s = rand([0.1:0.01:5.0;])
-	decay = rand([0.1:0.01:1.0;])
-	sub1_agent = Learner_basic(α_v, β_v, α_s, β_s, decay)
+    α_v = range(0,1,step = 0.01)
+	α_s = range(0,1,step = 0.01)
+	decay = range(0,1,step = 0.01)
 end
 
-# ╔═╡ e580923a-0c6a-11eb-1207-65691ca00888
-result1 = rl_learning_sr(sub1_env, sub1_agent, sub1_subinfo)
+# ╔═╡ 73efba36-0e0b-11eb-040c-e91eefbf0aff
+θ = params([α_v, α_s, decay])
 
-# ╔═╡ fb79a89c-09db-11eb-15e8-6d7305e1a0f2
-md"### 模型2 学习 S-R 联结的强化学习模型, 使用 SoftMax 决策, 错误试次下学习率不同"
+# ╔═╡ ab63b618-0e18-11eb-3711-7377713dd74f
+abstract type Learner end
 
-# ╔═╡ 87c3559e-0cfe-11eb-16db-7746f3add5e5
-md"## 编写模型诊断部分"
+# ╔═╡ 65fa15da-0e19-11eb-3802-b3e48ba5bf33
+begin
+	ho = @phyperopt for i = 10000,
+					   α_v = [0.1:0.1:1;],
+					   α_s = [0.1:0.1:1;],
+					   decay = [0.1:0.1:1;]
+		
+		agent = RLModels_no_SoftMax.Learner_basic(α_v, α_s, decay)
+		model_stim = RLModels_no_SoftMax.rl_learning_sr(sub1_env, agent, sub1_subinfo)
+		RLModels_basic.evaluate_relation(model_stim[:p_selection_history], sub1_subinfo.RT)[:MSE]
+	end
+end
 
-# ╔═╡ 9422943a-0cfe-11eb-09de-438abdf68a93
-x = result1["p_softmax_history"]
+# ╔═╡ 0f9b2e2a-0e1b-11eb-2ced-674a5af761bb
+plot(ho)
 
-# ╔═╡ b7939784-0cfe-11eb-0977-5996c25272e9
-y = sub1_subinfo.RT
-
-# ╔═╡ bdebbde2-0d16-11eb-1059-f3d7784ba3f6
-data = DataFrame(x = x, y = y);
-
-# ╔═╡ bdb28b52-0cfe-11eb-2bd3-a5504eaa1f42
-probe = lm(@formula(y~x), data)
-
-# ╔═╡ 3d19c4d8-0d17-11eb-1f8f-53597a42ed2f
-plot(x,y,seriestype = :scatter)
-
-# ╔═╡ f1c31cdc-0d16-11eb-131d-4b112501e444
-aic(probe)
-
-# ╔═╡ 1e7a2ca2-0d17-11eb-205d-cf451ad6738f
-bic(probe)
-
-# ╔═╡ 17964e92-0d18-11eb-3562-b91129af4c89
-dof_residual(probe)
-
-# ╔═╡ 2af07aa8-0d18-11eb-1f23-ef8e8e1ff744
-coef(probe)[2]
-
-# ╔═╡ 8b09261a-0d18-11eb-14d5-c586f78204cd
-r2(probe)
+# ╔═╡ 4352aaee-0e1c-11eb-0077-07b0aeeb97e2
+ho
 
 # ╔═╡ Cell order:
 # ╠═a60d9102-060a-11eb-1c04-fdb0ce5006ac
 # ╟─ec09183e-060a-11eb-2690-c9aa2c7e2a31
-# ╠═383dd75c-060e-11eb-1fd1-85f6eb33a9af
 # ╠═49632e92-060e-11eb-05a8-9b0fccf669bd
 # ╟─57f65b86-0d26-11eb-3de0-b5af36db7c1e
 # ╠═30a9fb66-0644-11eb-08d7-310a38336154
-# ╠═64a66ae6-077d-11eb-2e8c-5bdbc301926d
 # ╠═91240684-060e-11eb-3e4a-d1c1878d8c3a
 # ╠═ba1d75b4-077d-11eb-22de-e35a8ca85485
 # ╠═5cb10ab4-07d8-11eb-323a-355d87f5075d
@@ -130,17 +114,12 @@ r2(probe)
 # ╠═a4f8b8c6-0715-11eb-3453-9d4442e54113
 # ╠═622e58a4-087f-11eb-12aa-c9e85acc2d8e
 # ╠═9a0ce0ec-09db-11eb-3142-2d5c455cf2f8
-# ╠═46a7cac6-0acf-11eb-2ba8-a175c4a140e9
-# ╠═e580923a-0c6a-11eb-1207-65691ca00888
-# ╠═fb79a89c-09db-11eb-15e8-6d7305e1a0f2
-# ╠═87c3559e-0cfe-11eb-16db-7746f3add5e5
-# ╠═9422943a-0cfe-11eb-09de-438abdf68a93
-# ╠═b7939784-0cfe-11eb-0977-5996c25272e9
-# ╠═bdebbde2-0d16-11eb-1059-f3d7784ba3f6
-# ╠═bdb28b52-0cfe-11eb-2bd3-a5504eaa1f42
-# ╠═3d19c4d8-0d17-11eb-1f8f-53597a42ed2f
-# ╠═f1c31cdc-0d16-11eb-131d-4b112501e444
-# ╠═1e7a2ca2-0d17-11eb-205d-cf451ad6738f
-# ╠═17964e92-0d18-11eb-3562-b91129af4c89
-# ╠═2af07aa8-0d18-11eb-1f23-ef8e8e1ff744
-# ╠═8b09261a-0d18-11eb-14d5-c586f78204cd
+# ╠═1e690c28-0df4-11eb-254b-8b81eed2eff3
+# ╠═2a5d7276-0df4-11eb-2eed-39e04e00e1e5
+# ╠═31efd0b2-0dfa-11eb-1e6b-c996cf6deecb
+# ╠═73efba36-0e0b-11eb-040c-e91eefbf0aff
+# ╠═ab63b618-0e18-11eb-3711-7377713dd74f
+# ╠═ba570318-0e0c-11eb-2d0b-67a9242e2204
+# ╠═65fa15da-0e19-11eb-3802-b3e48ba5bf33
+# ╠═0f9b2e2a-0e1b-11eb-2ced-674a5af761bb
+# ╠═4352aaee-0e1c-11eb-0077-07b0aeeb97e2

@@ -36,7 +36,7 @@ There are two models with four different methods:
 ============================================================================#
 module RLModels_basic
 
-using DataFrames, DataFramesMeta, GLM
+using DataFrames, DataFramesMeta, GLM, StatsBase
 
 export ExpEnv, RealSub
 export evaluate_relation, init_env_sub
@@ -158,11 +158,12 @@ function evaluate_relation(x, y, method = :regression)
     elseif method == :regression
         data = DataFrame(x = x, y = y);
         reg_result = lm(@formula(y~x), data)
-        β = coef(reg_result)[2]
-        AIC = aic(reg_result)
-        BIC = bic(reg_result)
-        R2 = (reg_result)
-        result = Dict(:β => β, :AIC => AIC, :BIC => BIC, :R2 => r2)
+        β_value = coef(reg_result)[2]
+        aic_value = aic(reg_result)
+        bic_value = bic(reg_result)
+        r2_value = r2(reg_result)
+        mse_value = deviance(reg_result)
+        result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value, :MSE => mse_value)
         return result
     end
 end

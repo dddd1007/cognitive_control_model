@@ -30,7 +30,7 @@ struct Learner_witherror <: Learner
     α_v_error::Float64
     α_s_error::Float64
 
-    decay::Float64
+    decay
 end
 
 # 存在冲突控制的学习者
