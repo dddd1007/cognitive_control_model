@@ -152,9 +152,8 @@ function get_action_para(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub, 
 
 end
 
-# 定义强化学习相关函数
+##### 定义强化学习相关函数
 
-#TODO 将三种强化学习模型整合到一个函数中
 # 学习抽象概念的强化学习过程
 function rl_learning_sr(
     env::ExpEnv,

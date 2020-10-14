@@ -34,7 +34,7 @@ There are two models with four different methods:
 #============================================================================
 # Module0: Basic calculate elements of RLModels                             #
 ============================================================================#
-module RLModels
+module RLModels_basic
 
 using DataFrames, DataFramesMeta, GLM
 
