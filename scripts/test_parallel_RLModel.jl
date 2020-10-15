@@ -514,16 +514,16 @@ function hyperopt_rllearn_withCCC(env, realsub, looptime)
 end
 
 # set the generated file locations
-imgpath = "/home/dddd1007/project2git/cognitive_control_model/data/output/RLModels/img_rl_model_hyperopt/"
-csvpath = "/home/dddd1007/project2git/cognitive_control_model/data/output/RLModels/"
+imgpath = "/Data3/Xiaxk/research_data/cognitive_control_model/data/output/RLModels/img_rl_model_hyperopt/"
+csvpath = "/Data3/Xiaxk/research_data/cognitive_control_model/data/output/RLModels/"
 
 import CSV
 using DataFrames, DataFramesMeta, Plots
 
-include("/home/dddd1007/project2git/cognitive_control_model/src/optim.jl")
+include("/Data3/Xiaxk/research_data/cognitive_control_model/src/optim.jl")
 
 # import all data
-all_data = CSV.read("/home/dddd1007/project2git/cognitive_control_model/data/input/pure_all_data.csv");
+all_data = CSV.read("/Data3/Xiaxk/research_data/cognitive_control_model/data/input/pure_all_data.csv");
 all_data = @where(all_data, :Response .!= "NA")
 
 # Remove the subject who always move the head
