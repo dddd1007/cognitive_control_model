@@ -1,4 +1,4 @@
-push!(LOAD_PATH, "/Users/dddd1007/project2git/cognitive_control_model/models")
+push!(LOAD_PATH, "/home/dddd1007/project2git/cognitive_control_model/models")
 using DataManipulate, RLModels_basic, DataFramesMeta, CSV
 using Hyperopt, Plots
 import RLModels_SoftMax, RLModels_no_SoftMax
