@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.3
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -84,10 +84,10 @@ abstract type Learner end
 
 # ╔═╡ 65fa15da-0e19-11eb-3802-b3e48ba5bf33
 begin
-	ho = @phyperopt for i = 10000,
-					   α_v = [0.1:0.1:1;],
-					   α_s = [0.1:0.1:1;],
-					   decay = [0.1:0.1:1;]
+	ho = @phyperopt for i = 1000,
+					   α_v = [0.01:0.01:1;],
+					   α_s = [0.01:0.01:1;],
+					   decay = [0.01:0.01:1;]
 		
 		agent = RLModels_no_SoftMax.Learner_basic(α_v, α_s, decay)
 		model_stim = RLModels_no_SoftMax.rl_learning_sr(sub1_env, agent, sub1_subinfo)
