@@ -11,6 +11,7 @@ include("../src/optim.jl")
 all_data = CSV.read("/Users/dddd1007/project2git/cognitive_control_model/data/input/pure_all_data.csv");
 all_data = @where(all_data, :Response .!= "NA")
 
+# Remove the subject who always move the head
 sub27 = @where(all_data, :Subject_num .== 27)
 
 begin
@@ -48,7 +49,7 @@ for sub_num in 1:36
     each_env, each_subinfo = init_env_sub(each_sub_data, env_idx_dict, sub_idx_dict);
     
     # basic model
-    optim_param, eval_result, vis = hyperopt_rllearn_basic(each_env, each_subinfo, 1)
+    optim_param, eval_result, vis = hyperopt_rllearn_basic(each_env, each_subinfo, 100000000)
 
     params_basic[sub_num, 1:3] .= optim_param
     params_basic[sub_num, 4]   = eval_result
@@ -56,7 +57,7 @@ for sub_num in 1:36
     savefig(vis, imgpath * "basic/" * each_env.sub_tag[1] * ".png")
 
     # error model
-    optim_param, eval_result, vis = hyperopt_rllearn_witherror(each_env, each_subinfo, 1)
+    optim_param, eval_result, vis = hyperopt_rllearn_witherror(each_env, each_subinfo, 100000000)
 
     params_error[sub_num, 1:5] .= optim_param
     params_error[sub_num, 6]   = eval_result
@@ -64,7 +65,7 @@ for sub_num in 1:36
     savefig(vis,imgpath * "error/" * each_env.sub_tag[1] * ".png")
 
     # CCC model
-    optim_param, eval_result, vis = hyperopt_rllearn_withCCC(each_env, each_subinfo, 1)
+    optim_param, eval_result, vis = hyperopt_rllearn_withCCC(each_env, each_subinfo, 100000000)
 
     params_CCC[sub_num, 1:8] .= optim_param
     params_CCC[sub_num, 9]   = eval_result
