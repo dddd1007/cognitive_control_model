@@ -10,7 +10,7 @@ begin
             "stim_loc" => loc_rule, "congruency" => congruency_rule)
     end
     transform_data!(all_data, transform_rule)
-    sub1_data = @where(all_data, :Subject .== "sub01_Yangmiao");
+    sub1_data = @where(all_data, :Subject_num .== 1);
     begin
         env_idx_dict = Dict("stim_task_related" => "stim_color", 
                             "stim_task_unrelated" => "stim_loc", 
