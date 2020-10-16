@@ -111,7 +111,7 @@ end
 function get_action_para(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub, idx::Int, conflict)
 
     if env.env_type[idx] == "v" 
-        if realsub.corrections[idx] == 1 && conflict < agent.CCC
+        if realsub.corrections[idx] == 1 && conflict ≤ agent.CCC
             α = agent.α_v
         elseif realsub.corrections[idx] == 1 && conflict > agent.CCC
             α = agent.α_v_CCC
@@ -119,7 +119,7 @@ function get_action_para(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub, 
             α = agent.α_v_error
         end
     elseif env.env_type[idx] == "s"
-        if realsub.corrections[idx] == 1 && conflict < agent.CCC
+        if realsub.corrections[idx] == 1 && conflict ≤ agent.CCC
             α = agent.α_s
         elseif realsub.corrections[idx] == 1 && conflict > agent.CCC
             α = agent.α_s_CCC
