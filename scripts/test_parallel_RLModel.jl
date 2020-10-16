@@ -346,7 +346,11 @@ function get_action_para(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub, 
     if env.env_type[idx] == "v" 
         if realsub.corrections[idx] == 1 && conflict < agent.CCC
             α = agent.α_v
+<<<<<<< HEAD
         elseif realsub.corrections[idx] == 1 && conflict ≥ agent.CCC
+=======
+        elseif realsub.corrections[idx] == 1 && conflict > agent.CCC
+>>>>>>> f0715b4d823f203f52113f7a20471cbf7e4fdd5b
             α = agent.α_v_CCC
         elseif realsub.corrections[idx] == 0
             α = agent.α_v_error
@@ -354,7 +358,11 @@ function get_action_para(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub, 
     elseif env.env_type[idx] == "s"
         if realsub.corrections[idx] == 1 && conflict < agent.CCC
             α = agent.α_s
+<<<<<<< HEAD
         elseif realsub.corrections[idx] == 1 && conflict ≥ agent.CCC
+=======
+        elseif realsub.corrections[idx] == 1 && conflict > agent.CCC
+>>>>>>> f0715b4d823f203f52113f7a20471cbf7e4fdd5b
             α = agent.α_s_CCC
         elseif realsub.corrections[idx] == 0
             α = agent.α_s_error
@@ -467,11 +475,17 @@ function hyperopt_rllearn_basic(env, realsub, looptime)
         evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
     end
     
+<<<<<<< HEAD
     optim_param, eval_result = minimum(ho)
     verbose_table = DataFrame(VectorOfArray(ho.history)', collect(ho.params))
     verbose_table[:MSE] = ho.results
 
     return (optim_param, eval_result, verbose_table)
+=======
+    vis = plot(ho)
+    optim_param, eval_result = minimum(ho)
+    return (optim_param, eval_result, vis)
+>>>>>>> f0715b4d823f203f52113f7a20471cbf7e4fdd5b
 end
 
 function hyperopt_rllearn_witherror(env, realsub, looptime)
@@ -487,11 +501,17 @@ function hyperopt_rllearn_witherror(env, realsub, looptime)
         evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
     end
 
+<<<<<<< HEAD
     optim_param, eval_result = minimum(ho)
     verbose_table = DataFrame(VectorOfArray(ho.history)', collect(ho.params))
     verbose_table[:MSE] = ho.results
 
     return (optim_param, eval_result, verbose_table)
+=======
+    vis = plot(ho)
+    optim_param, eval_result = minimum(ho)
+    return (optim_param, eval_result, vis)
+>>>>>>> f0715b4d823f203f52113f7a20471cbf7e4fdd5b
 end
 
 function hyperopt_rllearn_withCCC(env, realsub, looptime)
@@ -500,8 +520,13 @@ function hyperopt_rllearn_withCCC(env, realsub, looptime)
                         α_s = [0.01:0.01:1;],
                         α_v_error = [0.01:0.01:1;],
                         α_s_error = [0.01:0.01:1;],
+<<<<<<< HEAD
                         α_v_CCC = [0.01:0.01:1;], 
                         α_s_CCC = [0.01:0.01:1;],
+=======
+                        α_s_CCC = [0.01:0.01:1;], 
+                        α_v_CCC = [0.01:0.01:1;],
+>>>>>>> f0715b4d823f203f52113f7a20471cbf7e4fdd5b
                         CCC = [0.01:0.01:1;], 
                         decay = [0.01:0.01:1;]
 
@@ -510,11 +535,17 @@ function hyperopt_rllearn_withCCC(env, realsub, looptime)
         evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
     end
 
+<<<<<<< HEAD
     optim_param, eval_result = minimum(ho)
     verbose_table = DataFrame(VectorOfArray(ho.history)', collect(ho.params))
     verbose_table[:MSE] = ho.results
 
     return (optim_param, eval_result, verbose_table)
+=======
+    vis = plot(ho)
+    optim_param, eval_result = minimum(ho)
+    return (optim_param, eval_result, vis)
+>>>>>>> f0715b4d823f203f52113f7a20471cbf7e4fdd5b
 end
 
 # set the generated file locations
@@ -550,6 +581,7 @@ begin
                         "corrections" => "Type", "sub_tag" => "Subject")
 end
 
+<<<<<<< HEAD
 # For analysis each subject
 Threads.@threads for sub_num in 1:36
     #sub_num = 2
@@ -563,10 +595,25 @@ Threads.@threads for sub_num in 1:36
     params_error = zeros(1, 6)
     params_CCC = zeros(1, 9)
 
+=======
+params_basic = zeros(36, 4)
+params_error = zeros(36, 6)
+params_CCC = zeros(36, 9)
+
+# For analysis each subject
+Threads.@threads for sub_num in 1:36
+    println(sub_num)
+
+    if sub_num == 27
+        continue
+    end
+
+>>>>>>> f0715b4d823f203f52113f7a20471cbf7e4fdd5b
     each_sub_data = @where(all_data, :Subject_num .== sub_num);
     each_env, each_subinfo = init_env_sub(each_sub_data, env_idx_dict, sub_idx_dict);
     
     # basic model
+<<<<<<< HEAD
     println("= Begin basic model of " * repr(sub_num) * " =")
     optim_param, eval_result, verbose_table = hyperopt_rllearn_basic(each_env, each_subinfo, 10000)
 
@@ -602,3 +649,36 @@ Threads.@threads for sub_num in 1:36
 
     println("! End CCC model of " * repr(sub_num) * " =")
 end
+=======
+    optim_param, eval_result, vis = hyperopt_rllearn_basic(each_env, each_subinfo, 100000)
+
+    params_basic[sub_num, 1:3] .= optim_param
+    params_basic[sub_num, 4]   = eval_result
+    
+    savefig(vis, imgpath * "basic/" * each_env.sub_tag[1] * ".png")
+
+    # error model
+    optim_param, eval_result, vis = hyperopt_rllearn_witherror(each_env, each_subinfo, 1000000)
+
+    params_error[sub_num, 1:5] .= optim_param
+    params_error[sub_num, 6]   = eval_result
+    
+    savefig(vis,imgpath * "error/" * each_env.sub_tag[1] * ".png")
+
+    # CCC model
+    optim_param, eval_result, vis = hyperopt_rllearn_withCCC(each_env, each_subinfo, 10000000)
+
+    params_CCC[sub_num, 1:8] .= optim_param
+    params_CCC[sub_num, 9]   = eval_result
+    
+    savefig(vis,imgpath * "CCC/" * each_env.sub_tag[1] * ".png")
+end
+
+params_basic_table = DataFrame(params_basic, [:α_v, :α_s, :decay, :MSE])
+params_error_table = DataFrame(params_error, [:α_v, :α_s, :α_v_error, :α_s_error, :decay, :MSE])
+params_CCC_table   = DataFrame(params_CCC,   [:α_v, :α_s, :α_v_error, :α_s_error, :α_v_CCC, :α_s_CCC, :CCC, :decay, :MSE])
+
+CSV.write(csvpath * "params_basic.csv", params_basic_table)
+CSV.write(csvpath * "params_error.csv", params_error_table)
+CSV.write(csvpath * "params_CCC.csv",   params_CCC_table)
+>>>>>>> f0715b4d823f203f52113f7a20471cbf7e4fdd5b
