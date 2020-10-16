@@ -239,8 +239,6 @@ function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Int)
     CCC = abs(weight_vector[correct_selection_idx] - weight_vector[op_selection_idx])
 end
 
-using RLModels_basic, GLM
-
 #### Define the Class System
 """
     Learner_basic
@@ -459,7 +457,7 @@ end
 
 function hyperopt_rllearn_basic(env, realsub, looptime)
     
-    ho = @phyperopt for i = looptime,
+    ho = @hyperopt for i = looptime,
                         α_v = [0.01:0.01:1;],
                         α_s = [0.01:0.01:1;],
                         decay = [0.01:0.01:1;]
@@ -475,7 +473,7 @@ function hyperopt_rllearn_basic(env, realsub, looptime)
 end
 
 function hyperopt_rllearn_witherror(env, realsub, looptime)
-    ho = @phyperopt for i = looptime,
+    ho = @hyperopt for i = looptime,
                         α_v = [0.01:0.01:1;],
                         α_s = [0.01:0.01:1;],
                         α_v_error = [0.01:0.01:1;],
@@ -493,7 +491,7 @@ function hyperopt_rllearn_witherror(env, realsub, looptime)
 end
 
 function hyperopt_rllearn_withCCC(env, realsub, looptime)
-    ho = @phyperopt for i = looptime,
+    ho = @hyperopt for i = looptime,
                         α_v = [0.01:0.01:1;],
                         α_s = [0.01:0.01:1;],
                         α_v_error = [0.01:0.01:1;],
@@ -514,13 +512,11 @@ function hyperopt_rllearn_withCCC(env, realsub, looptime)
 end
 
 # set the generated file locations
-imgpath = "/Data3/Xiaxk/research_data/cognitive_control_model/data/output/RLModels/img_rl_model_hyperopt/"
+imgpath = "/Data3/Xiaxk/research_data/cognitive_control_model/data/output/RLModels/img_rl_model_hyperopt/" 
 csvpath = "/Data3/Xiaxk/research_data/cognitive_control_model/data/output/RLModels/"
 
 import CSV
 using DataFrames, DataFramesMeta, Plots
-
-include("/Data3/Xiaxk/research_data/cognitive_control_model/src/optim.jl")
 
 # import all data
 all_data = CSV.read("/Data3/Xiaxk/research_data/cognitive_control_model/data/input/pure_all_data.csv");
@@ -553,7 +549,7 @@ params_error = zeros(36, 6)
 params_CCC = zeros(36, 9)
 
 # For analysis each subject
-for sub_num in 1:36
+Threads.@threads for sub_num in 1:36
     println(sub_num)
 
     if sub_num == 27
@@ -580,7 +576,7 @@ for sub_num in 1:36
     savefig(vis,imgpath * "error/" * each_env.sub_tag[1] * ".png")
 
     # CCC model
-    optim_param, eval_result, vis = hyperopt_rllearn_withCCC(each_env, each_subinfo, 1000000)
+    optim_param, eval_result, vis = hyperopt_rllearn_withCCC(each_env, each_subinfo, 10000000)
 
     params_CCC[sub_num, 1:8] .= optim_param
     params_CCC[sub_num, 9]   = eval_result
