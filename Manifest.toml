@@ -505,7 +505,7 @@ version = "0.4.4"
 uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[Models]]
-deps = ["CSV", "DataFrames", "DataFramesMeta", "GLM", "Hyperopt", "Plots", "StatsBase"]
+deps = ["CSV", "DataFrames", "DataFramesMeta", "GLM", "Hyperopt", "Plots", "RecursiveArrayTools", "StatsBase"]
 path = "Models"
 uuid = "73df4adf-0718-4152-b75d-f87bfd26a255"
 version = "0.1.0"
@@ -680,6 +680,12 @@ deps = ["Dates", "NaNMath", "PlotUtils", "RecipesBase"]
 git-tree-sha1 = "4a325c9bcc2d8e62a8f975b9666d0251d53b63b9"
 uuid = "01d81517-befc-4cb6-b9ec-a95719d0359c"
 version = "0.1.13"
+
+[[RecursiveArrayTools]]
+deps = ["ArrayInterface", "LinearAlgebra", "RecipesBase", "Requires", "StaticArrays", "Statistics", "ZygoteRules"]
+git-tree-sha1 = "639b3c4c7bcdc42be3ce69c4919eac17be73242b"
+uuid = "731186ca-8d62-57ce-b412-fbd966d074cd"
+version = "2.7.2"
 
 [[Reexport]]
 deps = ["Pkg"]

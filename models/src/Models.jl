@@ -17,4 +17,5 @@ include("RLModels/RLModels.jl")
 
 # Dynamic fitting
 include("Optim.jl")
+
 end # module
