@@ -7,14 +7,15 @@ Version: 0.0.009
 
 导入研究数据并初始化学习环境 =#
 
-#= =========================================================================== 
-# Global: Define RLModels with Softmax                                      #
-=========================================================================== =#
+#============================================================================= 
+# Global: Define RLModels with Softmax                                       #
+=============================================================================#
 module DataManipulate
 
 using DataFrames, DataFramesMeta, GLM
 import CSV
 export transform_data!
+
 
 
 #### 定义数据导入的函数
@@ -52,4 +53,4 @@ function transform_data!(raw_data::DataFrame, transform_rule::Dict)
     end
 end
 
-end
+end # module

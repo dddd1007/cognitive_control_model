@@ -31,17 +31,20 @@ There are two models with four different methods:
     - Change Softmax model's Q-value
     - Both
 =#
+
 #============================================================================
 # Module0: Basic calculate elements of RLModels                             #
 ============================================================================#
-module RLModels_basic
+module RLModels
 
-using DataFrames, DataFramesMeta, GLM, StatsBase
+using GLM, DataFrames
 
 export ExpEnv, RealSub
-export evaluate_relation, init_env_sub
+export init_env_sub, evaluate_relation 
 export update_options_weight_matrix, init_param
 export calc_CCC
+
+#### 定义类型系统
 
 # Init Class system
 
@@ -72,8 +75,6 @@ struct RealSub
 end
 
 #### Define the functions
-
-#### 定义初始化计算的函数
 
 """
 init_env_sub(
@@ -246,4 +247,6 @@ function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Int)
     CCC = abs(weight_vector[correct_selection_idx] - weight_vector[op_selection_idx])
 end
 
-end # Module
+include("RLModels_NoSoftMax.jl")
+include("RLModels_WithSoftMax.jl")
+end # module
