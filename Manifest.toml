@@ -330,9 +330,9 @@ version = "0.8.19"
 
 [[Hyperopt]]
 deps = ["BayesianOptimization", "Distributed", "GaussianProcesses", "Juno", "LatinHypercubeSampling", "Lazy", "LinearAlgebra", "MacroTools", "Parameters", "Random", "RecipesBase", "Statistics", "Test"]
-git-tree-sha1 = "c7f2c8eac57f6538511676b3c16df76a1d5170d8"
+git-tree-sha1 = "cb434d58e9292a5b3a33640d34a41423bca7d383"
 uuid = "93e5fe13-2215-51db-baaf-2e9a34fb2712"
-version = "0.3.3"
+version = "0.3.4"
 
 [[IRTools]]
 deps = ["InteractiveUtils", "MacroTools", "Test"]
@@ -452,9 +452,9 @@ version = "0.8.26"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
-git-tree-sha1 = "f7d2e3f654af75f01ec49be82c231c382214223a"
+git-tree-sha1 = "6a8a2a625ab0dea913aba95c11370589e0239ff0"
 uuid = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
-version = "0.5.5"
+version = "0.5.6"
 
 [[Markdown]]
 deps = ["Base64"]

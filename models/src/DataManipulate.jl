@@ -5,7 +5,8 @@ Author: Xiaokai Xia (xia@xiaokai.me)
 Date: 2020-09-28
 Version: 0.0.009
 
-导入研究数据并初始化学习环境 =#
+导入研究数据并初始化学习环境 
+=#
 
 #============================================================================= 
 # Global: Define RLModels with Softmax                                       #
@@ -14,9 +15,6 @@ module DataManipulate
 
 using DataFrames, DataFramesMeta, GLM
 import CSV
-export transform_data!
-
-
 
 #### 定义数据导入的函数
 """
