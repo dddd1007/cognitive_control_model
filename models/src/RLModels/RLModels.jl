@@ -37,7 +37,7 @@ There are two models with four different methods:
 ============================================================================#
 module RLModels
 
-using GLM, DataFrames
+using GLM, DataFrames, StatsBase
 
 export ExpEnv, RealSub
 export init_env_sub, evaluate_relation 
