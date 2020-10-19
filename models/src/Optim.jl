@@ -78,7 +78,7 @@ function RL_NoSoftMax_basic_AB(env, realsub, looptime)
 
         agent =  RLModels.NoSoftMax.Learner_basic(α_v, α_s, decay)
         model_stim = RLModels.NoSoftMax.rl_learning_ab(env, agent, realsub)
-        evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
+        evaluate_relation(model_stim[:PE], realsub.RT)[:MSE]
     end
     
     optim_param, eval_result = minimum(ho)
@@ -98,7 +98,7 @@ function RL_NoSoftMax_witherror_AB(env, realsub, looptime)
 
         agent = RLModels.NoSoftMax.Learner_witherror(α_v, α_s, α_v_error, α_s_error, decay)
         model_stim = RLModels.NoSoftMax.rl_learning_ab(env, agent, realsub)
-        evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
+        evaluate_relation(model_stim[:PE], realsub.RT)[:MSE]
     end
 
     optim_param, eval_result = minimum(ho)
@@ -121,7 +121,7 @@ function RL_NoSoftMax_withCCC_AB(env, realsub, looptime)
 
         agent = RLModels.NoSoftMax.Learner_withCCC(α_v, α_s, α_v_error, α_s_error, α_v_CCC, α_s_CCC, CCC, decay)
         model_stim = RLModels.NoSoftMax.rl_learning_ab(env, agent, realsub)
-        evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
+        evaluate_relation(model_stim[:PE], realsub.RT)[:MSE]
     end
 
     optim_param, eval_result = minimum(ho)

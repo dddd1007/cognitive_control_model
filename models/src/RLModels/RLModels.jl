@@ -144,8 +144,9 @@ function init_param(env, learn_type)
     end
 
     p_softmax_history = zeros(Float64, total_trials_num)
+    PE_history = zeros(Float64, total_trials_num)
 
-    return (total_trials_num, options_weight_matrix, p_softmax_history)
+    return (total_trials_num, options_weight_matrix, p_softmax_history, PE_history)
 end
 
 #### 定义工具性的计算函数

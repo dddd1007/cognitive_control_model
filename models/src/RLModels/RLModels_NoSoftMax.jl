@@ -194,7 +194,7 @@ function rl_learning_ab(env::ExpEnv, agent::Learner, realsub::RealSub)
     end
 
     # init learning parameters list
-    total_trials_num, options_weight_matrix, p_selection_history = 
+    total_trials_num, options_weight_matrix, p_selection_history, PE_history = 
         init_param(env, :ab)
 
     # Start learning
@@ -212,6 +212,13 @@ function rl_learning_ab(env::ExpEnv, agent::Learner, realsub::RealSub)
 
         ## Decision
         p_selection_history[idx] = selection_value(options_weight_matrix[idx+1, :], env.stim_action_congruency[idx])
+        
+        ## Calc PE
+        if env.stim_action_congruency[idx] == 1
+            PE_history[idx] = 1 - p_selection_history[idx]
+        elseif env.stim_action_congruency[idx] == 0
+            PE_history[idx] = p_selection_history[idx]
+        end
     
     end
 
@@ -219,6 +226,7 @@ function rl_learning_ab(env::ExpEnv, agent::Learner, realsub::RealSub)
     return Dict(
         :options_weight_history => options_weight_result,
         :p_selection_history => p_selection_history,
+        :PE => PE_history
     )
 end
 

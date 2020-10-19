@@ -31,7 +31,7 @@ end
 
 # For analysis each subject
 Threads.@threads for sub_num in 1:36
-    #sub_num = 2
+    #sub_num = 11
     println("========= Begin Sub " * repr(sub_num) * " ==========")
 
     if sub_num == 27 || sub_num == 6
@@ -59,25 +59,25 @@ Threads.@threads for sub_num in 1:36
 
     # error model
     println("= Begin error model of " * repr(sub_num) * " =")
-    optim_param, eval_result, verbose_table = Models.Optim.RL_NoSoftMax_witherror_AB(each_env, each_subinfo, 100000)
+    optim_param, eval_result, verbose_table = Models.Optim.RL_NoSoftMax_witherror_AB(each_env, each_subinfo, 10000)
 
     params_error[1:5] .= optim_param
     params_error[6]   = eval_result
     params_error_table = DataFrame(params_error, [:α_v, :α_s, :α_v_error, :α_s_error, :decay, :MSE])
-    CSV.write(csvpath * "sub_" * repr(sub_num) * "_params_error.csv", params_error_table) 
-    CSV.write(csvpath * "sub_" * repr(sub_num) * "_params_error_verbose.csv", verbose_table) 
+    CSV.write(csvpath * "/sub_" * repr(sub_num) * "_params_error.csv", params_error_table) 
+    CSV.write(csvpath * "/sub_" * repr(sub_num) * "_params_error_verbose.csv", verbose_table) 
 
     println("! End error model of " * repr(sub_num) * " =")
     
     # CCC model
     println("= Begin CCC model of " * repr(sub_num) * " =")
-    optim_param, eval_result, verbose_table = Models.Optim.RL_NoSoftMax_withCCC_AB(each_env, each_subinfo, 1000000)
+    optim_param, eval_result, verbose_table = Models.Optim.RL_NoSoftMax_withCCC_AB(each_env, each_subinfo, 10000)
 
     params_CCC[1:8] .= optim_param
     params_CCC[9]   = eval_result
     params_CCC_table   = DataFrame(params_CCC,   [:α_v, :α_s, :α_v_error, :α_s_error, :α_v_CCC, :α_s_CCC, :CCC, :decay, :MSE])
-    CSV.write(csvpath * "sub_" * repr(sub_num) * "_params_CCC.csv",   params_CCC_table)
-    CSV.write(csvpath * "sub_" * repr(sub_num) * "_params_CCC_verbose.csv",   verbose_table)
+    CSV.write(csvpath * "/sub_" * repr(sub_num) * "_params_CCC.csv",   params_CCC_table)
+    CSV.write(csvpath * "/sub_" * repr(sub_num) * "_params_CCC_verbose.csv",   verbose_table)
 
     println("! End CCC model of " * repr(sub_num) * " =")
 end
