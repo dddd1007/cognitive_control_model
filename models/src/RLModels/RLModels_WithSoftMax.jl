@@ -3,19 +3,20 @@
 ============================================================================#
 module WithSoftMax
 
-using Models.RLModels
+using ..RLModels
 
 #### Define the Class System
 """
-    Learner_basic
+    RLLearner_basic
 
-A learner which learnt parameters from the experiment environment.
+A RLLearner which learnt parameters from the experiment environment.
 """
-# 环境中的学习者
-abstract type Learner end
+#####
+##### 定义类型系统
+#####
 
 # 环境中的学习者, 在基本条件下
-struct Learner_basic <: Learner
+struct RLLearner_basic <: RLLearner
     α_v::Float64
     β_v::Float64
     α_s::Float64
@@ -24,7 +25,7 @@ struct Learner_basic <: Learner
 end
 
 # 环境中的学习者, 在错误试次下学习率不同
-struct Learner_witherror <: Learner
+struct RLLearner_witherror <: RLLearner
     α_v::Float64
     β_v::Float64
     α_s::Float64
@@ -39,7 +40,7 @@ struct Learner_witherror <: Learner
 end
 
 # 存在冲突控制的学习者
-struct Learner_withCCC <: Learner
+struct RLLearner_withCCC <: RLLearner
     α_v::Float64
     β_v::Float64
     α_s::Float64
@@ -81,7 +82,7 @@ function sr_softmax(options_vector::Array{Float64,1}, β, true_selection::Tuple,
 end
 
 # 定义参数选择过程的函数
-function get_action_para(env::ExpEnv, agent::Learner_basic, realsub::RealSub, idx::Int)
+function get_action_para(env::ExpEnv, agent::RLLearner_basic, realsub::RealSub, idx::Int)
     if env.env_type[idx] == "v"
         β = agent.β_v
         α = agent.α_v
@@ -93,7 +94,7 @@ function get_action_para(env::ExpEnv, agent::Learner_basic, realsub::RealSub, id
     return (α, β)
 end
 
-function get_action_para(env::ExpEnv, agent::Learner_witherror, realsub::RealSub, idx::Int)
+function get_action_para(env::ExpEnv, agent::RLLearner_witherror, realsub::RealSub, idx::Int)
     if env.env_type[idx] == "v"
         if realsub.corrections[idx] == 1
             β = agent.β_v
@@ -115,7 +116,7 @@ function get_action_para(env::ExpEnv, agent::Learner_witherror, realsub::RealSub
     return (α, β)
 end
 
-function get_action_para(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub, idx::Int,
+function get_action_para(env::ExpEnv, agent::RLLearner_withCCC, realsub::RealSub, idx::Int,
                          conflict)
     if env.env_type[idx] == "v"
         if realsub.corrections[idx] == 1 && conflict ≤ agent.CCC
@@ -147,7 +148,7 @@ end
 ##### 定义强化学习相关函数
 
 # 学习具体SR联结的强化学习过程
-function rl_learning_sr(env::ExpEnv, agent::Learner, realsub::RealSub)
+function rl_learning_sr(env::ExpEnv, agent::RLLearner, realsub::RealSub)
 
     # Check the subtag
     if env.sub_tag != realsub.sub_tag
@@ -159,7 +160,7 @@ function rl_learning_sr(env::ExpEnv, agent::Learner, realsub::RealSub)
 
     # Start learning
     for idx in 1:total_trials_num
-        if isa(agent, Learner_withCCC)
+        if isa(agent, RLLearner_withCCC)
             conflict = calc_CCC(options_weight_matrix[idx, :],
                                 (env.stim_task_unrelated[idx],
                                  env.stim_correct_action[idx]))

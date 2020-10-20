@@ -1,5 +1,5 @@
 #= 
-Data importer for Lingwang's lab
+Data importer in Lingwang's lab
 
 Author: Xiaokai Xia (xia@xiaokai.me)
 Date: 2020-09-28
@@ -11,10 +11,13 @@ Version: 0.0.009
 #============================================================================= 
 # Global: Define RLModels with Softmax                                       #
 =============================================================================#
+__precompile__()
 module DataManipulate
 
 using DataFrames, DataFramesMeta, GLM
 import CSV
+
+export transform_data!
 
 #### 定义数据导入的函数
 """

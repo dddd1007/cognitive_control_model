@@ -13,7 +13,7 @@ function RL_NoSoftMax_basic_SR(env, realsub, looptime)
                         α_s = [0.01:0.01:1;],
                         decay = [0.01:0.01:1;]
 
-        agent =  RLModels.WithSoftMax.Learner_basic(α_v, α_s, decay)
+        agent =  RLModels.WithSoftMax.RLLearner_basic(α_v, α_s, decay)
         model_stim = RLModels.WithSoftMax.rl_learning_sr(env, agent, realsub)
         evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
     end
@@ -33,7 +33,7 @@ function RL_NoSoftMax_witherror_SR(env, realsub, looptime)
                         α_s_error = [0.01:0.01:1;], 
                         decay = [0.01:0.01:1;]
 
-        agent = RLModels.WithSoftMax.Learner_witherror(α_v, α_s, α_v_error, α_s_error, decay)
+        agent = RLModels.WithSoftMax.RLLearner_witherror(α_v, α_s, α_v_error, α_s_error, decay)
         model_stim = RLModels.WithSoftMax.rl_learning_sr(env, agent, realsub)
         evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
     end
@@ -56,7 +56,7 @@ function RL_NoSoftMax_withCCC_SR(env, realsub, looptime)
                         CCC = [0.01:0.01:1;], 
                         decay = [0.01:0.01:1;]
 
-        agent = RLModels.WithSoftMax.Learner_withCCC(α_v, α_s, α_v_error, α_s_error, α_v_CCC, α_s_CCC, CCC, decay)
+        agent = RLModels.WithSoftMax.RLLearner_withCCC(α_v, α_s, α_v_error, α_s_error, α_v_CCC, α_s_CCC, CCC, decay)
         model_stim = RLModels.WithSoftMax.rl_learning_sr(env, agent, realsub)
         evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
     end
@@ -76,7 +76,7 @@ function RL_NoSoftMax_basic_AB(env, realsub, looptime)
                         α_s = [0.01:0.01:1;],
                         decay = [0.01:0.01:1;]
 
-        agent =  RLModels.NoSoftMax.Learner_basic(α_v, α_s, decay)
+        agent =  RLModels.NoSoftMax.RLLearner_basic(α_v, α_s, decay)
         model_stim = RLModels.NoSoftMax.rl_learning_ab(env, agent, realsub)
         evaluate_relation(model_stim[:PE], realsub.RT)[:MSE]
     end
@@ -96,7 +96,7 @@ function RL_NoSoftMax_witherror_AB(env, realsub, looptime)
                         α_s_error = [0.01:0.01:1;], 
                         decay = [0.01:0.01:1;]
 
-        agent = RLModels.NoSoftMax.Learner_witherror(α_v, α_s, α_v_error, α_s_error, decay)
+        agent = RLModels.NoSoftMax.RLLearner_witherror(α_v, α_s, α_v_error, α_s_error, decay)
         model_stim = RLModels.NoSoftMax.rl_learning_ab(env, agent, realsub)
         evaluate_relation(model_stim[:PE], realsub.RT)[:MSE]
     end
@@ -119,7 +119,7 @@ function RL_NoSoftMax_withCCC_AB(env, realsub, looptime)
                         CCC = [0.01:0.01:1;], 
                         decay = [0.01:0.01:1;]
 
-        agent = RLModels.NoSoftMax.Learner_withCCC(α_v, α_s, α_v_error, α_s_error, α_v_CCC, α_s_CCC, CCC, decay)
+        agent = RLModels.NoSoftMax.RLLearner_withCCC(α_v, α_s, α_v_error, α_s_error, α_v_CCC, α_s_CCC, CCC, decay)
         model_stim = RLModels.NoSoftMax.rl_learning_ab(env, agent, realsub)
         evaluate_relation(model_stim[:PE], realsub.RT)[:MSE]
     end

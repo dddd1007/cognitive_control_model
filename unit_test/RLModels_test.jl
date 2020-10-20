@@ -70,7 +70,7 @@ end
         decay = 0.9
     end
 
-    agent = RLModels_SoftMax.Learner_basic(α_v, β_v, α_s, β_s, decay)
+    agent = RLModels_SoftMax.RLLearner_basic(α_v, β_v, α_s, β_s, decay)
     @test RLModels_SoftMax.rl_learning_sr(sub1_env, agent, sub1_subinfo)
 
     # 错误试次下学习率不同
@@ -88,7 +88,7 @@ end
         decay = 0.9
     end
 
-    agent = RLModels_SoftMax.Learner_witherror(α_v, β_v, α_s, β_s, α_v_error, β_v_error, α_s_error, β_s_error, decay)
+    agent = RLModels_SoftMax.RLLearner_witherror(α_v, β_v, α_s, β_s, α_v_error, β_v_error, α_s_error, β_s_error, decay)
     @test RLModels_SoftMax.rl_learning_sr(sub1_env, agent, sub1_subinfo)
 
     # 有主动控制的CCC的模型
@@ -111,7 +111,7 @@ end
         decay = 0.9
     end
 
-    agent = RLModels_SoftMax.Learner_withCCC(α_v, β_v, α_s, β_s, α_v_error, β_v_error, α_s_error, β_s_error, α_v_CCC, β_v_CCC, α_s_CCC, β_s_CCC, decay)
+    agent = RLModels_SoftMax.RLLearner_withCCC(α_v, β_v, α_s, β_s, α_v_error, β_v_error, α_s_error, β_s_error, α_v_CCC, β_v_CCC, α_s_CCC, β_s_CCC, decay)
     RLModels_SoftMax.rl_learning_sr(sub1_env, agent, sub1_subinfo)
 end
 
@@ -121,7 +121,7 @@ begin
     α_s = 0.2
 end
 
-agent = RLModels_no_SoftMax.Learner_basic(α_v, α_s, decay)
+agent = RLModels_no_SoftMax.RLLearner_basic(α_v, α_s, decay)
 result = RLModels_no_SoftMax.rl_learning_ab(sub1_env, agent, sub1_subinfo)
 
 begin
@@ -138,7 +138,7 @@ begin
     decay = 0.9
 end
 
-agent = RLModels_SoftMax.Learner_witherror(α_v, β_v, α_s, β_s, α_v_error, β_v_error, α_s_error, β_s_error, decay)
+agent = RLModels_SoftMax.RLLearner_witherror(α_v, β_v, α_s, β_s, α_v_error, β_v_error, α_s_error, β_s_error, decay)
 result = RLModels_SoftMax.rl_learning_sr(sub1_env, agent, sub1_subinfo)
 
 begin

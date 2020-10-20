@@ -1,5 +1,5 @@
 #=
-Reinforcement Learning Models for Lingwang's lab
+# Reinforcement Learning Models for Lingwang's lab
 
 Author: Xiaokai Xia (xia@xiaokai.me)
 Date: 2020-09-28
@@ -35,11 +35,12 @@ There are two models with four different methods:
 #============================================================================
 # Module0: Basic calculate elements of RLModels                             #
 ============================================================================#
+__precompile__()
 module RLModels
 
 using GLM, DataFrames, StatsBase
 
-export ExpEnv, RealSub
+export ExpEnv, RealSub, RLLearner
 export init_env_sub, evaluate_relation 
 export update_options_weight_matrix, init_param
 export calc_CCC
@@ -51,7 +52,7 @@ export calc_CCC
 """
     ExpEnv
 
-The **experiment environment** which the learner will to learn.
+The **experiment environment** which the RLLearner will to learn.
 """
 struct ExpEnv
     stim_task_related::Array{Int64,1}
@@ -73,6 +74,9 @@ struct RealSub
     corrections::Array{Int64,1}
     sub_tag::Array{String,1}
 end
+
+# 环境中的学习者
+abstract type RLLearner end
 
 #####
 ##### 定义函数
@@ -145,7 +149,7 @@ end
 # 定义评估变量相关性的函数
 function evaluate_relation(x, y, method=:regression)
     if method == :mse
-        return sum(abs2.(x .- y))
+        return (sum(abs2.(x .- y)))/length(x)
     elseif method == :cor
         return cor(x, y)
     elseif method == :regression
@@ -230,6 +234,4 @@ function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Int)
     return CCC = abs(weight_vector[correct_selection_idx] - weight_vector[op_selection_idx])
 end
 
-include("RLModels_NoSoftMax.jl")
-include("RLModels_WithSoftMax.jl")
 end # module
