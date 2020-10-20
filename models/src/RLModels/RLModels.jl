@@ -44,9 +44,9 @@ export init_env_sub, evaluate_relation
 export update_options_weight_matrix, init_param
 export calc_CCC
 
-#### 定义类型系统
-
-# Init Class system
+#####
+##### 定义类型系统
+#####
 
 """
     ExpEnv
@@ -74,7 +74,9 @@ struct RealSub
     sub_tag::Array{String,1}
 end
 
-#### Define the functions
+#####
+##### 定义函数
+#####
 
 """
 init_env_sub(
