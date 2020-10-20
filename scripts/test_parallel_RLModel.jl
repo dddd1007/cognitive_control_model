@@ -33,8 +33,8 @@ begin
 end
 
 # For analysis each subject
-#Threads.@threads for sub_num in 1:36
-    sub_num = 2
+#Threads.@threads 
+for sub_num in 1:36
     println("========= Begin Sub " * repr(sub_num) * " ==========")
 
     if sub_num == 27 || sub_num == 6
@@ -50,7 +50,7 @@ end
     
     # basic model
     println("= Begin basic model of " * repr(sub_num) * " =")
-    optim_param, eval_result, verbose_table = hyperopt_rllearn_basic(each_env, each_subinfo, 10000)
+    @async optim_param, eval_result, verbose_table = hyperopt_rllearn_basic(each_env, each_subinfo, 10000)
 
     params_basic[1:3] .= optim_param
     params_basic[4]   = eval_result
@@ -62,7 +62,7 @@ end
 
     # error model
     println("= Begin error model of " * repr(sub_num) * " =")
-    optim_param, eval_result, verbose_table = hyperopt_rllearn_witherror(each_env, each_subinfo, 100000)
+    @async optim_param, eval_result, verbose_table = hyperopt_rllearn_witherror(each_env, each_subinfo, 100000)
 
     params_error[1:5] .= optim_param
     params_error[6]   = eval_result

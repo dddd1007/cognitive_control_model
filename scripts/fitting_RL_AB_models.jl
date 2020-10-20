@@ -1,4 +1,4 @@
-using DataFramesMeta, DataFrames, GLM, StatsBase, Models
+using DataFramesMeta, DataFrames, GLM, StatsBase, models
 using CSV: CSV
 using cognitive_control_model: cognitive_control_model
 # set the generated file locations
@@ -21,7 +21,7 @@ begin
     transform_rule = Dict("stim_color" => color_rule, "Type" => Type_rule,
                           "stim_loc" => loc_rule, "congruency" => congruency_rule)
 end
-Models.DataManipulate.transform_data!(all_data, transform_rule)
+models.DataManipulate.transform_data!(all_data, transform_rule)
 begin
     env_idx_dict = Dict("stim_task_related" => "stim_color",
                         "stim_task_unrelated" => "stim_loc",
@@ -33,8 +33,7 @@ begin
 end
 
 # For analysis each subject
-#Threads.@threads 
-for sub_num in 1:36
+Threads.@threads for sub_num in 1:36
     #sub_num = 11
     println("========= Begin Sub " * repr(sub_num) * " ==========")
 
@@ -50,12 +49,12 @@ for sub_num in 1:36
     params_CCC = zeros(1, 9)
 
     each_sub_data = @where(all_data, :Subject_num .== sub_num)
-    each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
+    each_env, each_subinfo = models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
                                                           sub_idx_dict)
 
     # basic model
     println("= Begin basic model of " * repr(sub_num) * " =")
-    optim_param, eval_result, verbose_table = Models.Optim.RL_NoSoftMax_basic_AB(each_env,
+    @async optim_param, eval_result, verbose_table = models.Optim.RL_NoSoftMax_basic_AB(each_env,
                                                                                  each_subinfo,
                                                                                  10000)
 
@@ -70,7 +69,7 @@ for sub_num in 1:36
 
     # error model
     println("= Begin error model of " * repr(sub_num) * " =")
-    optim_param, eval_result, verbose_table = Models.Optim.RL_NoSoftMax_witherror_AB(each_env,
+    @async optim_param, eval_result, verbose_table = models.Optim.RL_NoSoftMax_witherror_AB(each_env,
                                                                                      each_subinfo,
                                                                                      10000)
 
@@ -86,7 +85,7 @@ for sub_num in 1:36
 
     # CCC model
     println("= Begin CCC model of " * repr(sub_num) * " =")
-    optim_param, eval_result, verbose_table = Models.Optim.RL_NoSoftMax_withCCC_AB(each_env,
+    @async optim_param, eval_result, verbose_table = models.Optim.RL_NoSoftMax_withCCC_AB(each_env,
                                                                                    each_subinfo,
                                                                                    10000)
 
