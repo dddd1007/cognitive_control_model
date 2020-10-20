@@ -1,7 +1,7 @@
 
-#============================================================================ 
-# Module2: RLModels without selection                                         #
-============================================================================#
+#= =========================================================================== 
+# Module2: RLModels without selection                                        #
+=========================================================================== =#
 module NoSoftMax
 
 using Models.RLModels
@@ -30,7 +30,7 @@ struct Learner_witherror <: Learner
     α_v_error::Float64
     α_s_error::Float64
 
-    decay
+    decay::Float64
 end
 
 # 存在冲突控制的学习者
@@ -54,7 +54,7 @@ end
 function selection_value(
     options_vector::Array{Float64,1},
     true_selection::Tuple,
-    debug = false,
+    debug=false,
 )
     options_matrix = reshape(options_vector, 2, 2)'
     true_selection_idx = CartesianIndex(true_selection) + CartesianIndex(1, 1)
@@ -70,7 +70,7 @@ end
 function selection_value(
     options_vector::Array{Float64,1},
     true_selection::Int,
-    debug = false,)
+    debug=false,)
     true_selection_idx = true_selection + 1
     
     if debug
@@ -129,7 +129,6 @@ function get_action_para(env::ExpEnv, agent::Learner_withCCC, realsub::RealSub, 
     end
     
     return(α)
-
 end
 
 ##### 定义强化学习相关函数
@@ -163,7 +162,7 @@ function rl_learning_sr(
         ## Update
         # Please note the first row of the value matrix 
         # represent the preparedness of the subject!
-        options_weight_matrix[idx+1, :] =
+        options_weight_matrix[idx + 1, :] =
             update_options_weight_matrix(
                 options_weight_matrix[idx, :],
                 α,
@@ -173,7 +172,7 @@ function rl_learning_sr(
 
         ## Decision
         p_selection_history[idx] = selection_value(
-            options_weight_matrix[idx+1, :],
+            options_weight_matrix[idx + 1, :],
             (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
         )
     end
@@ -208,10 +207,10 @@ function rl_learning_ab(env::ExpEnv, agent::Learner, realsub::RealSub)
         end
 
         ## Update
-        options_weight_matrix[idx+1, :] = update_options_weight_matrix(options_weight_matrix[idx, :], α, env.stim_action_congruency[idx])
+        options_weight_matrix[idx + 1, :] = update_options_weight_matrix(options_weight_matrix[idx, :], α, env.stim_action_congruency[idx])
 
         ## Decision
-        p_selection_history[idx] = selection_value(options_weight_matrix[idx+1, :], env.stim_action_congruency[idx])
+        p_selection_history[idx] = selection_value(options_weight_matrix[idx + 1, :], env.stim_action_congruency[idx])
         
         ## Calc PE
         if env.stim_action_congruency[idx] == 1

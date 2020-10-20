@@ -99,40 +99,29 @@ end
 env, sub = init_env_realsub(transformed_data, env_idx_dict, sub_idx_dict, task_rule)
 ```
 """
-function init_env_sub(
-    transformed_data::DataFrame,
-    env_idx_dict::Dict,
-    sub_idx_dict::Dict
-)
-
-    exp_env = ExpEnv(
-        transformed_data[!, env_idx_dict["stim_task_related"]],
-        transformed_data[!, env_idx_dict["stim_task_unrelated"]],
-        transformed_data[!, env_idx_dict["correct_action"]],
-        transformed_data[!, env_idx_dict["stim_action_congruency"]],
-        transformed_data[!, env_idx_dict["env_type"]],
-        transformed_data[!, env_idx_dict["sub_tag"]],
-    )
+function init_env_sub(transformed_data::DataFrame, env_idx_dict::Dict, sub_idx_dict::Dict)
+    exp_env = ExpEnv(transformed_data[!, env_idx_dict["stim_task_related"]],
+                     transformed_data[!, env_idx_dict["stim_task_unrelated"]],
+                     transformed_data[!, env_idx_dict["correct_action"]],
+                     transformed_data[!, env_idx_dict["stim_action_congruency"]],
+                     transformed_data[!, env_idx_dict["env_type"]],
+                     transformed_data[!, env_idx_dict["sub_tag"]])
     real_sub = RealSub(
-        # Because of the miss action, we need the tryparse() 
-        # to parse "miss" to "nothing"
-        tryparse.(Float64, transformed_data[!, sub_idx_dict["response"]]),
-        tryparse.(Float64, transformed_data[!, sub_idx_dict["RT"]]),
-        transformed_data[!, sub_idx_dict["corrections"]],
-        transformed_data[!, sub_idx_dict["sub_tag"]],
-    )
-    println(
-        "The env and sub info of " *
-        transformed_data[!, env_idx_dict["sub_tag"]][1] *
-        " is generated!",
-    )
+                       # Because of the miss action, we need the tryparse() 
+                       # to parse "miss" to "nothing"
+                       tryparse.(Float64, transformed_data[!, sub_idx_dict["response"]]),
+                       tryparse.(Float64, transformed_data[!, sub_idx_dict["RT"]]),
+                       transformed_data[!, sub_idx_dict["corrections"]],
+                       transformed_data[!, sub_idx_dict["sub_tag"]])
+    println("The env and sub info of " *
+            transformed_data[!, env_idx_dict["sub_tag"]][1] *
+            " is generated!")
 
     return (exp_env, real_sub)
 end
 
 # 初始化更新价值矩阵和基本参数
 function init_param(env, learn_type)
-
     total_trials_num = length(env.stim_task_unrelated)
 
     if learn_type == :sr
@@ -152,20 +141,21 @@ end
 #### 定义工具性的计算函数
 
 # 定义评估变量相关性的函数
-function evaluate_relation(x, y, method = :regression)
+function evaluate_relation(x, y, method=:regression)
     if method == :mse
         return sum(abs2.(x .- y))
     elseif method == :cor
         return cor(x, y)
     elseif method == :regression
-        data = DataFrame(x = x, y = y);
-        reg_result = lm(@formula(y~x), data)
+        data = DataFrame(x=x, y=y)
+        reg_result = lm(@formula(y ~ x), data)
         β_value = coef(reg_result)[2]
         aic_value = aic(reg_result)
         bic_value = bic(reg_result)
         r2_value = r2(reg_result)
         mse_value = deviance(reg_result)
-        result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value, :MSE => mse_value)
+        result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value,
+                      :MSE => mse_value)
         return result
     end
 end
@@ -178,9 +168,8 @@ function update_options_weight_matrix(
     α::Float64,
     decay::Float64,
     correct_selection::Tuple;
-    dodecay = true,
-    debug = false,
-)
+    dodecay = true, debug = false)
+    
     weight_matrix = reshape(weight_vector, 2, 2)'
     correct_selection_idx = CartesianIndex(correct_selection) + CartesianIndex(1, 1)
     op_selection_idx = abs(correct_selection[1] - 1) + 1
@@ -204,13 +193,8 @@ function update_options_weight_matrix(
 end
 
 # 抽象概念的价值更新函数
-function update_options_weight_matrix(
-    weight_vector::Array{Float64,1},
-    α::Float64,
-    correct_selection::Int;
-    doreduce = true,
-    debug = false,
-)
+function update_options_weight_matrix(weight_vector::Array{Float64,1}, α::Float64,
+                                      correct_selection::Int; doreduce=true, debug=false)
     correct_selection_idx = correct_selection + 1
     op_selection_idx = 2 - correct_selection
 
@@ -219,10 +203,9 @@ function update_options_weight_matrix(
         println("The value is " * repr(weight_vector[correct_selection_idx]))
     end
 
-    weight_vector[correct_selection_idx] =
-        weight_vector[correct_selection_idx] +
-        α * (1 - weight_vector[correct_selection_idx])
-    
+    weight_vector[correct_selection_idx] = weight_vector[correct_selection_idx] +
+                                           α * (1 - weight_vector[correct_selection_idx])
+
     if doreduce
         weight_vector[op_selection_idx] = 1 - weight_vector[correct_selection_idx]
     end
@@ -235,17 +218,17 @@ function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Tuple)
     weight_matrix = reshape(weight_vector, 2, 2)'
 
     correct_selection_idx = CartesianIndex(correct_selection) + CartesianIndex(1, 1)
-    op_selection_idx =
-        CartesianIndex(correct_selection_idx[1], (abs(correct_selection[2] - 1) + 1))
+    op_selection_idx = CartesianIndex(correct_selection_idx[1],
+                                      (abs(correct_selection[2] - 1) + 1))
 
-    CCC = abs(weight_matrix[correct_selection_idx] - weight_matrix[op_selection_idx])
+    return CCC = abs(weight_matrix[correct_selection_idx] - weight_matrix[op_selection_idx])
 end
 
 function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Int)
     correct_selection_idx = correct_selection + 1
     op_selection_idx = 2 - correct_selection
 
-    CCC = abs(weight_vector[correct_selection_idx] - weight_vector[op_selection_idx])
+    return CCC = abs(weight_vector[correct_selection_idx] - weight_vector[op_selection_idx])
 end
 
 include("RLModels_NoSoftMax.jl")
