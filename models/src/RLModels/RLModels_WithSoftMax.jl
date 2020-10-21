@@ -5,17 +5,16 @@ module WithSoftMax
 
 using ..RLModels
 
-#### Define the Class System
-"""
-    RLLearner_basic
-
-A RLLearner which learnt parameters from the experiment environment.
-"""
 #####
 ##### 定义类型系统
 #####
 
 # 环境中的学习者, 在基本条件下
+"""
+    RLLearner_basic
+
+A RLLearner which learnt parameters from the experiment environment.
+"""
 struct RLLearner_basic <: RLLearner
     α_v::Float64
     β_v::Float64
@@ -169,18 +168,19 @@ function rl_learning_sr(env::ExpEnv, agent::RLLearner, realsub::RealSub)
             α, β = get_action_para(env, agent, realsub, idx)
         end
 
+        ## Decision
+        p_softmax_history[idx] = sr_softmax(options_weight_matrix[idx, :], β,
+                                            (env.stim_task_unrelated[idx],
+                                             realsub.response[idx]))
+ 
         ## Update 
         options_weight_matrix[idx + 1, :] = update_options_weight_matrix(options_weight_matrix[idx,
                                                                                                :],
                                                                          α, agent.decay,
                                                                          (env.stim_task_unrelated[idx],
-                                                                          env.stim_correct_action[idx]))
+                                                                          realsub.response[idx]))
 
-        ## Decision
-        p_softmax_history[idx] = sr_softmax(options_weight_matrix[idx + 1, :], β,
-                                            (env.stim_task_unrelated[idx],
-                                             env.stim_correct_action[idx]))
-    end
+   end
 
     options_weight_result = options_weight_matrix[2:end, :]
     return Dict(:options_weight_history => options_weight_result,

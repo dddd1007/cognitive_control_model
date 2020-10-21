@@ -96,7 +96,6 @@ begin
 end
 
 # ╔═╡ 0f9b2e2a-0e1b-11eb-2ced-674a5af761bb
-plot(ho)
 
 # ╔═╡ 4352aaee-0e1c-11eb-0077-07b0aeeb97e2
 ho

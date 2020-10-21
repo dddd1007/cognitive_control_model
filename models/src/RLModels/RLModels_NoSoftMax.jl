@@ -159,6 +159,11 @@ function rl_learning_sr(
         else
             α = get_action_para(env, agent, realsub, idx)
         end
+
+        ## Decision
+        p_selection_history[idx] = selection_value(
+            options_weight_matrix[idx, :],
+            (env.stim_task_unrelated[idx], realsub.response[idx]))
         
         ## Update
         # Please note the first row of the value matrix 
@@ -168,14 +173,10 @@ function rl_learning_sr(
                 options_weight_matrix[idx, :],
                 α,
                 agent.decay,
-                (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
+                (env.stim_task_unrelated[idx], realsub.response[idx]),
             )
 
-        ## Decision
-        p_selection_history[idx] = selection_value(
-            options_weight_matrix[idx + 1, :],
-            (env.stim_task_unrelated[idx], env.stim_correct_action[idx]),
-        )
+
     end
 
     options_weight_result = options_weight_matrix[2:end, :]
@@ -207,11 +208,10 @@ function rl_learning_ab(env::ExpEnv, agent::RLLearner, realsub::RealSub)
             α = get_action_para(env, agent, realsub, idx)
         end
 
+        ## Decision
+        p_selection_history[idx] = selection_value(options_weight_matrix[idx, :], env.stim_action_congruency[idx])
         ## Update
         options_weight_matrix[idx + 1, :] = update_options_weight_matrix(options_weight_matrix[idx, :], α, env.stim_action_congruency[idx])
-
-        ## Decision
-        p_selection_history[idx] = selection_value(options_weight_matrix[idx + 1, :], env.stim_action_congruency[idx])
         
         ## Calc PE
         if env.stim_action_congruency[idx] == 1
