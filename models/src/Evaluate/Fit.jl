@@ -1,7 +1,6 @@
 
 using .RLModels, Hyperopt, RecursiveArrayTools, StatsBase, DataFrames, GLM 
 
-
 #####
 ##### 强化学习模型的模型拟合
 #####
@@ -16,8 +15,8 @@ function fit_RL_SR(env, realsub, looptime; model_type)
                             α_s = [0.01:0.01:1;],
                             decay = [0.01:0.01:1;]
 
-            agent =  RLModels.WithSoftMax.RLLearner_basic(α_v, α_s, decay)
-            model_stim = RLModels.WithSoftMax.rl_learning_sr(env, agent, realsub)
+            agent =  RLModels.NoSoftMax.RLLearner_basic(α_v, α_s, decay)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
             evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
         end
     elseif model_type == :error
@@ -27,9 +26,9 @@ function fit_RL_SR(env, realsub, looptime; model_type)
                         α_error = [0.01:0.01:1;], 
                         decay = [0.01:0.01:1;]
 
-            agent = RLModels.WithSoftMax.RLLearner_witherror(α_v, α_s, α_error, α_error, decay)
-            model_stim = RLModels.WithSoftMax.rl_learning_sr(env, agent, realsub)
-            evaluate_relation(model_stim[:p_selection_hirtory], realsub.RT)[:MSE]
+            agent = RLModels.NoSoftMax.RLLearner_witherror(α_v, α_s, α_error, α_error, decay)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+            evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
         end
     elseif model_type == :CCC_same_alpha
         ho = @hyperopt for i = looptime,
@@ -40,8 +39,8 @@ function fit_RL_SR(env, realsub, looptime; model_type)
                         CCC = [0.01:0.01:1;], 
                         decay = [0.01:0.01:1;]
 
-            agent = RLModels.WithSoftMax.RLLearner_withCCC(α_v, α_s, α_error, α_error, α_CCC, α_CCC, CCC, decay)
-            model_stim = RLModels.WithSoftMax.rl_learning_sr(env, agent, realsub)
+            agent = RLModels.NoSoftMax.RLLearner_withCCC(α_v, α_s, α_error, α_error, α_CCC, α_CCC, CCC, decay)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
             evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
         end
     elseif model_type == :CCC_different_alpha
@@ -54,8 +53,8 @@ function fit_RL_SR(env, realsub, looptime; model_type)
             CCC = [0.01:0.01:1;], 
             decay = [0.01:0.01:1;]
 
-            agent = RLModels.WithSoftMax.RLLearner_withCCC(α_v, α_s, α_error, α_error, α_v_CCC, α_s_CCC, CCC, decay)
-            model_stim = RLModels.WithSoftMax.rl_learning_sr(env, agent, realsub)
+            agent = RLModels.NoSoftMax.RLLearner_withCCC(α_v, α_s, α_error, α_error, α_v_CCC, α_s_CCC, CCC, decay)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
             evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
         end
     end
