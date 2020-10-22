@@ -10,15 +10,9 @@ include("DataManipulate.jl")
 include("RLModels/RLModels.jl")
 @reexport using .RLModels
 
-include("RLModels/RLModels_NoSoftMax.jl")
-include("RLModels/RLModels_WithSoftMax.jl")
-
 # Dynamic fitting
-using .RLModels
-include("Evaluate/Evaluate.jl")
-export evaluate_relation
-
 include("Evaluate/Fit.jl")
-@reexport using .Fit
+include("Evaluate/Evaluate.jl")
+export evaluate_relation, fit_RL_SR, fit_RL_AB
 
 end # module

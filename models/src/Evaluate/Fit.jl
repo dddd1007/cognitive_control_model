@@ -1,8 +1,6 @@
-module Fit 
 
-using ..RLModels, Hyperopt, RecursiveArrayTools, StatsBase, DataFrames, GLM 
+using .RLModels, Hyperopt, RecursiveArrayTools, StatsBase, DataFrames, GLM 
 
-export fit_RL_SR, fit_RL_AB
 
 #####
 ##### 强化学习模型的模型拟合
@@ -26,23 +24,23 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         ho = @hyperopt for i = looptime,
                         α_v = [0.01:0.01:1;],
                         α_s = [0.01:0.01:1;],
-                        α_v_error = α_s_error = [0.01:0.01:1;], 
+                        α_error = [0.01:0.01:1;], 
                         decay = [0.01:0.01:1;]
 
-            agent = RLModels.WithSoftMax.RLLearner_witherror(α_v, α_s, α_v_error, α_s_error, decay)
+            agent = RLModels.WithSoftMax.RLLearner_witherror(α_v, α_s, α_error, α_error, decay)
             model_stim = RLModels.WithSoftMax.rl_learning_sr(env, agent, realsub)
-            evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
+            evaluate_relation(model_stim[:p_selection_hirtory], realsub.RT)[:MSE]
         end
     elseif model_type == :CCC_same_alpha
         ho = @hyperopt for i = looptime,
                         α_v = [0.01:0.01:1;],
                         α_s = [0.01:0.01:1;],
-                        α_v_error = α_s_error = [0.01:0.01:1;],
-                        α_v_CCC = α_s_CCC = [0.01:0.01:1;],
+                        α_error = [0.01:0.01:1;],
+                        α_CCC = [0.01:0.01:1;],
                         CCC = [0.01:0.01:1;], 
                         decay = [0.01:0.01:1;]
 
-            agent = RLModels.WithSoftMax.RLLearner_withCCC(α_v, α_s, α_v_error, α_s_error, α_v_CCC, α_s_CCC, CCC, decay)
+            agent = RLModels.WithSoftMax.RLLearner_withCCC(α_v, α_s, α_error, α_error, α_CCC, α_CCC, CCC, decay)
             model_stim = RLModels.WithSoftMax.rl_learning_sr(env, agent, realsub)
             evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
         end
@@ -50,13 +48,13 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         ho = @hyperopt for i = looptime,
             α_v = [0.01:0.01:1;],
             α_s = [0.01:0.01:1;],
-            α_v_error = α_s_error = [0.01:0.01:1;],
+            α_error = [0.01:0.01:1;],
             α_v_CCC = [0.01:0.01:1;],
             α_s_CCC = [0.01:0.01:1;],
             CCC = [0.01:0.01:1;], 
             decay = [0.01:0.01:1;]
 
-            agent = RLModels.WithSoftMax.RLLearner_withCCC(α_v, α_s, α_v_error, α_s_error, α_v_CCC, α_s_CCC, CCC, decay)
+            agent = RLModels.WithSoftMax.RLLearner_withCCC(α_v, α_s, α_error, α_error, α_v_CCC, α_s_CCC, CCC, decay)
             model_stim = RLModels.WithSoftMax.rl_learning_sr(env, agent, realsub)
             evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
         end
@@ -118,5 +116,3 @@ function fit_RL_AB(env, realsub, looptime; model_type)
 
     return (optim_param, eval_result, verbose_table)
 end
-
-end # module
