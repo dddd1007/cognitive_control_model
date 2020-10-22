@@ -175,14 +175,14 @@ function rl_learning_sr(
                 agent.decay,
                 (env.stim_task_unrelated[idx], realsub.response[idx]),
             )
-
-
     end
 
     options_weight_result = options_weight_matrix[2:end, :]
+    prediction_error = env.stim_correct_action - p_selection_history
     return Dict(
         :options_weight_history => options_weight_result,
         :p_selection_history => p_selection_history,
+        :prediction_error => prediction_error
     )
 end
 
@@ -212,21 +212,15 @@ function rl_learning_ab(env::ExpEnv, agent::RLLearner, realsub::RealSub)
         p_selection_history[idx] = selection_value(options_weight_matrix[idx, :], env.stim_action_congruency[idx])
         ## Update
         options_weight_matrix[idx + 1, :] = update_options_weight_matrix(options_weight_matrix[idx, :], α, env.stim_action_congruency[idx])
-        
-        ## Calc PE
-        if env.stim_action_congruency[idx] == 1
-            PE_history[idx] = 1 - p_selection_history[idx]
-        elseif env.stim_action_congruency[idx] == 0
-            PE_history[idx] = p_selection_history[idx]
-        end
     
     end
 
     options_weight_result = options_weight_matrix[2:end, :]
+    prediction_error = env.stim_action_congruency - p_selection_history
     return Dict(
         :options_weight_history => options_weight_result,
         :p_selection_history => p_selection_history,
-        :PE => PE_history
+        :prediction_error => prediction_error
     )
 end
 

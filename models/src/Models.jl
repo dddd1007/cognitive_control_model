@@ -14,7 +14,11 @@ include("RLModels/RLModels_NoSoftMax.jl")
 include("RLModels/RLModels_WithSoftMax.jl")
 
 # Dynamic fitting
-include("ModelEvaluate/Fit.jl")
+using .RLModels
+include("Evaluate/Evaluate.jl")
+export evaluate_relation
+
+include("Evaluate/Fit.jl")
 @reexport using .Fit
 
 end # module
