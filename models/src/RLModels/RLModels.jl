@@ -146,25 +146,7 @@ end
 
 #### 定义工具性的计算函数
 
-# 定义评估变量相关性的函数
-function evaluate_relation(x, y, method=:regression)
-    if method == :mse
-        return (sum(abs2.(x .- y)))/length(x)
-    elseif method == :cor
-        return cor(x, y)
-    elseif method == :regression
-        data = DataFrame(x=x, y=y)
-        reg_result = lm(@formula(y ~ x), data)
-        β_value = coef(reg_result)[2]
-        aic_value = aic(reg_result)
-        bic_value = bic(reg_result)
-        r2_value = r2(reg_result)
-        mse_value = deviance(reg_result)
-        result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value,
-                      :MSE => mse_value)
-        return result
-    end
-end
+
 
 # 定义更新价值矩阵的函数
 

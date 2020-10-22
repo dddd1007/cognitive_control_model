@@ -14,7 +14,7 @@ include("RLModels/RLModels_NoSoftMax.jl")
 include("RLModels/RLModels_WithSoftMax.jl")
 
 # Dynamic fitting
-include("Optim.jl")
-@reexport using .Optim
+include("ModelEvaluate/Fit.jl")
+@reexport using .Fit
 
 end # module
