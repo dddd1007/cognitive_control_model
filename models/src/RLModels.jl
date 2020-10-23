@@ -35,7 +35,6 @@ There are two models with four different methods:
 #============================================================================
 # Module0: Basic calculate elements of RLModels                             #
 ============================================================================#
-__precompile__()
 module RLModels
 
 using GLM, DataFrames, StatsBase
