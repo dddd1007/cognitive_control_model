@@ -7,7 +7,7 @@ include("DataManipulate.jl")
 #export transform_data!
 
 # Reinforcement Learning
-include("RLModels/RLModels.jl")
+include("RLModels.jl")
 @reexport using .RLModels
 
 # Dynamic fitting

@@ -11,7 +11,6 @@ Version: 0.0.009
 #============================================================================= 
 # Global: Define RLModels with Softmax                                       #
 =============================================================================#
-__precompile__()
 module DataManipulate
 
 using DataFrames, DataFramesMeta, GLM
