@@ -1,9 +1,10 @@
 # 生成测试数据
 using DataFrames, DataFramesMeta
 import CSV
-using Models
+using Models, cognitive_control_model
 begin
-    all_data = CSV.read("/Users/dddd1007/project2git/cognitive_control_model/data/input/pure_all_data.csv");
+    all_data = CSV.read(joinpath(dirname(pathof(cognitive_control_model)), "..", "data",
+                             "input", "pure_all_data.csv"));
     begin
         color_rule = Dict("red" => "0" , "green" => "1")
         congruency_rule = Dict("con" => "1", "inc" => "0")

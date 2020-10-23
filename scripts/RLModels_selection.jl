@@ -1,31 +1,22 @@
-using Models
+using Models, DataFrames
+import CSV
+csvpath = "/Data3/Xiaxk/research_data/cognitive_control_model/data/output/RLModels/model_selection/"
 
-include("../tmp/init_sub1_data.jl")
+include("import_all_data.jl")
 
-model_evaluation(sub1_env, sub1_subinfo)
+Threads.@threads for sub_num in 1:36
+        
+    if sub_num == 27 || sub_num == 6
+        continue
+    end
+    println("========= Begin Sub " * repr(sub_num) * " ==========")
+    
+    each_sub_data = @where(all_data, :Subject_num .== sub_num)
+    each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
+                                                          sub_idx_dict)
+    AIC_results = model_evaluation(each_env, each_subinfo)
+    table = DataFrame(AIC_results', [:basic, :error, :same_CCC, :diff_CCC])
+    filename = csvpath * convert(String, each_env.sub_tag[1]) * "_AIC.csv"
+    CSV.write(filename, table)
+end
 
-#fit_RL_SR(sub1_env, sub1_subinfo, 10, model_type=:basic)
-
-result_list = zeros(4)
-criteria = :AIC
-optim_param_basic, _, _ = fit_RL_SR(env, realsub, 10, model_type=:basic)
-p_history_basic = model_recovery(env, realsub, optim_param_basic)[:p_selection_history]
-result_basic = evaluate_relation(p_history_basic, realsub.RT)[criteria]
-result_table[1] = result_basic
-
-optim_param_error, _, _ = fit_RL_SR(env, realsub, 100000, model_type=:error)
-p_history_error = model_recovery(env, realsub, optim_param_error)[:p_selection_history]
-result_error = evaluate_relation(p_history_error, realsub.RT)[criteria]
-result_table[2] = result_error
-
-optim_param_ccc_same, _, _ = fit_RL_SR(env, realsub, 1000000,
-                                       model_type=:CCC_same_alpha)
-p_history_ccc_same = model_recovery(env, realsub, optim_param_ccc_same)[:p_selection_history]
-result_ccc_same = evaluate_relation(p_history_ccc_same, realsub.RT)[criteria]
-result_table[3] = result_ccc_same
-
-optim_param_ccc_diff, _, _ = fit_RL_SR(env, realsub, 5000000,
-                                       model_type=:CCC_different_alpha)
-p_history_ccc_diff = model_recovery(env, realsub, optim_param_ccc_diff)[:p_selection_history]
-result_ccc_diff = evaluate_relation(p_history_ccc_diff, realsub.RT)[criteria]
-result_table[4] = result_ccc_diff

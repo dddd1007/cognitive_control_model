@@ -28,27 +28,28 @@ function evaluate_relation(x, y, method=:regression)
 end
 
 # 根据最优参数重新拟合模型
-function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64,1};
-                        type=:SR)
-    if type == :SR
-        nargs = length(opt_params)
+function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64,1})
+    nargs = length(opt_params)
 
-        if nargs == 3
-            agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2],
-                                                       opt_params[3])
-        elseif nargs == 5
-            agent = RLModels.NoSoftMax.RLLearner_witherror(opt_params[1], opt_params[2],
-                                                           opt_params[3], opt_params[4],
-                                                           opt_params[5])
-        elseif nargs == 8
-            agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
-                                                         opt_params[3], opt_params[4],
-                                                         opt_params[5], opt_params[6],
-                                                         opt_params[7], opt_params[8])
-        end
-
-        return RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+    if nargs == 3
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2],
+                                                    opt_params[3])
+    elseif nargs == 4
+        agent = RLModels.NoSoftMax.RLLearner_witherror(opt_params[1], opt_params[2],
+                                                        opt_params[3], opt_params[3], opt_params[4])
+    elseif nargs == 6
+        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
+                                                        opt_params[3], opt_params[3], 
+                                                        opt_params[4], opt_params[4], 
+                                                        opt_params[5], opt_params[6])
+    elseif nargs == 7
+    agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
+                                                    opt_params[3], opt_params[3], 
+                                                    opt_params[4], opt_params[5], 
+                                                    opt_params[6], opt_params[7])                                                    
     end
+
+    return RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
 end
 
 # 模型选择
@@ -60,18 +61,18 @@ function model_evaluation(env, realsub; criteria=:AIC, verbose = false)
     result_basic = evaluate_relation(p_history_basic, realsub.RT)[criteria]
     result_list[1] = result_basic
 
-    optim_param_error, _, _ = fit_RL_SR(env, realsub, 100000, model_type=:error)
+    optim_param_error, _, _ = fit_RL_SR(env, realsub, 50000, model_type=:error)
     p_history_error = model_recovery(env, realsub, optim_param_error)[:p_selection_history]
     result_error = evaluate_relation(p_history_error, realsub.RT)[criteria]
     result_list[2] = result_error
 
-    optim_param_ccc_same, _, _ = fit_RL_SR(env, realsub, 1000000,
+    optim_param_ccc_same, _, _ = fit_RL_SR(env, realsub, 100000,
                                            model_type=:CCC_same_alpha)
     p_history_ccc_same = model_recovery(env, realsub, optim_param_ccc_same)[:p_selection_history]
     result_ccc_same = evaluate_relation(p_history_ccc_same, realsub.RT)[criteria]
     result_list[3] = result_ccc_same
 
-    optim_param_ccc_diff, _, _ = fit_RL_SR(env, realsub, 5000000,
+    optim_param_ccc_diff, _, _ = fit_RL_SR(env, realsub, 500000,
                                            model_type=:CCC_different_alpha)
     p_history_ccc_diff = model_recovery(env, realsub, optim_param_ccc_diff)[:p_selection_history]
     result_ccc_diff = evaluate_relation(p_history_ccc_diff, realsub.RT)[criteria]

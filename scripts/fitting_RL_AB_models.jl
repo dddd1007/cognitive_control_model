@@ -34,12 +34,11 @@ end
 
 # For analysis each subject
 Threads.@threads for sub_num in 1:36
-    #sub_num = 11
-    println("========= Begin Sub " * repr(sub_num) * " ==========")
-
+    
     if sub_num == 27 || sub_num == 6
         continue
     end
+    println("========= Begin Sub " * repr(sub_num) * " ==========")
 
     params_basic = zeros(1, 4)
     params_error = zeros(1, 6)
