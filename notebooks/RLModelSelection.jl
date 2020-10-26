@@ -7,8 +7,15 @@ using InteractiveUtils
 # ╔═╡ fd156d94-14e9-11eb-367c-4d69767436df
 using DataFrames, CSV
 
+# ╔═╡ bb3be282-1506-11eb-39d9-b5eeeb38c296
+using Statistics
+
+# ╔═╡ 9394af46-1503-11eb-3793-9bf76150e79e
+# 导入全部数据
+include("../scripts/import_all_data.jl")
+
 # ╔═╡ 3bb97d24-14e5-11eb-17b2-17e2e46e812c
-md"整合数据“
+md"## 整合数据"
 
 # ╔═╡ 8ad08f4c-14e5-11eb-3895-271c7ad84a11
 # import Data
@@ -41,11 +48,20 @@ result = combinetable(model_selection_result, csv_files, file_list)
 # ╔═╡ 5e6f11f0-14f2-11eb-1cdc-19b8fa33fca8
 CSV.write("/Users/dddd1007/project2git/cognitive_control_model/data/output/summary/RLModel_selection.csv", result)
 
-# ╔═╡ afea5746-14f3-11eb-00d0-29662b53ea11
-vcat(model_selection_result, temp_file)
-
 # ╔═╡ 03b8b5ac-14f4-11eb-1726-85e690c495eb
-model_selection_result
+md"## 查看错误率"
+
+# ╔═╡ ce36e52e-1503-11eb-0170-4d8f272a3e61
+grouped_data = groupby(all_data, :Subject)
+
+# ╔═╡ 3f65b918-1505-11eb-2249-71025bcb5396
+names(grouped_data)
+
+# ╔═╡ d3f8207c-1503-11eb-1dd9-2107385bbe34
+error_rate = combine(grouped_data, :Type => mean)
+
+# ╔═╡ eda58d92-1507-11eb-2929-d7e44a5f07ce
+CSV.write("/Users/dddd1007/project2git/cognitive_control_model/data/output/summary/error_rate.csv", error_rate)
 
 # ╔═╡ Cell order:
 # ╠═3bb97d24-14e5-11eb-17b2-17e2e46e812c
@@ -57,5 +73,10 @@ model_selection_result
 # ╠═b3f59134-14e9-11eb-0f58-17c30084d6ed
 # ╠═cf44635c-14ee-11eb-07ca-25ccdc33b060
 # ╠═5e6f11f0-14f2-11eb-1cdc-19b8fa33fca8
-# ╠═afea5746-14f3-11eb-00d0-29662b53ea11
 # ╠═03b8b5ac-14f4-11eb-1726-85e690c495eb
+# ╠═9394af46-1503-11eb-3793-9bf76150e79e
+# ╠═ce36e52e-1503-11eb-0170-4d8f272a3e61
+# ╠═3f65b918-1505-11eb-2249-71025bcb5396
+# ╠═bb3be282-1506-11eb-39d9-b5eeeb38c296
+# ╠═d3f8207c-1503-11eb-1dd9-2107385bbe34
+# ╠═eda58d92-1507-11eb-2929-d7e44a5f07ce
