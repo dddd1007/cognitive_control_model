@@ -9,7 +9,33 @@ using .RLModels, Hyperopt, RecursiveArrayTools, StatsBase, DataFrames, GLM
 function fit_RL_SR(env, realsub, looptime; model_type)
     
     ## Fit the hyperparameters
-    if model_type == :basic
+    if model_type == :single_alpha
+        ho = @hyperopt for i = looptime,
+                            α = [0.01:0.01:1;],
+                            decay = [0.01:0.01:1;]
+
+            agent =  RLModels.NoSoftMax.RLLearner_basic(α, α, decay)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+            evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
+        end 
+    elseif model_type == :single_alpha_no_decay
+        ho = @hyperopt for i = looptime,
+                            α = [0.01:0.01:1;]
+
+            agent =  RLModels.NoSoftMax.RLLearner_basic(α, α, 1)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+            evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
+        end
+    elseif model_type == :no_decay
+        ho = @hyperopt for i = looptime,
+                            α_v = [0.01:0.01:1;],
+                            α_s = [0.01:0.01:1;]
+
+            agent =  RLModels.NoSoftMax.RLLearner_basic(α_v, α_s, 1)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+            evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
+        end
+    elseif model_type == :basic
         ho = @hyperopt for i = looptime,
                             α_v = [0.01:0.01:1;],
                             α_s = [0.01:0.01:1;],
@@ -45,13 +71,13 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         end
     elseif model_type == :CCC_different_alpha
         ho = @hyperopt for i = looptime,
-            α_v = [0.01:0.01:1;],
-            α_s = [0.01:0.01:1;],
-            α_error = [0.01:0.01:1;],
-            α_v_CCC = [0.01:0.01:1;],
-            α_s_CCC = [0.01:0.01:1;],
-            CCC = [0.01:0.01:1;], 
-            decay = [0.01:0.01:1;]
+                            α_v = [0.01:0.01:1;],
+                            α_s = [0.01:0.01:1;],
+                            α_error = [0.01:0.01:1;],
+                            α_v_CCC = [0.01:0.01:1;],
+                            α_s_CCC = [0.01:0.01:1;],
+                            CCC = [0.01:0.01:1;], 
+                            decay = [0.01:0.01:1;]
 
             agent = RLModels.NoSoftMax.RLLearner_withCCC(α_v, α_s, α_error, α_error, α_v_CCC, α_s_CCC, CCC, decay)
             model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)

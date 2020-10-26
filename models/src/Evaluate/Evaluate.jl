@@ -28,21 +28,27 @@ function evaluate_relation(x, y, method=:regression)
 end
 
 # 根据最优参数重新拟合模型
-function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64,1})
-    nargs = length(opt_params)
+function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64,1}; model_type)
 
-    if nargs == 3
+    if model_type == :single_alpha
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1],
+                                                   opt_params[2])
+    elseif model_type == :single_alpha_no_decay
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1], 1)
+    elseif model_type == :no_decay
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2], 1)
+    elseif model_type == :basic
         agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2],
                                                     opt_params[3])
-    elseif nargs == 4
+    elseif model_type == :error
         agent = RLModels.NoSoftMax.RLLearner_witherror(opt_params[1], opt_params[2],
                                                         opt_params[3], opt_params[3], opt_params[4])
-    elseif nargs == 6
+    elseif model_type == :CCC_same_alpha
         agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
                                                         opt_params[3], opt_params[3], 
                                                         opt_params[4], opt_params[4], 
                                                         opt_params[5], opt_params[6])
-    elseif nargs == 7
+    elseif model_type == :CCC_different_alpha
     agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
                                                     opt_params[3], opt_params[3], 
                                                     opt_params[4], opt_params[5], 
@@ -52,35 +58,24 @@ function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64
     return RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
 end
 
-# 模型选择
-function model_evaluation(env, realsub; criteria=:AIC, verbose = false)
-    result_list = zeros(4)
-
-    optim_param_basic, _, _ = fit_RL_SR(env, realsub, 10000, model_type=:basic)
-    p_history_basic = model_recovery(env, realsub, optim_param_basic)[:p_selection_history]
+# 快速拟合模型并评估拟合度
+function fit_and_evaluate(env, realsub; criteria=:AIC, model_type, number_iterations)
+    optim_param_basic, _, _ = fit_RL_SR(env, realsub, number_iterations, model_type)
+    p_history_basic = model_recovery(env, realsub, optim_param_basic, model_type)[:p_selection_history]
     result_basic = evaluate_relation(p_history_basic, realsub.RT)[criteria]
-    result_list[1] = result_basic
+end
 
-    optim_param_error, _, _ = fit_RL_SR(env, realsub, 50000, model_type=:error)
-    p_history_error = model_recovery(env, realsub, optim_param_error)[:p_selection_history]
-    result_error = evaluate_relation(p_history_error, realsub.RT)[criteria]
-    result_list[2] = result_error
+# 模型选择
+function model_evaluation(env, realsub; criteria=:AIC)
+    result_list = zeros(7)
 
-    optim_param_ccc_same, _, _ = fit_RL_SR(env, realsub, 100000,
-                                           model_type=:CCC_same_alpha)
-    p_history_ccc_same = model_recovery(env, realsub, optim_param_ccc_same)[:p_selection_history]
-    result_ccc_same = evaluate_relation(p_history_ccc_same, realsub.RT)[criteria]
-    result_list[3] = result_ccc_same
-
-    optim_param_ccc_diff, _, _ = fit_RL_SR(env, realsub, 500000,
-                                           model_type=:CCC_different_alpha)
-    p_history_ccc_diff = model_recovery(env, realsub, optim_param_ccc_diff)[:p_selection_history]
-    result_ccc_diff = evaluate_relation(p_history_ccc_diff, realsub.RT)[criteria]
-    result_list[4] = result_ccc_diff
-
-    if verbose
-        return (result_list, (optim_param_basic, optim_param_error, optim_param_ccc_same, optim_param_ccc_diff))
-    end
-
+    result_list[1] = fit_and_evaluate(env, realsub, criteria, model_type=:single_alpha, 10)
+    result_list[2] = fit_and_evaluate(env, realsub, criteria, model_type=:single_alpha_no_decay, 10)
+    result_list[3] = fit_and_evaluate(env, realsub, criteria, model_type=:no_decay, 10)
+    result_list[4] = fit_and_evaluate(env, realsub, criteria, model_type=:basic, 10)
+    result_list[5] = fit_and_evaluate(env, realsub, criteria, model_type=:error, 10)
+    result_list[6] = fit_and_evaluate(env, realsub, criteria, model_type=:CCC_same_alpha, 10)
+    result_list[7] = fit_and_evaluate(env, realsub, criteria, model_type=:CCC_different_alpha, 10)
+    
     return result_list
 end
