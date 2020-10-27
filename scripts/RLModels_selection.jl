@@ -4,8 +4,7 @@ import CSV
 csvpath = joinpath(dirname(pathof(Models)), "..", "..", "data", "output", "RLModels", "model_selection")
 include("import_all_data.jl")
 
-#Threads.@threads 
-for sub_num in 1:36
+Threads.@threads for sub_num in 1:36
         
     if sub_num == 27 || sub_num == 6
         continue
