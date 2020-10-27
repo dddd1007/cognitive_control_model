@@ -71,22 +71,35 @@ end
 # 模型选择
 function model_evaluation(env, realsub; criteria=:AIC)
     result_list = zeros(7)
-
+    
+    println("=== Stage 1 ===")
     result_list[1] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:single_alpha, number_iterations=10000)
+                                      model_type=:single_alpha, number_iterations=3000)
+
+    println("=== Stage 2 ===")                                  
     result_list[2] = fit_and_evaluate(env, realsub, criteria=criteria,
                                       model_type=:single_alpha_no_decay,
-                                      number_iterations=10000)
+                                      number_iterations=1000)
+    
+    println("=== Stage 3 ===")
     result_list[3] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:no_decay,
-                                      number_iterations=10000)
+                                      number_iterations=3000)
+
+    println("=== Stage 4 ===")
     result_list[4] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:basic,
-                                      number_iterations=100000)
+                                      number_iterations=10000)
+
+    println("=== Stage 5 ===")
     result_list[5] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:error,
-                                      number_iterations=500000)
+                                      number_iterations=50000)
+
+    println("=== Stage 6 ===")
     result_list[6] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:CCC_same_alpha, number_iterations=1000000)
+                                      model_type=:CCC_same_alpha, number_iterations=100000)
+                                    
+    println("=== Stage 7 ===")
     result_list[7] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:CCC_different_alpha, number_iterations=500000)
+                                      model_type=:CCC_different_alpha, number_iterations=50000)
 
     return result_list
 end
