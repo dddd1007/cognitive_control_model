@@ -1,10 +1,11 @@
 using Models, DataFrames
 import CSV
-csvpath = "/Data3/Xiaxk/research_data/cognitive_control_model/data/output/RLModels/model_selection/"
 
+csvpath = joinpath(dirname(pathof(Models)), "..", "..", "data", "output", "RLModels", "model_selection")
 include("import_all_data.jl")
 
-Threads.@threads for sub_num in 1:36
+#Threads.@threads 
+for sub_num in 1:36
         
     if sub_num == 27 || sub_num == 6
         continue
@@ -15,8 +16,10 @@ Threads.@threads for sub_num in 1:36
     each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
                                                           sub_idx_dict)
     AIC_results = model_evaluation(each_env, each_subinfo)
-    table = DataFrame(AIC_results', [:basic, :error, :same_CCC, :diff_CCC])
-    filename = csvpath * convert(String, each_env.sub_tag[1]) * "_AIC.csv"
-    CSV.write(filename, table)
+    table = DataFrame(AIC_results', [:single_alpha, :single_alpha_no_decay, :no_decay, :basic, :error, :same_CCC, :diff_CCC])
+
+    filename = convert(String, each_env.sub_tag[1]) * "_AIC.csv"
+    filepath = joinpath(csvpath, filename)
+    CSV.write(filepath, table)
 end
 
