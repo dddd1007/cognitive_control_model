@@ -72,6 +72,9 @@ end
 function model_evaluation(env, realsub; criteria=:AIC)
     result_list = zeros(7)
 
+    subname = realsub.sub_tag[1]
+    
+    println("+++ " * subname * " basic model +++")
     result_list[1] = fit_and_evaluate(env, realsub, criteria=criteria,
                                       model_type=:single_alpha, number_iterations=10000)
     result_list[2] = fit_and_evaluate(env, realsub, criteria=criteria,
@@ -79,14 +82,15 @@ function model_evaluation(env, realsub; criteria=:AIC)
                                       number_iterations=10000)
     result_list[3] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:no_decay,
                                       number_iterations=10000)
+    println("+++ " * subname * " complex model +++)
     result_list[4] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:basic,
-                                      number_iterations=100000)
+                                      number_iterations=80000)
     result_list[5] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:error,
-                                      number_iterations=500000)
+                                      number_iterations=100000)
     result_list[6] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:CCC_same_alpha, number_iterations=1000000)
+                                      model_type=:CCC_same_alpha, number_iterations=500000)
     result_list[7] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:CCC_different_alpha, number_iterations=500000)
+                                      model_type=:CCC_different_alpha, number_iterations=900000)
 
     return result_list
 end
