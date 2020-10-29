@@ -42,8 +42,7 @@ function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64
     elseif model_type == :total_decay
         agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2], 1)
     elseif model_type == :basic
-        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2],
-                                                   opt_params[3])
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2], opt_params[3])
     elseif model_type == :error
         agent = RLModels.NoSoftMax.RLLearner_witherror(opt_params[1], opt_params[2],
                                                        opt_params[3], opt_params[3],
