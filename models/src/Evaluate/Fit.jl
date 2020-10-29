@@ -22,8 +22,8 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         ho = @hyperopt for i = looptime,
                             α = [0.01:0.01:1;]
 
-            agent =  RLModels.NoSoftMax.RLLearner_basic(α, α, 0, dodecay=false)
-            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+            agent =  RLModels.NoSoftMax.RLLearner_basic(α, α, 0)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub, dodecay = false)
             evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
         end
     elseif model_type == :no_decay
@@ -31,8 +31,8 @@ function fit_RL_SR(env, realsub, looptime; model_type)
                             α_v = [0.01:0.01:1;],
                             α_s = [0.01:0.01:1;]
 
-            agent =  RLModels.NoSoftMax.RLLearner_basic(α_v, α_s, 0, dodecay=false)
-            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+            agent =  RLModels.NoSoftMax.RLLearner_basic(α_v, α_s, 0)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub, dodecay = false)
             evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
         end
     elseif model_type == :total_decay

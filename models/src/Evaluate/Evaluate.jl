@@ -34,9 +34,9 @@ function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64
         agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1],
                                                    opt_params[2])
     elseif model_type == :single_alpha_no_decay
-        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1], 0, dodecay=false)
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1], 0)
     elseif model_type == :no_decay
-        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2], 0, dodecay=false)
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2], 0)
     elseif model_type == :single_alpha_total_decay
         agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1], 1)
     elseif model_type == :total_decay
@@ -59,7 +59,11 @@ function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64
                                                      opt_params[6], opt_params[7])
     end
 
-    return RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+    if model_type == :single_alpha_no_decay || model_type == :no_decay
+        return RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub, dodecay= false)
+    else
+        return RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+    end
 end
 
 # 快速拟合模型并评估拟合度
@@ -79,7 +83,7 @@ function model_evaluation(env, realsub; criteria=:AIC)
     
     println("+++ " * subname * " basic model +++")
     result_list[1] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:single_alpha, number_iterations=3000)
+                                      model_type=:single_alpha, number_iterations=5000)
     result_list[2] = fit_and_evaluate(env, realsub, criteria=criteria,
                                       model_type=:single_alpha_no_decay,
                                       number_iterations=5000)
