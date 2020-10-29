@@ -364,7 +364,7 @@ end
 ##### 定义强化学习相关函数
 
 # 学习具体SR联结的强化学习过程
-function rl_learning_sr(env::ExpEnv, agent::RLLearner, realsub::RealSub)
+function rl_learning_sr(env::ExpEnv, agent::RLLearner, realsub::RealSub; dodecay=true)
 
     # Check the subtag
     if env.sub_tag != realsub.sub_tag
@@ -391,11 +391,10 @@ function rl_learning_sr(env::ExpEnv, agent::RLLearner, realsub::RealSub)
                                              realsub.response[idx]))
  
         ## Update 
-        options_weight_matrix[idx + 1, :] = update_options_weight_matrix(options_weight_matrix[idx,
-                                                                                               :],
+        options_weight_matrix[idx + 1, :] = update_options_weight_matrix(options_weight_matrix[idx,:],
                                                                          α, agent.decay,
                                                                          (env.stim_task_unrelated[idx],
-                                                                          realsub.response[idx]))
+                                                                          realsub.response[idx]), dodecay=dodecay)
 
    end
 
@@ -545,7 +544,8 @@ end
 function rl_learning_sr(
     env::ExpEnv,
     agent::RLLearner,
-    realsub::RealSub
+    realsub::RealSub;
+    dodecay = true
 )
 
     # Check the subtag
@@ -581,6 +581,7 @@ function rl_learning_sr(
                 α,
                 agent.decay,
                 (env.stim_task_unrelated[idx], realsub.response[idx]),
+                dodecay = dodecay
             )
     end
 
