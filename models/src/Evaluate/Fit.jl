@@ -40,7 +40,7 @@ function fit_RL_SR(env, realsub, looptime; model_type)
                            α_v = [0.01:0.01:1;],
                            α_s = [0.01:0.01:1;]
 
-            agent =  RLModels.NoSoftMax.RLLearner_basic(α_v, α_s, 0)
+            agent =  RLModels.NoSoftMax.RLLearner_basic(α_v, α_s, 1)
             model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
             evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
         end
