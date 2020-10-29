@@ -96,13 +96,13 @@ function model_evaluation(env, realsub; criteria=:AIC)
 
     println("+++ " * subname * " complex model +++")
     result_list[6] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:basic,
-                                      number_iterations=10000)
+                                      number_iterations=200000)
     result_list[7] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:error,
-                                      number_iterations=50000)
+                                      number_iterations=500000)
     result_list[8] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:CCC_same_alpha, number_iterations=100000)
+                                      model_type=:CCC_same_alpha, number_iterations=1000000)
     result_list[9] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:CCC_different_alpha, number_iterations=300000)
+                                      model_type=:CCC_different_alpha, number_iterations=3000000)
 
     return result_list
 end
