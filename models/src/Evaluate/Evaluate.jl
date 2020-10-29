@@ -34,8 +34,12 @@ function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64
         agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1],
                                                    opt_params[2])
     elseif model_type == :single_alpha_no_decay
-        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1], 1)
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1], 0, dodecay=false)
     elseif model_type == :no_decay
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2], 0, dodecay=false)
+    elseif model_type == :single_alpha_total_decay
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1], 1)
+    elseif model_type == :total_decay
         agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2], 1)
     elseif model_type == :basic
         agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2],
@@ -70,28 +74,32 @@ end
 
 # 模型选择
 function model_evaluation(env, realsub; criteria=:AIC)
-    result_list = zeros(7)
+    result_list = zeros(9)
 
     subname = realsub.sub_tag[1]
     
     println("+++ " * subname * " basic model +++")
     result_list[1] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:single_alpha, number_iterations=10000)                    
+                                      model_type=:single_alpha, number_iterations=3000)
     result_list[2] = fit_and_evaluate(env, realsub, criteria=criteria,
                                       model_type=:single_alpha_no_decay,
-                                      number_iterations=10000)
+                                      number_iterations=5000)
     result_list[3] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:no_decay,
-                                      number_iterations=80000)
-    
+                                      number_iterations=5000)
+    result_list[4] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:single_alpha_total_decay,
+                                      number_iterations=5000)
+    result_list[5] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:total_decay,
+                                      number_iterations=5000)
+
     println("+++ " * subname * " complex model +++")
-    result_list[4] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:basic,
-                                      number_iterations=150000)
-    result_list[5] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:error,
-                                      number_iterations=300000)
-    result_list[6] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:CCC_same_alpha, number_iterations=600000)
-    result_list[7] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:CCC_different_alpha, number_iterations=900000)
+    result_list[6] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:basic,
+                                      number_iterations=10000)
+    result_list[7] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:error,
+                                      number_iterations=50000)
+    result_list[8] = fit_and_evaluate(env, realsub, criteria=criteria,
+                                      model_type=:CCC_same_alpha, number_iterations=100000)
+    result_list[9] = fit_and_evaluate(env, realsub, criteria=criteria,
+                                      model_type=:CCC_different_alpha, number_iterations=300000)
 
     return result_list
 end
