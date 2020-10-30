@@ -24,8 +24,11 @@ csv_files = "../data/output/RLModels/model_selection/"
 # ╔═╡ af564ae2-14e9-11eb-25e1-01ffdad6597c
 file_list = readdir(csv_files);
 
+# ╔═╡ 46040974-19b9-11eb-1e57-19f4dd2f8d83
+filter!(s -> occursin(r".csv", s), file_list)
+
 # ╔═╡ d737367a-14e9-11eb-2f98-670b22e03c80
-model_selection_result = DataFrame(zeros(5)', [:Sub, :basic, :error, :same_CCC, :diff_CCC])
+model_selection_result = DataFrame(zeros(10)', [:Sub, :single_alpha, :single_alpha_no_decay, :no_decay, :single_alpha_total_decay, :total_decay, :basic, :error, :same_CCC, :diff_CCC])
 
 # ╔═╡ 2793457a-14ed-11eb-3757-b799ddb8c341
 model_selection_result.Sub = string(model_selection_result.Sub)
@@ -68,6 +71,7 @@ CSV.write("/Users/dddd1007/project2git/cognitive_control_model/data/output/summa
 # ╠═fd156d94-14e9-11eb-367c-4d69767436df
 # ╠═8ad08f4c-14e5-11eb-3895-271c7ad84a11
 # ╠═af564ae2-14e9-11eb-25e1-01ffdad6597c
+# ╠═46040974-19b9-11eb-1e57-19f4dd2f8d83
 # ╠═d737367a-14e9-11eb-2f98-670b22e03c80
 # ╠═2793457a-14ed-11eb-3757-b799ddb8c341
 # ╠═b3f59134-14e9-11eb-0f58-17c30084d6ed
