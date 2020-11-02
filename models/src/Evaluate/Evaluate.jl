@@ -67,45 +67,11 @@ function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64
 end
 
 # 快速拟合模型并评估拟合度
-function fit_and_evaluate(env, realsub; criteria=:AIC, model_type, number_iterations)
-    optim_param, _, _ = fit_RL_SR(env, realsub, number_iterations,
-                                        model_type=model_type)
-    p_history = model_recovery(env, realsub, optim_param,
-                                     model_type=model_type)[:p_selection_history]
-    eval_result = evaluate_relation(p_history, realsub.RT)[criteria]
+function fit_and_evaluate(env, realsub; model_type, number_iterations)
+    optim_param, _, _ = fit_RL_SR(env, realsub, number_iterations, model_type=model_type)
+    p_history = model_recovery(env, realsub, optim_param, model_type=model_type)[:p_selection_history]
+    eval_result = evaluate_relation(p_history, realsub.RT)
 
-    return Dict(:optim_param => optim_param, :p_history => p_history, :eval_result => eval_result)
-end
-
-# 模型选择
-function model_evaluation(env, realsub; criteria=:AIC)
-    
-    eval_list = zeros(9)
-
-    subname = realsub.sub_tag[1]
-    
-    println("+++ " * subname * " basic model +++")
-    eval_list[1] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:single_alpha, number_iterations=5000)
-    eval_list[2] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:single_alpha_no_decay,
-                                      number_iterations=5000)
-    eval_list[3] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:no_decay,
-                                      number_iterations=5000)
-    eval_list[4] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:single_alpha_total_decay,
-                                      number_iterations=5000)
-    eval_list[5] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:total_decay,
-                                      number_iterations=5000)
-
-    println("+++ " * subname * " complex model +++")
-    eval_list[6] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:basic,
-                                      number_iterations=200000)
-    eval_list[7] = fit_and_evaluate(env, realsub, criteria=criteria, model_type=:error,
-                                      number_iterations=500000)
-    eval_list[8] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:CCC_same_alpha, number_iterations=1000000)
-    eval_list[9] = fit_and_evaluate(env, realsub, criteria=criteria,
-                                      model_type=:CCC_different_alpha, number_iterations=3000000)
-
-    return eval_list
+    return Dict(:optim_param => optim_param, :p_history => p_history, 
+                :eval_result => eval_result, :model_type => model_type)
 end

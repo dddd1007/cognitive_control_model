@@ -15,5 +15,6 @@ include("Evaluate/Fit.jl")
 include("Evaluate/Evaluate.jl")
 export evaluate_relation, fit_RL_SR, fit_RL_AB
 export model_recovery, model_evaluation
+export fit_and_evaluate
 
 end # module
