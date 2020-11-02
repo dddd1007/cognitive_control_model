@@ -41,7 +41,7 @@ function model_evaluation(env, realsub, number_iterations)
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:basic, number_iterations=number_iterations * 10))
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:error, number_iterations=number_iterations * 50))
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_same_alpha, number_iterations=number_iterations * 100))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha, number_iterations=number_iterations * 300))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha, number_iterations=number_iterations * 500))
 
     return Model_eval_result(eval_result...)
 end
@@ -68,6 +68,6 @@ end
 current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")
 filename = savepath * "/" * current_time  * ".jld2"
 
-import JLD2, FileIO
+using JLD2, FileIO
 
 @save filename eval_results
