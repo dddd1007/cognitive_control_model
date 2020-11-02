@@ -27,7 +27,7 @@ subject = subjects[0]
 filename = data_folder + subject + '.csv'
 data = pd.read_csv(filename)
 for m, model_type in enumerate(models):
-    a = datetime.now()
+    #a = datetime.now()
     RLCCmodel = RLCCModels(model_type, data)
     RLCCmodel.subject = subject
     RLCCmodel.results_folder = results_folder
