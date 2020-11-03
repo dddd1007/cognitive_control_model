@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 import sys
-import transplant
+#import transplant
 import obj_function
 
 if sys.platform == 'linux':
@@ -30,7 +30,7 @@ class RLCCModels(object):
         self.parameter_x0 = []
         self.alpha_bound =(0.0001, 1)
         self.beta_bound = (0.0001, 200)
-        self.ccc_bound = (-0.999, 0)
+        self.ccc_bound = (-1, 0)
 
         self.fit_with_error = 0 # 0, GLM fit without error; 1, with error
         self.fit_with_logRT = 0 # 0, GLM fit raw RT; 1, with np.log(RT)
@@ -129,63 +129,63 @@ class RLCCModels(object):
         #SR model with beta
         if model_type == 'SR_Q':
             #alpha, beta
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'beta']
             self.model_para_bounds = [self.alpha_bound, self.beta_bound]
             self.parameter_size=len(self.model_para_names)
         elif model_type == 'SR_Q_D':
             #alpha, beta, decay
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'beta', 'decay']
             self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound]
             self.parameter_size = len(self.model_para_names)
         elif model_type == 'SR_Q_D_E':
             #alpha, beta, decay, alpha_error
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'beta', 'decay', 'alpha_error']
             self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.alpha_bound]
             self.parameter_size = len(self.model_para_names)
         elif model_type == 'SR_Q_D_E_alphaCCC':
             #alpha, beta, decay, alpha_error, ccc, alpha_ccc
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'beta', 'decay', 'alpha_error', 'ccc', 'alpha_ccc']
             self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound]
             self.parameter_size = len(self.model_para_names)
         elif model_type == 'SR_Q_D_E_betaCCC':
             #alpha, beta, decay, alpha_error, ccc, beta_ccc
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'beta', 'decay', 'alpha_error', 'ccc', 'beta_ccc']
             self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.alpha_bound, self.ccc_bound, self.beta_bound]
             self.parameter_size = len(self.model_para_names)
         elif model_type == 'SR_Q_D_E_alphaCCC_betaCCC':
             #alpha, beta, decay, alpha_error, ccc, alpha_ccc, beta_ccc
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'beta', 'decay', 'alpha_error', 'ccc', 'alpha_ccc', 'beta_ccc']
             self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound, self.beta_bound]
             self.parameter_size = len(self.model_para_names)
         elif model_type == 'SR_Q_D_alphaCCC':
             #alpha, beta, decay, ccc, alpha_ccc
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'beta', 'decay', 'ccc', 'alpha_ccc']
             self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound]
             self.parameter_size = len(self.model_para_names)
         elif model_type == 'SR_Q_D_betaCCC':
             #alpha, beta, decay, ccc, beta_ccc
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'beta', 'decay',  'ccc', 'beta_ccc']
             self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.ccc_bound, self.beta_bound]
             self.parameter_size = len(self.model_para_names)
         elif model_type == 'SR_Q_D_alphaCCC_betaCCC':
             #alpha, beta, decay, ccc, alpha_ccc, beta_ccc
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'beta', 'decay', 'ccc', 'alpha_ccc', 'beta_ccc']
             self.model_para_bounds = [self.alpha_bound, self.beta_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound, self.beta_bound]
@@ -194,39 +194,39 @@ class RLCCModels(object):
         # SR model without beta
         if model_type == 'SR_Q_WOB':
             # alpha
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
-            self.model_para_names = ['alpha']
+            self.model_para_names = [ 'alpha']
             self.model_para_bounds = [self.alpha_bound]
             self.parameter_size = len(self.model_para_names)
         elif model_type == 'SR_Q_D_WOB':
             # alpha, decay
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
-            self.model_para_names = ['alpha', 'decay']
+            self.model_para_names = [ 'alpha', 'decay']
             self.model_para_bounds = [self.alpha_bound, self.alpha_bound]
             self.parameter_size = len(self.model_para_names)
         elif model_type == 'SR_Q_D_E_WOB':
             # alpha, decay, alpha_error
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'decay', 'alpha_error']
             self.model_para_bounds = [self.alpha_bound, self.alpha_bound, self.alpha_bound]
             self.parameter_size = len(self.model_para_names)
-        elif model_type == 'SR_Q_D_E_alphaCCC_WOB':
-            # alpha, decay, alpha_error, ccc, alpha_ccc
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
-            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
-            self.model_para_names = ['alpha', 'decay', 'alpha_error', 'ccc', 'alpha_ccc']
-            self.model_para_bounds = [self.alpha_bound, self.alpha_bound, self.alpha_bound, self.ccc_bound,
-                                      self.alpha_bound]
-            self.parameter_size = len(self.model_para_names)
         elif model_type == 'SR_Q_D_alphaCCC_WOB':
             # alpha, decay, ccc, alpha_ccc
-            self.Q_name = ['Q_ll', 'Q_lr', 'Q3_rl', 'Q4_rr']
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
             self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
             self.model_para_names = ['alpha', 'decay', 'ccc', 'alpha_ccc']
             self.model_para_bounds = [self.alpha_bound, self.alpha_bound, self.ccc_bound, self.alpha_bound]
+            self.parameter_size = len(self.model_para_names)
+        elif model_type == 'SR_Q_D_E_alphaCCC_WOB':
+            # alpha, decay, alpha_error, ccc, alpha_ccc
+            self.Q_name = ['Q_ll', 'Q_lr', 'Q_rl', 'Q_rr']
+            self.PE_name = ['PE_ll', 'PE_lr', 'PE_rl', 'PE_rr']
+            self.model_para_names = [ 'alpha', 'decay', 'alpha_error', 'ccc', 'alpha_ccc']
+            self.model_para_bounds = [self.alpha_bound, self.alpha_bound, self.alpha_bound, self.ccc_bound,
+                                      self.alpha_bound]
             self.parameter_size = len(self.model_para_names)
 
     def SR_Learning(self, parameters):

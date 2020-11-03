@@ -7,6 +7,19 @@
 
 using .Models, DataFrames
 
+struct Model_eval_result
+    subname
+    single_alpha
+    single_alpha_no_decay
+    no_decay
+    single_alpha_total_decay
+    total_decay
+    basic
+    error
+    CCC_same_alpha
+    CCC_different_alpha
+end
+
 # 定义评估变量关系的函数 
 function evaluate_relation(x, y, method=:regression)
     if method == :mse
@@ -20,7 +33,7 @@ function evaluate_relation(x, y, method=:regression)
         aic_value = aic(reg_result)
         bic_value = bic(reg_result)
         r2_value = r2(reg_result)
-        mse_value = deviance(reg_result)
+        mse_value = deviance(reg_result)/dof_residual(reg_result)
         result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value,
                       :MSE => mse_value)
         return result
