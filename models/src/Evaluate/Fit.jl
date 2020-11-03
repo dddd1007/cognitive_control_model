@@ -102,7 +102,7 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         end
     end
 
-    optim_param, eval_result = maximum(ho)
+    optim_param, eval_result = minimum(ho)
     verbose_table = DataFrame(VectorOfArray(ho.history)', collect(ho.params))
     verbose_table[:MSE] = ho.results
 
@@ -152,7 +152,7 @@ function fit_RL_AB(env, realsub, looptime; model_type)
         end
     end
     
-    optim_param, eval_result = maximum(ho)
+    optim_param, eval_result = minimum(ho)
     verbose_table = DataFrame(VectorOfArray(ho.history)', collect(ho.params))
     verbose_table[:MSE] = ho.results
 
