@@ -645,7 +645,7 @@ static PyObject *SR_Learning_without_beta(PyObject *self, PyObject *args)
 {
 	PyObject *parameters, *stimPosit, *respPosit, *correction;
 	char *model_type;
-	double alpha = 0, decay = 0, alpha_error = 0, ccc = 0, alpha_ccc = 0;
+	double alpha = 0, decay = 0, alpha_error = 0, ccc = 0, alpha_ccc = 0, relevant = 0;
 
 	if (!PyArg_ParseTuple(args, "sOOOO", &model_type, &parameters, &stimPosit, &respPosit, &correction))
 		return NULL;
@@ -675,6 +675,7 @@ static PyObject *SR_Learning_without_beta(PyObject *self, PyObject *args)
 		ccc = PyFloat_AsDouble(PyList_GetItem(parameters, 2));
 		alpha_ccc = PyFloat_AsDouble(PyList_GetItem(parameters, 3));
 	}
+	
 	else if (!strcmp(model_type, "SR_Q_D_E_alphaCCC_WOB") && para_len == 5) //Q-learning with forgetting, error and cognitive control:alpha, decay, alpha_error, ccc, alpha_ccc
 	{
 
@@ -749,8 +750,7 @@ static PyObject *SR_Learning_without_beta(PyObject *self, PyObject *args)
 				else
 					alpha_temp = alpha;
 			}
-		}
-		
+		}				
 		else if (!strcmp(model_type, "SR_Q_D_E_alphaCCC_WOB") && para_len == 5)
 		{
 			conflict = 2 * P - 1;

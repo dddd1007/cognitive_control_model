@@ -2,6 +2,7 @@
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 import statsmodels.api as sm
 
 from sklearn import preprocessing	
@@ -21,7 +22,6 @@ def objective_function(parameters, model):
 
     return mse
 
-
 def glm_fit(model, fitpara=False):
     allData = pd.concat([model.data, pd.DataFrame(model.PResult, columns=['P'])], axis=1)
 
@@ -33,7 +33,7 @@ def glm_fit(model, fitpara=False):
         correData = allData[allData['error_outlier'] != 2]
 
     correData = correData.reset_index(drop=True)
-    xData = pd.concat([2*correData['P']-1, correData['congruency'], correData['hand'], correData['postError'],
+    xData = pd.concat(2*[correData['P']-1, correData['congruency'], correData['hand'], correData['postError'],
                        correData['block1'], correData['block2'], correData['block3']], axis=1)
     xData.columns.values[0] = 'P_diff'
 
