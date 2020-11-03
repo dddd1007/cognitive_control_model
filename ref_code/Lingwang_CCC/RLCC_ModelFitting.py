@@ -64,4 +64,4 @@ RLCCmodel.group_parameter_results(subjects, models, 'with_error_', '_SR')
 RLCCmodel.group_parameter_results(subjects, models, 'logRT_with_error_', '_SR')
 
 # do the model selection based on AIC
-RLCCmodel.model_selection()
+#RLCCmodel.model_selection()
