@@ -25,10 +25,10 @@ function model_evaluation(env, realsub, number_iterations)
 
     println("+++ " * subname * " complex model +++")
     
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:basic, number_iterations=1))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:error, number_iterations=1))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_same_alpha, number_iterations=1))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha, number_iterations=1))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:basic, number_iterations=number_iterations*10))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:error, number_iterations=number_iterations*50))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_same_alpha, number_iterations=number_iterations*100))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha, number_iterations=number_iterations*900))
 
     return Model_eval_result(eval_result...)
 end
