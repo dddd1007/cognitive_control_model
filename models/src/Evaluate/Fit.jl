@@ -11,7 +11,7 @@ function fit_RL_SR(env, realsub, looptime; model_type)
     ## Fit the hyperparameters
     if model_type == :single_alpha
         ho = @hyperopt for i = looptime,
-                            α = [0.001:0.001:1;],
+                            α = [0.001:0.001:0.999;],
                             decay = [0.001:0.001:1;]
 
             agent =  RLModels.NoSoftMax.RLLearner_basic(α, α, decay)
@@ -20,7 +20,7 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         end 
     elseif model_type == :single_alpha_no_decay
         ho = @hyperopt for i = looptime,
-                            α = [0.001:0.001:1;]
+                            α = [0.001:0.001:0.999;]
 
             agent =  RLModels.NoSoftMax.RLLearner_basic(α, α, 0)
             model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub, dodecay = false)

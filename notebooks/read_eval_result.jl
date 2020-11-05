@@ -70,7 +70,6 @@ begin
 	test_data_wangtype = DataFrame(y = sub1_subinfo.RT, 
 		p_diff = 2 * single_alpha_wang[:p_selection_history] .- 1,
 		congruency = correData[:congruency], hand = correData[:hand], 					    postError = correData[:postError], block1 = correData[:block1], 			           block2 = correData[:block2], block3 = correData[:block3])
-    
 end
 
 # ╔═╡ 08c8962a-1e7c-11eb-1098-2500daf6df22

@@ -1,8 +1,7 @@
 using Test, GLM, StatsBase
 import CSV
 
-using DataManipulate, RLModels_basic, DataFramesMeta
-import RLModels_SoftMax, RLModels_no_SoftMax
+using Models, DataFramesMeta
 
 # 生成测试数据
 begin
@@ -30,32 +29,22 @@ begin
 end
 
 # 测试函数计算的基本要素
-@testset "Basic elements of Calculations" begin
-    
-    # 冲突水平的计算
-    test1 = [0.6;0.4;0.7;0.3]
-    @test RLModels_basic.calc_CCC(test1, (0,0)) ≈ 0.2
 
-    test2 = [0.6, 0.4]
-    @test RLModels_basic.calc_CCC(test2, 0) ≈ 0.2
 
-    # 价值矩阵更新
-    weight_matrix = zeros(Float64, (2, 4))
-    weight_matrix[1,:] = [0.5,0.5,0.5,0.5]
-    weight_matrix[2,:] = RLModels_no_SoftMax.update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0.9, (0,0))
-    @test weight_matrix[2,:] == [0.75, 0.5, 0.5, 0.5]
-    
-    weight_matrix = zeros(Float64, (2, 4))
-    weight_matrix[1,:] = [0.5,0.5,0.6,0.6]
-    weight_matrix[2,:] = RLModels_no_SoftMax.update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0.9, (0,0))
-    @test weight_matrix[2,:] == [0.75, 0.5, 0.51, 0.51]
+# 冲突水平的计算
+test1 = [0.6;0.4;0.7;0.3]
+@test Models.RLModels.calc_CCC(test1, (0,0)) ≈ 0.2
 
-    weight_matrix = zeros(Float64, (2, 2))
-    weight_matrix[1,:] = [0.4, 0.6]
-    weight_matrix[2,:] = RLModels_no_SoftMax.update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0)
-    @test weight_matrix[2,:] ≈ [0.7, 0.3]
+test2 = [0.6, 0.4]
+@test Models.RLModels.calc_CCC(test2, 0) ≈ 0.2
 
-end
+# 价值矩阵更新
+weight_matrix = zeros(Float64, (2, 4))
+weight_matrix[1,:] = [0.5,0.5,0.5,0.5]
+weight_matrix[2,:] = Models.RLModels.update_options_weight_matrix(weight_matrix[1,:] , 0.5, 0.9, (0,0))
+@test weight_matrix[2,:] == [0.75, 0.25, 0.5, 0.5]
+
+
 
 # 测试拟合带SoftMax的计算过程
 
