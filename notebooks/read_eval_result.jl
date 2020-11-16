@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.6
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -17,7 +17,7 @@ using CSV
 include("/Users/dddd1007/project2git/cognitive_control_model/tmp/init_sub1_data.jl")
 
 # ╔═╡ 96be983c-1dd0-11eb-1357-fffbc6026e5b
-@load "/Users/dddd1007/project2git/cognitive_control_model/data/output/RLModels/model_selection/2020-11-04-095421_sub1_simple_models.jld2" eval_results
+@load "/Users/dddd1007/project2git/cognitive_control_model/data/output/RLModels/model_selection/2020-11-05-155242_sub1_simple_models.jld2" eval_results
 
 # ╔═╡ ad5bda0a-1dd0-11eb-0f61-21147035bf5d
 eval_results["sub01_Yangmiao"]
