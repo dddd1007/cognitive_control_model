@@ -9,7 +9,7 @@ include("import_all_data.jl")
 
 Please note the parameters fitted in the scripts come from the log(RT)
 ===============================#
-all_data.logRT = log.(parse.(Float64,all_data.RT))
+all_data.logRT = string.(log.(parse.(Float64,all_data.RT)))
 select!(all_data, Not(:RT))
 rename!(all_data, Dict(:logRT => :RT))
 

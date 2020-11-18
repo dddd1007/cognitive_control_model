@@ -4,7 +4,7 @@ using cognitive_control_model: cognitive_control_model
 
 # import all data
 all_data = CSV.read(joinpath(dirname(pathof(cognitive_control_model)), "..", "data",
-                             "input", "pure_all_data.csv"));
+                             "input", "pure_all_data.csv"), DataFrame);
 all_data = @where(all_data, :Response .!= "NA")
 
 # Remove the subject who always move the head
