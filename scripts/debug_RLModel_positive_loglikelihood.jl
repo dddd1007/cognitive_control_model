@@ -4,17 +4,20 @@ import CSV
 savepath = joinpath(dirname(pathof(Models)), "..", "..", "data", "output", "RLModels", "model_selection")
 include("import_all_data.jl")
 
+#===============================
+!!!modifiy the RT into logRT
+
+Please note the parameters fitted in the scripts come from the log(RT)
+===============================#
+all_data.logRT = log.(parse.(Float64,all_data.RT))
+select!(all_data, Not(:RT))
+rename!(all_data, Dict(:logRT => :RT))
+
 struct Model_eval_result
     subname
     single_alpha
     single_alpha_no_decay
     no_decay
-    single_alpha_total_decay
-    total_decay
-    basic
-    error
-    CCC_same_alpha
-    CCC_different_alpha
 end
 
 #sub1_data = @where(all_data, :Subject_num .== 1)
@@ -33,15 +36,6 @@ function model_evaluation(env, realsub, number_iterations)
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha, number_iterations=number_iterations))
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha_no_decay, number_iterations=number_iterations))
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:no_decay, number_iterations=number_iterations))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha_total_decay, number_iterations=number_iterations))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:total_decay, number_iterations=number_iterations))
-
-    println("+++ " * subname * " complex model +++")
-    
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:basic, number_iterations=number_iterations * 10))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:error, number_iterations=number_iterations * 30))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_same_alpha, number_iterations=number_iterations * 50))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha, number_iterations=number_iterations * 100))
 
     return Model_eval_result(eval_result...)
 end
@@ -66,8 +60,8 @@ Threads.@threads for sub_num in 1:36
 end
 
 current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")
-filename = savepath * "/" * current_time  * ".jld2"
+filename = savepath * "/" * current_time  * "_debug_positive_loglikelihood.jld2"
 
 using JLD2, FileIO
 
-@save filename eval_results
+@save filename Model_eval_result eval_results

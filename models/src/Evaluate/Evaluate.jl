@@ -34,8 +34,9 @@ function evaluate_relation(x, y, method=:regression)
         bic_value = bic(reg_result)
         r2_value = r2(reg_result)
         mse_value = deviance(reg_result)/dof_residual(reg_result)
+        loglikelihood_value = loglikelihood(reg_result)
         result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value,
-                      :MSE => mse_value)
+                      :MSE => mse_value, :Loglikelihood => loglikelihood_value)
         return result
     end
 end
