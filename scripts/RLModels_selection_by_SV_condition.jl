@@ -1,4 +1,4 @@
-using Models, DataFrames, Dates
+using Models, DataFrames, Dates, JLD2, FileIO
 import CSV
 
 savepath = joinpath(dirname(pathof(Models)), "..", "..", "data", "output", "RLModels", "model_selection")
@@ -50,7 +50,11 @@ end
 ##### Begin evaluation
 #####
 
-eval_results = Dict()
+# Evaluate V condition
+
+all_data_v = @where(all_data, :condition .== "v")
+
+eval_results_v = Dict()
 
 Threads.@threads for sub_num in 1:36
         
@@ -59,15 +63,36 @@ Threads.@threads for sub_num in 1:36
     end
     println("========= Begin Sub " * repr(sub_num) * " ==========")
     
-    each_sub_data = @where(all_data, :Subject_num .== sub_num)
+    each_sub_data = @where(all_data_v, :Subject_num .== sub_num)
     each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
                                                           sub_idx_dict)
-    eval_results[each_subinfo.sub_tag[1]] = model_evaluation(each_env, each_subinfo, 10000)
+    eval_results_v[each_subinfo.sub_tag[1]] = model_evaluation(each_env, each_subinfo, 10000)
 end
 
 current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")
-filename = savepath * "/" * current_time  * ".jld2"
+filename = savepath * "/" * current_time  * "_v.jld2"
 
-using JLD2, FileIO
+@save filename eval_results_v
 
-@save filename eval_results
+# Evaluate S condition
+
+all_data_s = @where(all_data, :condition .== "s")
+
+eval_results_s = Dict()
+
+Threads.@threads for sub_num in 1:36
+        
+    if sub_num == 27 || sub_num == 6
+        continue
+    end
+    println("========= Begin Sub " * repr(sub_num) * " ==========")
+    
+    each_sub_data = @where(all_data_s, :Subject_num .== sub_num)
+    each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
+                                                          sub_idx_dict)
+    eval_results_s[each_subinfo.sub_tag[1]] = model_evaluation(each_env, each_subinfo, 10000)
+end
+
+filename = savepath * "/" * current_time  * "_s.jld2"
+
+@save filename eval_results_s
