@@ -277,6 +277,21 @@ struct RLLearner_withCCC <: RLLearner
     decay::Any
 end
 
+struct RLLearner_withCCC_no_error <: RLLearner
+    α_v::Float64
+    β_v::Float64
+    α_s::Float64
+    β_s::Float64
+
+    α_v_CCC::Float64
+    β_v_CCC::Float64
+    α_s_CCC::Float64
+    β_s_CCC::Float64
+
+    CCC::Float64
+    decay::Any
+end
+
 #### Define the data update functions
 
 # 定义SR学习中的决策过程
@@ -456,6 +471,18 @@ struct RLLearner_withCCC <: RLLearner
     decay::Float64
 end
 
+# 存在冲突控制但在错误试次下没有改变学习率的学习者
+struct RLLearner_withCCC_no_error <: RLLearner
+    α_v::Float64
+    α_s::Float64
+
+    α_v_CCC::Float64
+    α_s_CCC::Float64
+
+    CCC::Float64
+    decay::Float64
+end
+
 #### Define the Functions
 
 # 定义SR学习中的决策过程
@@ -533,6 +560,25 @@ function get_action_para(env::ExpEnv, agent::RLLearner_withCCC, realsub::RealSub
             α = agent.α_s_CCC
         elseif realsub.corrections[idx] == 0
             α = agent.α_s_error
+        end
+    end
+    
+    return(α)
+end
+
+function get_action_para(env::ExpEnv, agent::RLLearner_withCCC_no_error, realsub::RealSub, idx::Int, conflict)
+
+    if env.env_type[idx] == "v" 
+        if conflict ≤ agent.CCC
+            α = agent.α_v
+        elseif conflict > agent.CCC
+            α = agent.α_v_CCC
+        end
+    elseif env.env_type[idx] == "s"
+        if conflict ≤ agent.CCC
+            α = agent.α_s
+        elseif conflict > agent.CCC
+            α = agent.α_s_CCC
         end
     end
     

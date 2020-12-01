@@ -9,12 +9,12 @@ struct Model_eval_result
     single_alpha
     single_alpha_no_decay
     no_decay
-    single_alpha_total_decay
-    total_decay
     basic
     error
     CCC_same_alpha
     CCC_different_alpha
+    CCC_same_alpha_no_error
+    CCC_different_alpha_no_error
 end
 
 #sub1_data = @where(all_data, :Subject_num .== 1)
@@ -33,8 +33,6 @@ function model_evaluation(env, realsub, number_iterations)
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha, number_iterations=number_iterations))
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha_no_decay, number_iterations=number_iterations))
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:no_decay, number_iterations=number_iterations))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha_total_decay, number_iterations=number_iterations))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:total_decay, number_iterations=number_iterations))
 
     println("+++ " * subname * " complex model +++")
     
@@ -42,6 +40,8 @@ function model_evaluation(env, realsub, number_iterations)
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:error, number_iterations=number_iterations * 30))
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_same_alpha, number_iterations=number_iterations * 50))
     push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha, number_iterations=number_iterations * 100))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_same_alpha_no_error, number_iterations=number_iterations * 30))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha_no_error, number_iterations=number_iterations * 50))
 
     return Model_eval_result(eval_result...)
 end
@@ -62,7 +62,7 @@ Threads.@threads for sub_num in 1:36
     each_sub_data = @where(all_data, :Subject_num .== sub_num)
     each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
                                                           sub_idx_dict)
-    eval_results[each_subinfo.sub_tag[1]] = model_evaluation(each_env, each_subinfo, 10000)
+    eval_results[each_subinfo.sub_tag[1]] = model_evaluation(each_env, each_subinfo, 1)
 end
 
 current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")

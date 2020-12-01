@@ -100,6 +100,31 @@ function fit_RL_SR(env, realsub, looptime; model_type)
             model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
             evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
         end
+    elseif model_type == :CCC_same_alpha_no_error
+        ho = @hyperopt for i = looptime,
+                         α_v = [0.001:0.001:1;],
+                         α_s = [0.001:0.001:1;],
+                       α_CCC = [0.001:0.001:1;],
+                         CCC = [0.001:0.001:1;], 
+                       decay = [0.001:0.001:1;]
+    
+            agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(α_v, α_s, α_CCC, α_CCC, CCC, decay)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+            evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
+        end
+    elseif model_type == :CCC_different_alpha_no_error
+        ho = @hyperopt for i = looptime,
+                         α_v = [0.001:0.001:1;],
+                         α_s = [0.001:0.001:1;],
+                     α_v_CCC = [0.001:0.001:1;],
+                     α_s_CCC = [0.001:0.001:1;],
+                         CCC = [0.001:0.001:1;], 
+                       decay = [0.001:0.001:1;]
+    
+            agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(α_v, α_s, α_v_CCC, α_s_CCC, CCC, decay)
+            model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+            evaluate_relation(model_stim[:p_selection_history], realsub.RT)[:MSE]
+        end
     end
 
     optim_param, eval_result = minimum(ho)

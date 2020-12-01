@@ -7,19 +7,6 @@
 
 using .Models, DataFrames
 
-struct Model_eval_result
-    subname
-    single_alpha
-    single_alpha_no_decay
-    no_decay
-    single_alpha_total_decay
-    total_decay
-    basic
-    error
-    CCC_same_alpha
-    CCC_different_alpha
-end
-
 # 定义评估变量关系的函数 
 function evaluate_relation(x, y, method=:regression)
     if method == :mse
@@ -71,6 +58,14 @@ function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64
                                                      opt_params[3], opt_params[3],
                                                      opt_params[4], opt_params[5],
                                                      opt_params[6], opt_params[7])
+    elseif model_type == :CCC_same_alpha_no_error
+        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
+                                                     opt_params[3], opt_params[3],
+                                                     opt_params[4], opt_params[5])
+    elseif model_type == :CCC_different_alpha_no_error
+        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
+                                                     opt_params[3], opt_params[4],
+                                                     opt_params[5], opt_params[6])
     end
 
     if model_type == :single_alpha_no_decay || model_type == :no_decay
