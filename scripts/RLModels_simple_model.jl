@@ -4,6 +4,10 @@ import CSV
 savepath = joinpath(dirname(pathof(Models)), "..", "..", "data", "output", "RLModels", "model_selection")
 include("import_all_data.jl")
 
+struct Model_eval_result
+    CCC_same_alpha_no_error
+    CCC_different_alpha_no_error
+end
 #sub1_data = @where(all_data, :Subject_num .== 1)
 #env, realsub = init_env_sub(sub1_data, env_idx_dict, sub_idx_dict)
 
@@ -15,22 +19,10 @@ function model_evaluation(env, realsub, number_iterations)
 
     push!(eval_result, subname)
 
-    println("+++ " * subname * " basic model +++")
-    
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha, number_iterations=number_iterations))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha_no_decay, number_iterations=number_iterations))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:no_decay, number_iterations=number_iterations))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha_total_decay, number_iterations=number_iterations))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:total_decay, number_iterations=number_iterations))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_same_alpha_no_error, number_iterations=number_iterations * 30))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha_no_error, number_iterations=number_iterations * 50))
 
-    println("+++ " * subname * " complex model +++")
-    
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:basic, number_iterations=number_iterations*10))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:error, number_iterations=number_iterations*50))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_same_alpha, number_iterations=number_iterations*100))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha, number_iterations=number_iterations*900))
-
-    return Model_eval_result(eval_result...)
+    return eval_result
 end
 
 #####
@@ -44,7 +36,7 @@ println("========= Begin Sub " * repr(sub_num) * " ==========")
 
 each_sub_data = @where(all_data, :Subject_num .== sub_num)
 each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict, sub_idx_dict)
-eval_results[each_subinfo.sub_tag[1]] = model_evaluation(each_env, each_subinfo, 100000)
+eval_results[each_subinfo.sub_tag[1]] = model_evaluation(each_env, each_subinfo, 1)
 
 
 current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")

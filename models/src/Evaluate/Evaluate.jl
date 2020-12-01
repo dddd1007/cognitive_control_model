@@ -59,13 +59,13 @@ function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64
                                                      opt_params[4], opt_params[5],
                                                      opt_params[6], opt_params[7])
     elseif model_type == :CCC_same_alpha_no_error
-        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
-                                                     opt_params[3], opt_params[3],
-                                                     opt_params[4], opt_params[5])
+        agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(opt_params[1], opt_params[2],
+                                                              opt_params[3], opt_params[3],
+                                                              opt_params[4], opt_params[5])
     elseif model_type == :CCC_different_alpha_no_error
-        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
-                                                     opt_params[3], opt_params[4],
-                                                     opt_params[5], opt_params[6])
+        agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(opt_params[1], opt_params[2],
+                                                              opt_params[3], opt_params[4],
+                                                              opt_params[5], opt_params[6])
     end
 
     if model_type == :single_alpha_no_decay || model_type == :no_decay

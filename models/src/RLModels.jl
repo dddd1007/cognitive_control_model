@@ -607,7 +607,7 @@ function rl_learning_sr(
     # Start learning
     for idx = 1:total_trials_num
         
-        if isa(agent, RLLearner_withCCC)
+        if isa(agent, RLLearner_withCCC) | isa(agent, RLLearner_withCCC_no_error)
             conflict = calc_CCC(options_weight_matrix[idx,:], (env.stim_task_unrelated[idx], env.stim_correct_action[idx]))
             α = get_action_para(env, agent, realsub, idx, conflict)
         else
