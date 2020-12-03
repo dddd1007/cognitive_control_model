@@ -29,10 +29,10 @@ eval_results_v
 md"## 获取关于结果的表格"
 
 # ╔═╡ dd8b42d6-27d7-11eb-337d-2f5ab764aad8
-subject_names = keys(eval_results_v)
+subject_names = keys(eval_results_s)
 
 # ╔═╡ dd6137d8-27d8-11eb-27b0-190c68ba8a88
-query_result = eval_results_v["sub25_LuSihan"]
+query_result = eval_results_s["sub25_LuSihan"]
 
 # ╔═╡ 601d0ccc-27d9-11eb-2551-0feb4f859f46
 function show_aic(eval_results, index)
@@ -46,24 +46,21 @@ function show_aic(eval_results, index)
 end
 
 # ╔═╡ 3b0f2ec4-27e0-11eb-244c-6709a228f931
-foo = []
+foo = DataFrame(subject = [], _1a1d = [], _1a = [], _2a = [], _2a1d = [], _2a1d1e = [], _2a1d1e1CCC = [], _2a1d1e2CCC = [])
 
 # ╔═╡ 0164e7ec-27e3-11eb-1406-fb26c1ef9ac6
-show_aic(eval_results_v["sub31_TanPeixian"], :AIC)
+show_aic(eval_results_s["sub31_TanPeixian"], :AIC)
 
 # ╔═╡ f6530bbc-27de-11eb-10ac-a1e9de05c68f
 for i in collect(subject_names)
-	push!(foo, [i, show_aic(eval_results[i], :MSE)...])
+	push!(foo, [i, show_aic(eval_results_v[i], :AIC)...])
 end
 
 # ╔═╡ 9becefc2-27e2-11eb-1f9c-1376fe2caf1f
-#foo
-
-# ╔═╡ f1ac02ae-27e0-11eb-03e5-9d2614ffd5b9
-foo2 = DataFrame(foo)
+foo
 
 # ╔═╡ bf923aa0-27e1-11eb-1937-69d27fd159da
-CSV.write("/Users/dddd1007/Dropbox/My Mac (eXrld-MBP)/Desktop/test.csv", foo2)
+CSV.write("/Users/dddd1007/Dropbox/My Mac (eXrld-MBP)/Desktop/test.csv", foo)
 
 # ╔═╡ Cell order:
 # ╠═b7211716-27d6-11eb-0baa-e5791b5954ee
@@ -80,6 +77,5 @@ CSV.write("/Users/dddd1007/Dropbox/My Mac (eXrld-MBP)/Desktop/test.csv", foo2)
 # ╠═0164e7ec-27e3-11eb-1406-fb26c1ef9ac6
 # ╠═f6530bbc-27de-11eb-10ac-a1e9de05c68f
 # ╠═9becefc2-27e2-11eb-1f9c-1376fe2caf1f
-# ╠═f1ac02ae-27e0-11eb-03e5-9d2614ffd5b9
 # ╠═8eea045a-27e1-11eb-21e4-8b71eaff7541
 # ╠═bf923aa0-27e1-11eb-1937-69d27fd159da
