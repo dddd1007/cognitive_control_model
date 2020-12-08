@@ -49,7 +49,7 @@ Threads.@threads for sub_num in 1:36
     each_sub_data = @where(all_data, :Subject_num .== sub_num)
     each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
                                                           sub_idx_dict)
-    eval_results[each_subinfo.sub_tag[1]] = model_evaluation(each_env, each_subinfo, 1000000)
+    eval_results[each_subinfo.sub_tag[1]] = model_evaluation(each_env, each_subinfo, 10000)
 end
 
 current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")
