@@ -29,46 +29,47 @@ function evaluate_relation(x, y, method=:regression)
 end
 
 # 根据最优参数重新拟合模型
-function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64,1};
+function model_recovery(env::ExpEnv, realsub::RealSub, opt_params;
                         model_type)
-    if model_type == :single_alpha
-        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1],
-                                                   opt_params[2])
-    elseif model_type == :single_alpha_no_decay
-        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1], 0)
-    elseif model_type == :no_decay
-        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2], 0)
-    elseif model_type == :single_alpha_total_decay
-        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[1], 1)
-    elseif model_type == :total_decay
-        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2], 1)
-    elseif model_type == :basic
-        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[1], opt_params[2], opt_params[3])
-    elseif model_type == :error
-        agent = RLModels.NoSoftMax.RLLearner_witherror(opt_params[1], opt_params[2],
-                                                       opt_params[3], opt_params[3],
-                                                       opt_params[4])
-    elseif model_type == :CCC_same_alpha
-        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
-                                                     opt_params[3], opt_params[3],
-                                                     opt_params[4], opt_params[4],
-                                                     opt_params[5], opt_params[6])
-    elseif model_type == :CCC_different_alpha
-        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[1], opt_params[2],
-                                                     opt_params[3], opt_params[3],
-                                                     opt_params[4], opt_params[5],
-                                                     opt_params[6], opt_params[7])
-    elseif model_type == :CCC_same_alpha_no_error
-        agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(opt_params[1], opt_params[2],
-                                                              opt_params[3], opt_params[3],
-                                                              opt_params[4], opt_params[5])
-    elseif model_type == :CCC_different_alpha_no_error
-        agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(opt_params[1], opt_params[2],
-                                                              opt_params[3], opt_params[4],
-                                                              opt_params[5], opt_params[6])
+                    
+    if model_type == :_1a
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[:α], opt_params[:α], 0)
+    elseif model_type == :_1a1d
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[:α], opt_params[:α],
+                                                   opt_params[:decay])
+    elseif model_type == :_1a1d1e
+        agent = RLModels.NoSoftMax.RLLearner_witherror(opt_params[:α], opt_params[:α],
+                                                       opt_params[:α_error], opt_params[:α_error],
+                                                       opt_params[:decay])
+    elseif model_type == :_1a1d1e1CCC
+        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[:α], opt_params[:α],
+                                                     opt_params[:α_error], opt_params[:α_error],
+                                                     opt_params[:α_CCC], opt_params[:α_CCC],
+                                                     opt_params[:CCC], opt_params[:decay])
+    elseif model_type == :_1a1d1CCC
+        agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(opt_params[:α], opt_params[:α],
+                                                              opt_params[:α_CCC], opt_params[:α_CCC],
+                                                              opt_params[:CCC], opt_params[:decay])
+    elseif model_type == :_2a
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[:α_v], opt_params[:α_s], 0)
+    elseif model_type == :_2a1d
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[:α_v], opt_params[:α_s], opt_params[:decay])
+    elseif model_type == :_2a1d1e
+        agent = RLModels.NoSoftMax.RLLearner_witherror(opt_params[:α_v], opt_params[:α_s],
+                                                       opt_params[:α_error], opt_params[:α_error],
+                                                       opt_params[:decay])
+    elseif model_type == :_2a1d1e1CCC
+        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[:α_v], opt_params[:α_s],
+                                                     opt_params[:α_error], opt_params[:α_error],
+                                                     opt_params[:α_CCC], opt_params[:α_CCC],
+                                                     opt_params[:CCC], opt_params[:decay])
+    elseif model_type == :_2a1d1CCC
+        agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(opt_params[:α_v], opt_params[:α_s],
+                                                              opt_params[:α_CCC], opt_params[:α_CCC],
+                                                              opt_params[:CCC], opt_params[:decay])
     end
 
-    if model_type == :single_alpha_no_decay || model_type == :no_decay
+    if model_type == :_1a || model_type == :_2a
         return RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub, dodecay=false)
     else
         return RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)

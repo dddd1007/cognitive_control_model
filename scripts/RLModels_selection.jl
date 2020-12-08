@@ -4,9 +4,6 @@ import CSV
 savepath = joinpath(dirname(pathof(Models)), "..", "..", "data", "output", "RLModels", "model_selection")
 include("import_all_data.jl")
 
-#sub1_data = @where(all_data, :Subject_num .== 1)
-#env, realsub = init_env_sub(sub1_data, env_idx_dict, sub_idx_dict)
-
 # 定义模型选择函数
 function model_evaluation(env, realsub, number_iterations)
     
@@ -15,20 +12,21 @@ function model_evaluation(env, realsub, number_iterations)
 
     push!(eval_result, subname)
 
-    # println("+++ " * subname * " basic model +++")
+    println("+++ " * subname * " 1a model +++")
     
-    # push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha, number_iterations=number_iterations))
-    # push!(eval_result, fit_and_evaluate(env, realsub, model_type=:single_alpha_no_decay, number_iterations=number_iterations))
-    # push!(eval_result, fit_and_evaluate(env, realsub, model_type=:no_decay, number_iterations=number_iterations))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:_1a, number_iterations=number_iterations))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:_1a1d, number_iterations=number_iterations * 10))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:_1a1d1e, number_iterations=number_iterations * 30))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:_1a1d1CCC, number_iterations=number_iterations * 50))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:_1a1d1e1CCC, number_iterations=number_iterations * 100))
 
-    # println("+++ " * subname * " complex model +++")
+    println("+++ " * subname * " complex model +++")
     
-    # push!(eval_result, fit_and_evaluate(env, realsub, model_type=:basic, number_iterations=number_iterations * 10))
-    # push!(eval_result, fit_and_evaluate(env, realsub, model_type=:error, number_iterations=number_iterations * 30))
-    # push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_same_alpha, number_iterations=number_iterations * 50))
-    # push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha, number_iterations=number_iterations * 100))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_same_alpha_no_error, number_iterations=number_iterations * 50))
-    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:CCC_different_alpha_no_error, number_iterations=number_iterations * 100))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:_2a, number_iterations=number_iterations))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:_2a1d, number_iterations=number_iterations * 10))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:_2a1d1e, number_iterations=number_iterations * 30))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:_2a1d1CCC, number_iterations=number_iterations * 50))
+    push!(eval_result, fit_and_evaluate(env, realsub, model_type=:_2a1d1e1CCC, number_iterations=number_iterations * 100))
 
     return eval_result
 end
@@ -53,6 +51,6 @@ Threads.@threads for sub_num in 1:36
 end
 
 current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")
-filename = savepath * "/" * current_time  * "CCC_no_error.jld2"
+filename = savepath * "/" * current_time  * "final_selection.jld2"
 
 @save filename eval_results
