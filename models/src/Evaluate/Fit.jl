@@ -166,9 +166,10 @@ function fit_RL_AB(env, realsub, looptime; model_type)
         end
     end
     
-    optim_param, eval_result = minimum(ho)
+    optim_params_value, eval_result = minimum(ho)
+    optim_params = Dict(zip(ho.params, optim_params_value))
     verbose_table = DataFrame(VectorOfArray(ho.history)', collect(ho.params))
     verbose_table[:MSE] = ho.results
 
-    return (optim_param, eval_result, verbose_table)
+    return (optim_params, eval_result, verbose_table)
 end
