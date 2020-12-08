@@ -1,5 +1,6 @@
 
-using .RLModels, Hyperopt, RecursiveArrayTools, StatsBase, DataFrames, GLM 
+using .RLModels
+using Hyperopt, RecursiveArrayTools, StatsBase, DataFrames, GLM 
 
 #####
 ##### 强化学习模型的模型拟合
@@ -38,7 +39,7 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         end
     elseif model_type == :_1a1d1e1CCC
         ho = @hyperopt for i = looptime,
-                        α = [0.001:0.001:1;]
+                        α = [0.001:0.001:1;],
                         α_error = [0.001:0.001:1;],
                         α_CCC = [0.001:0.001:1;],
                         CCC = [0.001:0.001:1;], 
@@ -116,11 +117,12 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         end
     end
 
-    optim_param, eval_result = minimum(ho)
+    optim_params_value, eval_result = minimum(ho)
+    optim_params = Dict(zip(ho.params, optim_params_value))
     verbose_table = DataFrame(VectorOfArray(ho.history)', collect(ho.params))
     verbose_table[:MSE] = ho.results
 
-    return (optim_param, eval_result, verbose_table)
+    return (optim_params, eval_result, verbose_table)
 end
 
 ### 估计AB模型

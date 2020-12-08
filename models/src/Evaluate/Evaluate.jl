@@ -29,7 +29,7 @@ function evaluate_relation(x, y, method=:regression)
 end
 
 # 根据最优参数重新拟合模型
-function model_recovery(env::ExpEnv, realsub::RealSub, opt_params::Array{Float64,1};
+function model_recovery(env::ExpEnv, realsub::RealSub, opt_params;
                         model_type)
                     
     if model_type == :_1a
