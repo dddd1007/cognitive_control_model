@@ -120,7 +120,7 @@ function fit_RL_SR(env, realsub, looptime; model_type)
     optim_params_value, eval_result = minimum(ho)
     optim_params = Dict(zip(ho.params, optim_params_value))
     verbose_table = DataFrame(VectorOfArray(ho.history)', collect(ho.params))
-    verbose_table[:MSE] = ho.results
+    verbose_table[!, :MSE] = ho.results
 
     return (optim_params, eval_result, verbose_table)
 end
