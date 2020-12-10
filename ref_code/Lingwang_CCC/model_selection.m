@@ -1,7 +1,7 @@
 %function model_selection(filename)
 
-results_folder = "/Users/dddd1007/project2git/cognitive_control_model/data/output/summary/"
-filename = "2nd_model_selection_aic.csv"
+results_folder = "/Data3/Xiaxk/research_data/cognitive_control_model/data/output/RLModels/model_selectioni/"
+filename = "model_selection_final.csv"
 
 %AIC
 data = csvread(append(results_folder,filename),1,1);
