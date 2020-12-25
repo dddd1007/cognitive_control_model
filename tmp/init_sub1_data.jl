@@ -4,7 +4,7 @@ import CSV
 using Models, cognitive_control_model
 begin
     all_data = CSV.read(joinpath(dirname(pathof(cognitive_control_model)), "..", "data",
-                             "input", "pure_all_data.csv"));
+                             "input", "pure_all_data.csv"), DataFrame);
     begin
         color_rule = Dict("red" => "0" , "green" => "1")
         congruency_rule = Dict("con" => "1", "inc" => "0")

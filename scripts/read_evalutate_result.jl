@@ -9,7 +9,7 @@ for i in values(eval_results)
     result = []
 	push!(result, i[1])
 	
-	for j in 2:11
+	for j in 2:11i
         push!(result, i[j][:eval_result][:AIC])
 	end
 	
