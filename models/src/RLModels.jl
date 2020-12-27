@@ -605,11 +605,14 @@ function rl_learning_sr(
         init_param(env, :sr)
 
     # Start learning
+    conflict_list = []
+
     for idx = 1:total_trials_num
         
         if isa(agent, RLLearner_withCCC) | isa(agent, RLLearner_withCCC_no_error)
             conflict = calc_CCC(options_weight_matrix[idx,:], (env.stim_task_unrelated[idx], env.stim_correct_action[idx]))
             α = get_action_para(env, agent, realsub, idx, conflict)
+            push!(conflict_list, conflict)
         else
             α = get_action_para(env, agent, realsub, idx)
         end
@@ -637,7 +640,8 @@ function rl_learning_sr(
     return Dict(
         :options_weight_history => options_weight_result,
         :p_selection_history => p_selection_history,
-        :prediction_error => prediction_error
+        :prediction_error => prediction_error,
+        :conflict_list => conflict_list
     )
 end
 
