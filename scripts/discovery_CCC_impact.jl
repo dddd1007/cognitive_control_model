@@ -10,17 +10,22 @@ function extract_CCC_optim_params(eval_results, subname)
     return eval_results[subname][5][:optim_param]
 end
 
-function add_conflict_list!(sub_dataframe, env, subinfo, opt_params)
-    conflict_list = model_recovery(env, subinfo, opt_params, model_type = :_1a1d1CCC)[:conflict_list]
+function add_conflict_list(sub_dataframe, env, subinfo, opt_params)
+    model_result = model_recovery(env, subinfo, opt_params, model_type = :_1a1d1CCC)
+    conflict_list = model_result[:conflict_list]
+    weight_history = model_result[:options_weight_history]
     sub_dataframe.if_over_CCC = conflict_list .> opt_params[:CCC]
+    weight_history_table = DataFrame(weight_history, [:ll,:lr,:rl,:rr])
+    sub_dataframe = hcat(sub_dataframe, weight_history_table)
     return sub_dataframe
 end
 
 for subname in collect(keys(eval_results))
+    subname = collect(keys(eval_results))[1]
     each_sub_data = @where(all_data, :Subject .== subname)
     env, subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict, sub_idx_dict)
     opt_params = extract_CCC_optim_params(eval_results, subname)
-    add_conflict_list!(each_sub_data, env, subinfo, opt_params)
+    each_sub_data = add_conflict_list(each_sub_data, env, subinfo, opt_params) 
     push!(temp_dataframe_stake, each_sub_data)
 end
 
@@ -32,7 +37,7 @@ end
 
 dataframe_with_CCC_tag
 
-CSV.write("/Users/dddd1007/Desktop/test.csv", dataframe_with_CCC_tag)
+CSV.write("/Users/dddd1007/Downloads/test.csv", dataframe_with_CCC_tag)
 
 # 验证假设
 function test_RT_difference(dataframe_with_CCC_tag)
@@ -62,13 +67,3 @@ function test_RT_difference(dataframe_with_CCC_tag)
 
     return UnequalVarianceTTest(samestim_RT_list, samestim_noCCC_RT_list)
 end
-MannWhitneyUTest(samestim_RT_list, samestim_noCCC_RT_list)
-
-s_CCC_table = @where(dataframe_with_CCC_tag, :condition .== "s")
-test_RT_difference(s_CCC_table)
-
-v_CCC_table = @where(dataframe_with_CCC_tag, :condition .== "v")
-test_RT_difference(v_CCC_table)
-
-run1_CCC_table = @where(dataframe_with_CCC_tag, :run .== 1)
-test_RT_difference(run1_CCC_table)
