@@ -199,21 +199,16 @@ function update_options_weight_matrix(weight_vector::Array{Float64,1}, α::Float
 end
 
 # 定义计算冲突程度的函数
-function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Tuple)
+function calc_CCC(weight_vector::Array{Float64,1}, stim_loc_sub_selection::Tuple)
     weight_matrix = reshape(weight_vector, 2, 2)'
 
-    correct_selection_idx = CartesianIndex(correct_selection) + CartesianIndex(1, 1)
-    op_selection_idx = CartesianIndex(correct_selection_idx[1],
-                                      (abs(correct_selection[2] - 1) + 1))
+    sub_selection_idx = CartesianIndex(stim_loc_sub_selection) + CartesianIndex(1, 1)
 
-    return CCC = abs(weight_matrix[correct_selection_idx] - weight_matrix[op_selection_idx])
+    return CCC = 2 * weight_matrix[sub_selection_idx] - 1
 end
 
-function calc_CCC(weight_vector::Array{Float64,1}, correct_selection::Int)
-    correct_selection_idx = correct_selection + 1
-    op_selection_idx = 2 - correct_selection
-
-    return CCC = abs(weight_vector[correct_selection_idx] - weight_vector[op_selection_idx])
+function calc_CCC(weight_vector::Array{Float64,1}, sub_action::Int)
+    return CCC = 2 * weight_vector[sub_action] - 1
 end
 
 #============================================================================ 
@@ -550,16 +545,20 @@ function get_action_para(env::ExpEnv, agent::RLLearner_withCCC, realsub::RealSub
             α = agent.α_v
         elseif realsub.corrections[idx] == 1 && conflict < agent.CCC
             α = agent.α_v_CCC
-        elseif realsub.corrections[idx] == 0
+        elseif realsub.corrections[idx] == 0 && -conflict ≥ agent.CCC
             α = agent.α_v_error
+        elseif realsub.corrections[idx] == 0 && -conflict < agent.CCC
+            α = agent.α_v_CCC
         end
     elseif env.env_type[idx] == "s"
         if realsub.corrections[idx] == 1 && conflict ≥ agent.CCC
             α = agent.α_s
         elseif realsub.corrections[idx] == 1 && conflict < agent.CCC
             α = agent.α_s_CCC
-        elseif realsub.corrections[idx] == 0
+        elseif realsub.corrections[idx] == 0 && -conflict ≥ agent.CCC
             α = agent.α_s_error
+        elseif realsub.corrections[idx] == 0 && -conflict < agent.CCC
+            α = agent.α_s_CCC
         end
     end
     
@@ -569,18 +568,26 @@ end
 function get_action_para(env::ExpEnv, agent::RLLearner_withCCC_no_error, realsub::RealSub, idx::Int, conflict)
 
     if env.env_type[idx] == "v" 
-        if conflict ≥ agent.CCC
+        if realsub.corrections[idx] == 1 && conflict ≥ agent.CCC
             α = agent.α_v
-        elseif conflict < agent.CCC
+        elseif realsub.corrections[idx] == 1 && conflict < agent.CCC
+            α = agent.α_v_CCC
+        elseif realsub.corrections[idx] == 0 && -conflict ≥ agent.CCC
+            α = agent.α_v
+        elseif realsub.corrections[idx] == 0 && -conflict < agent.CCC
             α = agent.α_v_CCC
         end
     elseif env.env_type[idx] == "s"
-        if conflict ≥ agent.CCC
+        if realsub.corrections[idx] == 1 && conflict ≥ agent.CCC
             α = agent.α_s
-        elseif conflict < agent.CCC
+        elseif realsub.corrections[idx] == 1 && conflict < agent.CCC
+            α = agent.α_s_CCC
+        elseif realsub.corrections[idx] == 0 && -conflict ≥ agent.CCC
+            α = agent.α_s
+        elseif realsub.corrections[idx] == 0 && -conflict < agent.CCC
             α = agent.α_s_CCC
         end
-    end
+    end 
     
     return(α)
 end
