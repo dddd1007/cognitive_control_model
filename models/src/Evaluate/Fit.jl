@@ -42,7 +42,7 @@ function fit_RL_SR(env, realsub, looptime; model_type)
                         α = [0.001:0.001:1;],
                         α_error = [0.001:0.001:1;],
                         α_CCC = [0.001:0.001:1;],
-                        CCC = [0.001:0.001:1;], 
+                        CCC = [-0.001:-0.001:-1;], 
                         decay = [0.001:0.001:1;]
 
             agent = RLModels.NoSoftMax.RLLearner_withCCC(α, α, α_error, α_error, α_CCC, α_CCC, CCC, decay)
@@ -53,7 +53,7 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         ho = @hyperopt for i = looptime,
                          α = [0.001:0.001:1;],
                        α_CCC = [0.001:0.001:1;],
-                         CCC = [0.001:0.001:1;], 
+                         CCC = [-0.001:-0.001:-1;], 
                        decay = [0.001:0.001:1;]
     
             agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(α, α, α_CCC, α_CCC, CCC, decay)
@@ -71,9 +71,9 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         end
     elseif model_type == :_2a1d
         ho = @hyperopt for i = looptime,
-                            α_v = [0.001:0.001:1;],
-                            α_s = [0.001:0.001:1;],
-                            decay = [0.001:0.001:1;]
+                         α_v = [0.001:0.001:1;],
+                         α_s = [0.001:0.001:1;],
+                       decay = [0.001:0.001:1;]
 
             agent =  RLModels.NoSoftMax.RLLearner_basic(α_v, α_s, decay)
             model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
@@ -83,8 +83,8 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         ho = @hyperopt for i = looptime,
                         α_v = [0.001:0.001:1;],
                         α_s = [0.001:0.001:1;],
-                        α_error = [0.001:0.001:1;], 
-                        decay = [0.001:0.001:1;]
+                    α_error = [0.001:0.001:1;], 
+                      decay = [0.001:0.001:1;]
 
             agent = RLModels.NoSoftMax.RLLearner_witherror(α_v, α_s, α_error, α_error, decay)
             model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
@@ -94,10 +94,10 @@ function fit_RL_SR(env, realsub, looptime; model_type)
         ho = @hyperopt for i = looptime,
                         α_v = [0.001:0.001:1;],
                         α_s = [0.001:0.001:1;],
-                        α_error = [0.001:0.001:1;],
-                        α_CCC = [0.001:0.001:1;],
-                        CCC = [0.001:0.001:1;], 
-                        decay = [0.001:0.001:1;]
+                    α_error = [0.001:0.001:1;],
+                      α_CCC = [0.001:0.001:1;],
+                        CCC = [-0.001:-0.001:-1;], 
+                      decay = [0.001:0.001:1;]
 
             agent = RLModels.NoSoftMax.RLLearner_withCCC(α_v, α_s, α_error, α_error, α_CCC, α_CCC, CCC, decay)
             model_stim = RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
@@ -108,7 +108,7 @@ function fit_RL_SR(env, realsub, looptime; model_type)
                          α_v = [0.001:0.001:1;],
                          α_s = [0.001:0.001:1;],
                        α_CCC = [0.001:0.001:1;],
-                         CCC = [0.001:0.001:1;], 
+                         CCC = [-0.001:-0.001:-1;], 
                        decay = [0.001:0.001:1;]
     
             agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(α_v, α_s, α_CCC, α_CCC, CCC, decay)
