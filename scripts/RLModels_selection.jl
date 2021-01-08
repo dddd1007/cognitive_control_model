@@ -51,6 +51,6 @@ Threads.@threads for sub_num in 1:36
 end
 
 current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")
-filename = savepath * "/" * current_time  * "final_selection.jld2"
+filename = savepath * "/" * current_time  * "final_selection_correct_CCC.jld2"
 
 @save filename eval_results
