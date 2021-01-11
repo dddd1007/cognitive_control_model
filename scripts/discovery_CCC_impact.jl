@@ -1,6 +1,6 @@
 using JLD2, DataFrames, DataFramesMeta, FileIO, CSV, Models, StatsBase, HypothesisTests
 
-@load "/Users/dddd1007/project2git/cognitive_control_model/data/output/RLModels/model_selection/2020-12-09-155938final_selection.jld2"
+@load "/Users/dddd1007/project2git/cognitive_control_model/data/output/RLModels/model_selection/2021-01-07-145437final_selection_correct_CCC.jld2"
 
 include("/Users/dddd1007/project2git/cognitive_control_model/scripts/import_all_data.jl")
 
@@ -21,7 +21,6 @@ function add_conflict_list(sub_dataframe, env, subinfo, opt_params)
 end
 
 for subname in collect(keys(eval_results))
-    subname = collect(keys(eval_results))[1]
     each_sub_data = @where(all_data, :Subject .== subname)
     env, subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict, sub_idx_dict)
     opt_params = extract_CCC_optim_params(eval_results, subname)
@@ -67,3 +66,5 @@ function test_RT_difference(dataframe_with_CCC_tag)
 
     return UnequalVarianceTTest(samestim_RT_list, samestim_noCCC_RT_list)
 end
+
+test_RT_difference(dataframe_with_CCC_tag)
