@@ -1,0 +1,16 @@
+---
+title: "探索CCC的影响"
+output: html_notebook
+---
+
+## 导入数据
+```{r}
+library(tidyverse)
+raw_data <- read.csv("../data/output/summary/subdata_with_CCC.csv")
+```
+
+## 查看数据并初步理解
+```{r}
+raw_data
+```
+
