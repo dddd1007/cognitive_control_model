@@ -1,0 +1,48 @@
+---
+title: "分析老师的模型和我的模型之间的差异"
+output: html_notebook
+---
+
+## 1. 老师的模型是否准确?
+
+和老师的模型的差异在于目标函数之间的差异. 先检查 P, PE 和 RT 的相关关系
+
+### 1.1 查看被试1
+
+```{r}
+library(tidyverse)
+
+sub1_data <-read_csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/data_by_sub/sub_1_prepared_data.csv")
+xia_model <- read_csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_2a1d1CCC_2a1d1e.csv")
+wang_model <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/ref_code/Lingwang_CCC/model_results/RLCC_model_results_SR_Q_D_alphaCCC_V_WOB_sub_1.csv")
+```
+
+```{r}
+# 相关分析
+RT_data = sub1_data$RT
+xia_2a1d1e <- xia_model %>% 
+  filter(Subject_num == 1) %>% 
+  select(`_2a1d1e`) 
+xia_2a1d1CCC <- xia_model %>% 
+  filter(Subject_num == 1) %>% 
+  select(`_2a1d1CCC`) 
+wang_2a1d1CCC <- wang_model$P
+
+pretest_data <- cbind(RT_data, xia_2a1d1CCC, xia_2a1d1e, wang_2a1d1CCC, log(RT_data))
+```
+
+做一个回归看一下贡献度
+```{r}
+lm(RT_data ~ `_2a1d1CCC` + `_2a1d1e` + wang_2a1d1CCC, data = as_data_frame(pretest_data)) %>% 
+  summary()
+
+lm(log(RT_data) ~ `_2a1d1CCC` + `_2a1d1e` + wang_2a1d1CCC, data = as_data_frame(pretest_data)) %>% 
+  summary()
+```
+
+再逐个看一下回归
+```{r}
+cor(pretest_data)
+```
+
+

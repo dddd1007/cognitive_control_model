@@ -1,0 +1,27 @@
+---
+title: "探索CCC的影响"
+output: html_notebook
+---
+
+## 导入数据
+```{r}
+library(tidyverse)
+raw_data <- read.csv("../data/output/summary/subdata_with_CCC.csv")
+```
+
+## 查看数据并初步理解
+```{r}
+raw_data
+```
+
+## 筛选出所有上下一致的trials
+```{r}
+diff_table_1 <- tibble()
+diff_table_2 <- tibble()
+
+leading_index <- list()
+for(i in 1:nrow(raw_data)){
+  
+}
+```
+
