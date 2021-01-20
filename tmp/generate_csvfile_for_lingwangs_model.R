@@ -14,11 +14,11 @@ renamer <- function(input_dataframe, baseline_margin){
 
     input_data <- cbind(input_dataframe, postError, baseline_margin)
     
-    return(input_dataframe)
+    return(input_data)
 }
 
-savepath = "/Users/dddd1007/project2git/cognitive_control_model/ref_code/Lingwang_CCC/data/"
-for (i in 1:36) {
+savepath = "/Users/dddd1007/project2git/cognitive_control_model/ref_code/Lingwang_CCC/data/wang_1a_input/"
+for (i in 28:36) {
     foo = filter(all_data, Subject_num == i)
     bar = renamer(foo, baseline_margin)
     write_csv(bar, paste0(savepath, "sub_", i, "_prepared_data.csv"))
