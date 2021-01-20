@@ -2,6 +2,7 @@
 
 import sys
 sys.path.append("/Data3/Xiaxk/research_data/cognitive_control_model/ref_code/Lingwang_CCC")
+#sys.path.append("/Data3/Wang/Huang/RLCC/")
 
 from RLCC_Models import RLCCModels
 from obj_function import objective_function
@@ -17,10 +18,10 @@ from datetime import datetime
 warnings.filterwarnings("ignore", category=FutureWarning, module="RLModels")
 
 
-data_folder = '/Data3/Xiaxk/research_data/cognitive_control_model/ref_code/Lingwang_CCC/data/'
-results_folder = '/Data3/Xiaxk/research_data/cognitive_control_model/ref_code/Lingwang_CCC/model_results/'
+data_folder = '/Data3/Xiaxk/research_data/cognitive_control_model/ref_code/Lingwang_CCC/data/wang_1a_input/'
+results_folder = '/Data3/Xiaxk/research_data/cognitive_control_model/ref_code/Lingwang_CCC/data/wang_1a_output/'
 
-subjects = ['sub01']
+subjects = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '28', '29', '30', '31', '32', '33', '34', '35', '36']
 
 models = ['SR_Q_WOB', 'SR_Q_D_WOB', 'SR_Q_D_E_WOB', 'SR_Q_D_alphaCCC_WOB', 'SR_Q_D_E_alphaCCC_WOB']
 #models = ['AB_Q_WOB', 'AB_Q_E_WOB', 'AB_Q_alphaCCC_WOB', 'AB_Q_E_alphaCCC_WOB']
@@ -30,7 +31,7 @@ for s, subject in enumerate(subjects):
     print('********************')
     print(subject)
     #read data
-    filename = data_folder + subject + '.csv'
+    filename = data_folder + 'sub_' + subject + '_prepared_data.csv'
     data = pd.read_csv(filename)
     for m, model_type in enumerate(models):
         a = datetime.now()
