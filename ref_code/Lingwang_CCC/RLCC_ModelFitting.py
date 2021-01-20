@@ -1,8 +1,8 @@
 # coding: utf-8
 
 import sys
-#sys.path.append("/Data3/Xiaxk/research_data/cognitive_control_model/ref_code/Lingwang_CCC")
-sys.path.append("/Data3/Wang/Huang/RLCC/")
+sys.path.append("/Data3/Xiaxk/research_data/cognitive_control_model/ref_code/Lingwang_CCC")
+#sys.path.append("/Data3/Wang/Huang/RLCC/")
 
 from RLCC_Models import RLCCModels
 from obj_function import objective_function
