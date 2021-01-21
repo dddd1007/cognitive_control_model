@@ -429,11 +429,209 @@ sample estimates:
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
+</div>
+<div id="批量计算" class="section level2">
+<h2>2. 批量计算</h2>
+<div id="各变量在线性回归中的贡献度" class="section level3">
+<h3>2.1 各变量在线性回归中的贡献度</h3>
+<p>首先看下每个被试的回归贡献度</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGVtcFssNF1cblxuYGBgIn0= -->
+<pre class="r"><code>temp[,4]
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAoSW50ZXJjZXB0KSAgIGBfMmExZDFDQ0NgICAgICBgXzJhMWQxZWAgd2FuZ18yYTFkMUNDQyBcbiAxLjA1Mjg1N2UtMjkgIDYuODA0NTcxZS0wMyAgNi4yNTk3ODhlLTAxICA3LjE4MDcwMGUtMDEgXG4ifQ== -->
+<pre><code>  (Intercept)   `_2a1d1CCC`     `_2a1d1e` wang_2a1d1CCC 
+ 1.052857e-29  6.804571e-03  6.259788e-01  7.180700e-01 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG1fcHZhbHVlIDwtIGZ1bmN0aW9uKHN1Yl9udW0pe1xuICAgIHN1Yl9kYXRhX3BhdGggPC0gcGFzdGUwKFwiL1VzZXJzL2RkZGQxMDA3L3Byb2plY3QyZ2l0L2NvZ25pdGl2ZV9jb250cm9sX21vZGVsL2RhdGEvaW5wdXQvZGF0YV9ieV9zdWIvc3ViX1wiLCBzdWJfbnVtLCBcIl9wcmVwYXJlZF9kYXRhLmNzdlwiKVxuICAgIHdhbmdfbW9kZWxfcGF0aCA8LSBwYXN0ZTAoXCIvVXNlcnMvZGRkZDEwMDcvcHJvamVjdDJnaXQvY29nbml0aXZlX2NvbnRyb2xfbW9kZWwvcmVmX2NvZGUvTGluZ3dhbmdfQ0NDL21vZGVsX3Jlc3VsdHMvUkxDQ19tb2RlbF9yZXN1bHRzX1NSX1FfRF9hbHBoYUNDQ19WX1dPQl9zdWJfXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgc3ViX251bSwgXCIuY3N2XCIpXG4gICAgc3ViX2RhdGEgPC1yZWFkX2NzdihzdWJfZGF0YV9wYXRoLCBjb2xfdHlwZXMgPSBjb2xzKCkpXG4gICAgeGlhX21vZGVsIDwtIHJlYWRfY3N2KFwiL1VzZXJzL2RkZGQxMDA3L3Byb2plY3QyZ2l0L2NvZ25pdGl2ZV9jb250cm9sX21vZGVsL2RhdGEvaW5wdXQvYWxsX2RhdGFfd2l0aF8yYTFkMUNDQ18yYTFkMWUuY3N2XCIsIGNvbF90eXBlcyA9IGNvbHMoKSkgJT4lIFxuICAgICAgZmlsdGVyKFN1YmplY3RfbnVtID09IHN1Yl9udW0pXG4gICAgd2FuZ19tb2RlbCA8LSByZWFkLmNzdih3YW5nX21vZGVsX3BhdGgpXG4gICAgXG4gICAgUlRfZGF0YSA9IHN1Yl9kYXRhJFJUXG4gICAgeGlhXzJhMWQxZSA8LSB4aWFfbW9kZWwgJT4lIFxuICAgICAgc2VsZWN0KGBfMmExZDFlYCkgXG4gICAgeGlhXzJhMWQxQ0NDIDwtIHhpYV9tb2RlbCAlPiUgXG4gICAgICBzZWxlY3QoYF8yYTFkMUNDQ2ApIFxuICAgIHdhbmdfMmExZDFDQ0MgPC0gd2FuZ19tb2RlbCRQXG5cbiAgICBwcmV0ZXN0X2RhdGEgPC0gY2JpbmQoUlRfZGF0YSwgeGlhXzJhMWQxQ0NDLCB4aWFfMmExZDFlLCB3YW5nXzJhMWQxQ0NDLCBsb2coUlRfZGF0YSkpXG4gICAgXG4gICAgcGFyYW1ldGVycyA8LSBsbShSVF9kYXRhIH4gYF8yYTFkMWVgICsgYF8yYTFkMUNDQ2AgKyB3YW5nXzJhMWQxQ0NDLCBkYXRhID0gYXNfZGF0YV9mcmFtZShwcmV0ZXN0X2RhdGEpKSAlPiUgXG4gICAgICBzdW1tYXJ5KClcbiAgICBcbiAgICByZXR1cm4ocGFyYW1ldGVycyRjb2VmZmljaWVudHNbLDRdKVxufVxuYGBgIn0= -->
+<pre class="r"><code>lm_pvalue &lt;- function(sub_num){
+    sub_data_path &lt;- paste0(&quot;/Users/dddd1007/project2git/cognitive_control_model/data/input/data_by_sub/sub_&quot;, sub_num, &quot;_prepared_data.csv&quot;)
+    wang_model_path &lt;- paste0(&quot;/Users/dddd1007/project2git/cognitive_control_model/ref_code/Lingwang_CCC/model_results/RLCC_model_results_SR_Q_D_alphaCCC_V_WOB_sub_&quot;,
+                         sub_num, &quot;.csv&quot;)
+    sub_data &lt;-read_csv(sub_data_path, col_types = cols())
+    xia_model &lt;- read_csv(&quot;/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_2a1d1CCC_2a1d1e.csv&quot;, col_types = cols()) %&gt;% 
+      filter(Subject_num == sub_num)
+    wang_model &lt;- read.csv(wang_model_path)
+    
+    RT_data = sub_data$RT
+    xia_2a1d1e &lt;- xia_model %&gt;% 
+      select(`_2a1d1e`) 
+    xia_2a1d1CCC &lt;- xia_model %&gt;% 
+      select(`_2a1d1CCC`) 
+    wang_2a1d1CCC &lt;- wang_model$P
+
+    pretest_data &lt;- cbind(RT_data, xia_2a1d1CCC, xia_2a1d1e, wang_2a1d1CCC, log(RT_data))
+    
+    parameters &lt;- lm(RT_data ~ `_2a1d1e` + `_2a1d1CCC` + wang_2a1d1CCC, data = as_data_frame(pretest_data)) %&gt;% 
+      summary()
+    
+    return(parameters$coefficients[,4])
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzdWx0X2xpc3QgPC0gbGlzdCgpXG5mb3IgKGkgaW4gMTozNikge1xuICBwcmludChpKVxuICBpZiAoaSA9PSA2KSB7XG4gICAgbmV4dFxuICB9XG4gIFxuICByZXN1bHRfbGlzdFtbaV1dIDwtIGxtX3B2YWx1ZShpKVxufVxuYGBgIn0= -->
+<pre class="r"><code>result_list &lt;- list()
+for (i in 1:36) {
+  print(i)
+  if (i == 6) {
+    next
+  }
+  
+  result_list[[i]] &lt;- lm_pvalue(i)
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDFcblsxXSAyXG5bMV0gM1xuWzFdIDRcblsxXSA1XG5bMV0gNlxuWzFdIDdcblsxXSA4XG5bMV0gOVxuWzFdIDEwXG5bMV0gMTFcblsxXSAxMlxuWzFdIDEzXG5bMV0gMTRcblsxXSAxNVxuWzFdIDE2XG5bMV0gMTdcblsxXSAxOFxuWzFdIDE5XG4ifQ== -->
+<pre><code>[1] 1
+[1] 2
+[1] 3
+[1] 4
+[1] 5
+[1] 6
+[1] 7
+[1] 8
+[1] 9
+[1] 10
+[1] 11
+[1] 12
+[1] 13
+[1] 14
+[1] 15
+[1] 16
+[1] 17
+[1] 18
+[1] 19</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-output-begin eyJkYXRhIjoi6ZSZ6K+vOiAnL1VzZXJzL2RkZGQxMDA3L3Byb2plY3QyZ2l0L2NvZ25pdGl2ZV9jb250cm9sX21vZGVsL2RhdGEvaW5wdXQvZGF0YV9ieV9zdWIvc3ViXzE5X3ByZXBhcmVkX2RhdGEuY3N2JyBkb2VzIG5vdCBleGlzdC5cbiJ9 -->
+<pre><code>错误: &#39;/Users/dddd1007/project2git/cognitive_control_model/data/input/data_by_sub/sub_19_prepared_data.csv&#39; does not exist.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>合并结果</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG1fcmVzdWx0X3RhYmxlIDwtIGRvLmNhbGwocmJpbmQsIHJlc3VsdF9saXN0KVxuYGBgIn0= -->
+<pre class="r"><code>lm_result_table &lt;- do.call(rbind, result_list)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>从结果来看, 2a1d1CCC 的变量显著性始终是最高的</p>
+</div>
+<div id="相关性" class="section level3">
+<h3>2.2 相关性</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29yX2VhY2ggPC0gZnVuY3Rpb24oc3ViX251bSl7XG4gICAgICBzdWJfZGF0YV9wYXRoIDwtIHBhc3RlMChcIi9Vc2Vycy9kZGRkMTAwNy9wcm9qZWN0MmdpdC9jb2duaXRpdmVfY29udHJvbF9tb2RlbC9kYXRhL2lucHV0L2RhdGFfYnlfc3ViL3N1Yl9cIiwgc3ViX251bSwgXCJfcHJlcGFyZWRfZGF0YS5jc3ZcIilcbiAgICB3YW5nX21vZGVsX3BhdGggPC0gcGFzdGUwKFwiL1VzZXJzL2RkZGQxMDA3L3Byb2plY3QyZ2l0L2NvZ25pdGl2ZV9jb250cm9sX21vZGVsL3JlZl9jb2RlL0xpbmd3YW5nX0NDQy9tb2RlbF9yZXN1bHRzL1JMQ0NfbW9kZWxfcmVzdWx0c19TUl9RX0RfYWxwaGFDQ0NfVl9XT0Jfc3ViX1wiLFxuICAgICAgICAgICAgICAgICAgICAgICAgIHN1Yl9udW0sIFwiLmNzdlwiKVxuICAgIHN1Yl9kYXRhIDwtcmVhZF9jc3Yoc3ViX2RhdGFfcGF0aCwgY29sX3R5cGVzID0gY29scygpKVxuICAgIHhpYV9tb2RlbCA8LSByZWFkX2NzdihcIi9Vc2Vycy9kZGRkMTAwNy9wcm9qZWN0MmdpdC9jb2duaXRpdmVfY29udHJvbF9tb2RlbC9kYXRhL2lucHV0L2FsbF9kYXRhX3dpdGhfMmExZDFDQ0NfMmExZDFlLmNzdlwiLCBjb2xfdHlwZXMgPSBjb2xzKCkpICU+JSBcbiAgICAgIGZpbHRlcihTdWJqZWN0X251bSA9PSBzdWJfbnVtKVxuICAgIHdhbmdfbW9kZWwgPC0gcmVhZC5jc3Yod2FuZ19tb2RlbF9wYXRoKVxuICAgIFxuICAgIFJUX2RhdGEgPSBzdWJfZGF0YSRSVFxuICAgIHhpYV8yYTFkMWUgPC0geGlhX21vZGVsICU+JSBcbiAgICAgIHNlbGVjdChgXzJhMWQxZWApIFxuICAgIHhpYV8yYTFkMUNDQyA8LSB4aWFfbW9kZWwgJT4lIFxuICAgICAgc2VsZWN0KGBfMmExZDFDQ0NgKSBcbiAgICB3YW5nXzJhMWQxQ0NDIDwtIHdhbmdfbW9kZWwkUFxuICAgIFxuICAgIHJlc3VsdCA8LSBjKGNvcihSVF9kYXRhLCB4aWFfMmExZDFDQ0MpLCBjb3IoUlRfZGF0YSwgeGlhXzJhMWQxZSksIGNvcihSVF9kYXRhLCB3YW5nXzJhMWQxQ0NDKSlcbiAgICBuYW1lcyhyZXN1bHQpIDwtIGMoXCJ4aWFfMmExZDFDQ0NcIiwgXCJ4aWFfMmExZDFlXCIsIFwid2FuZ18yYTFkMUNDQ1wiKVxuICAgIHJldHVybihyZXN1bHQpXG59XG5gYGAifQ== -->
+<pre class="r"><code>cor_each &lt;- function(sub_num){
+      sub_data_path &lt;- paste0(&quot;/Users/dddd1007/project2git/cognitive_control_model/data/input/data_by_sub/sub_&quot;, sub_num, &quot;_prepared_data.csv&quot;)
+    wang_model_path &lt;- paste0(&quot;/Users/dddd1007/project2git/cognitive_control_model/ref_code/Lingwang_CCC/model_results/RLCC_model_results_SR_Q_D_alphaCCC_V_WOB_sub_&quot;,
+                         sub_num, &quot;.csv&quot;)
+    sub_data &lt;-read_csv(sub_data_path, col_types = cols())
+    xia_model &lt;- read_csv(&quot;/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_2a1d1CCC_2a1d1e.csv&quot;, col_types = cols()) %&gt;% 
+      filter(Subject_num == sub_num)
+    wang_model &lt;- read.csv(wang_model_path)
+    
+    RT_data = sub_data$RT
+    xia_2a1d1e &lt;- xia_model %&gt;% 
+      select(`_2a1d1e`) 
+    xia_2a1d1CCC &lt;- xia_model %&gt;% 
+      select(`_2a1d1CCC`) 
+    wang_2a1d1CCC &lt;- wang_model$P
+    
+    result &lt;- c(cor(RT_data, xia_2a1d1CCC), cor(RT_data, xia_2a1d1e), cor(RT_data, wang_2a1d1CCC))
+    names(result) &lt;- c(&quot;xia_2a1d1CCC&quot;, &quot;xia_2a1d1e&quot;, &quot;wang_2a1d1CCC&quot;)
+    return(result)
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29yX2VhY2goMSlcblxuYGBgIn0= -->
+<pre class="r"><code>cor_each(1)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIHhpYV8yYTFkMUNDQyAgICB4aWFfMmExZDFlIHdhbmdfMmExZDFDQ0MgXG4gICAtMC4yODI5OTExICAgIC0wLjI3MTM4OTggICAgLTAuMjA3MDA3NiBcbiJ9 -->
+<pre><code> xia_2a1d1CCC    xia_2a1d1e wang_2a1d1CCC 
+   -0.2829911    -0.2713898    -0.2070076 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzdWx0X2xpc3QgPC0gbGlzdCgpXG5mb3IgKGkgaW4gMTozNikge1xuICBwcmludChpKVxuICBpZiAoaSA9PSA2KSB7XG4gICAgbmV4dFxuICB9XG4gIFxuICByZXN1bHRfbGlzdFtbaV1dIDwtIGNvcl9lYWNoKGkpXG59XG5gYGAifQ== -->
+<pre class="r"><code>result_list &lt;- list()
+for (i in 1:36) {
+  print(i)
+  if (i == 6) {
+    next
+  }
+  
+  result_list[[i]] &lt;- cor_each(i)
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDFcblsxXSAyXG5bMV0gM1xuWzFdIDRcblsxXSA1XG5bMV0gNlxuWzFdIDdcblsxXSA4XG5bMV0gOVxuWzFdIDEwXG5bMV0gMTFcblsxXSAxMlxuWzFdIDEzXG5bMV0gMTRcblsxXSAxNVxuWzFdIDE2XG5bMV0gMTdcblsxXSAxOFxuWzFdIDE5XG4ifQ== -->
+<pre><code>[1] 1
+[1] 2
+[1] 3
+[1] 4
+[1] 5
+[1] 6
+[1] 7
+[1] 8
+[1] 9
+[1] 10
+[1] 11
+[1] 12
+[1] 13
+[1] 14
+[1] 15
+[1] 16
+[1] 17
+[1] 18
+[1] 19</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-output-begin eyJkYXRhIjoi6ZSZ6K+vOiAnL1VzZXJzL2RkZGQxMDA3L3Byb2plY3QyZ2l0L2NvZ25pdGl2ZV9jb250cm9sX21vZGVsL2RhdGEvaW5wdXQvZGF0YV9ieV9zdWIvc3ViXzE5X3ByZXBhcmVkX2RhdGEuY3N2JyBkb2VzIG5vdCBleGlzdC5cbiJ9 -->
+<pre><code>错误: &#39;/Users/dddd1007/project2git/cognitive_control_model/data/input/data_by_sub/sub_19_prepared_data.csv&#39; does not exist.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29yX3Jlc3VsdF90YWJsZVxuXG5gYGAifQ== -->
+<pre class="r"><code>cor_result_table
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgeGlhXzJhMWQxQ0NDIHhpYV8yYTFkMWUgd2FuZ18yYTFkMUNDQ1xuIFsxLF0gICAtMC4yODI5OTExIC0wLjI3MTM4OTggICAtMC4yMDcwMDc1NlxuIFsyLF0gICAtMC40NzA0NDE1IC0wLjQ2NDUzNDAgICAtMC4zNzIyMTQzMVxuIFszLF0gICAtMC4xODY0MTY1IC0wLjE1NDA4MTUgICAtMC4xMjU4NzkyOVxuIFs0LF0gICAgMC4xOTM5ODAwIC0wLjE1NzQxMzEgICAtMC4wNzEyMDczMFxuIFs1LF0gICAtMC4xNjg1MTUzIC0wLjEyNTUxMzcgICAtMC4wMzU2NDc2NVxuIFs2LF0gICAtMC4yNjUxNDE0IC0wLjI0OTYwMDYgICAtMC4xODkyNjEyM1xuIFs3LF0gICAtMC4yMTU3MDYyIC0wLjE5MjY3MDUgICAtMC4xMDA4MzgxN1xuIFs4LF0gICAtMC4xNzEwOTUwIC0wLjE2MDg2MzMgICAtMC4xNDQwNjE0MFxuIFs5LF0gICAtMC4xNTI3NjczIC0wLjEyMjQ4NDEgICAtMC4wODc3NDU1OFxuWzEwLF0gICAtMC4xODA2NTA5IC0wLjE3MTI5MTAgICAtMC4xMzQ0NTYxM1xuWzExLF0gICAtMC4yNDM0NDM5IC0wLjE5OTU3MzMgICAtMC4xNzI0MTM2N1xuWzEyLF0gICAtMC4yOTE5NDQ4IC0wLjE2ODAwOTkgICAtMC4xNDU0NzQxNVxuWzEzLF0gICAtMC4xOTMxOTA1IC0wLjE4NjE2MDQgICAtMC4xMjE0Nzc1NVxuWzE0LF0gICAtMC4yMjUwODI4IC0wLjIwMjg2MDcgICAtMC4xNjk1NTI1MFxuWzE1LF0gICAtMC4yMzUzMDMxIC0wLjIxNTAyNzQgICAtMC4xMzM2MTg5MFxuWzE2LF0gICAtMC4xODE4MzYwIC0wLjE3NDM3ODQgICAtMC4xODUzMzEyN1xuWzE3LF0gICAtMC4zNDE1MDk1IC0wLjIwNDc4MjcgICAtMC4xMzkyMDUyNFxuIn0= -->
+<pre><code>      xia_2a1d1CCC xia_2a1d1e wang_2a1d1CCC
+ [1,]   -0.2829911 -0.2713898   -0.20700756
+ [2,]   -0.4704415 -0.4645340   -0.37221431
+ [3,]   -0.1864165 -0.1540815   -0.12587929
+ [4,]    0.1939800 -0.1574131   -0.07120730
+ [5,]   -0.1685153 -0.1255137   -0.03564765
+ [6,]   -0.2651414 -0.2496006   -0.18926123
+ [7,]   -0.2157062 -0.1926705   -0.10083817
+ [8,]   -0.1710950 -0.1608633   -0.14406140
+ [9,]   -0.1527673 -0.1224841   -0.08774558
+[10,]   -0.1806509 -0.1712910   -0.13445613
+[11,]   -0.2434439 -0.1995733   -0.17241367
+[12,]   -0.2919448 -0.1680099   -0.14547415
+[13,]   -0.1931905 -0.1861604   -0.12147755
+[14,]   -0.2250828 -0.2028607   -0.16955250
+[15,]   -0.2353031 -0.2150274   -0.13361890
+[16,]   -0.1818360 -0.1743784   -0.18533127
+[17,]   -0.3415095 -0.2047827   -0.13920524</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAi5YiG5p6Q6ICB5biI55qE5qih5Z6L5ZKM5oiR55qE5qih5Z6L5LmL6Ze055qE5beu5byCIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgojIyAxLiDogIHluIjnmoTmqKHlnovmmK/lkKblh4bnoa4/CgrlkozogIHluIjnmoTmqKHlnovnmoTlt67lvILlnKjkuo7nm67moIflh73mlbDkuYvpl7TnmoTlt67lvIIuIOWFiOajgOafpSBQLCBQRSDlkowgUlQg55qE55u45YWz5YWz57O7CgojIyMgMS4xIOafpeeci+iiq+ivlTEKCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKCnN1YjFfZGF0YSA8LXJlYWRfY3N2KCIvVXNlcnMvZGRkZDEwMDcvcHJvamVjdDJnaXQvY29nbml0aXZlX2NvbnRyb2xfbW9kZWwvZGF0YS9pbnB1dC9kYXRhX2J5X3N1Yi9zdWJfMV9wcmVwYXJlZF9kYXRhLmNzdiIpCnhpYV9tb2RlbCA8LSByZWFkX2NzdigiL1VzZXJzL2RkZGQxMDA3L3Byb2plY3QyZ2l0L2NvZ25pdGl2ZV9jb250cm9sX21vZGVsL2RhdGEvaW5wdXQvYWxsX2RhdGFfd2l0aF8yYTFkMUNDQ18yYTFkMWUuY3N2IikKd2FuZ19tb2RlbCA8LSByZWFkLmNzdigiL1VzZXJzL2RkZGQxMDA3L3Byb2plY3QyZ2l0L2NvZ25pdGl2ZV9jb250cm9sX21vZGVsL3JlZl9jb2RlL0xpbmd3YW5nX0NDQy9tb2RlbF9yZXN1bHRzL1JMQ0NfbW9kZWxfcmVzdWx0c19TUl9RX0RfYWxwaGFDQ0NfVl9XT0Jfc3ViXzEuY3N2IikKYGBgCgpgYGB7cn0KIyDnm7jlhbPliIbmnpAKUlRfZGF0YSA9IHN1YjFfZGF0YSRSVAp4aWFfMmExZDFlIDwtIHhpYV9tb2RlbCAlPiUgCiAgZmlsdGVyKFN1YmplY3RfbnVtID09IDEpICU+JSAKICBzZWxlY3QoYF8yYTFkMWVgKSAKeGlhXzJhMWQxQ0NDIDwtIHhpYV9tb2RlbCAlPiUgCiAgZmlsdGVyKFN1YmplY3RfbnVtID09IDEpICU+JSAKICBzZWxlY3QoYF8yYTFkMUNDQ2ApIAp3YW5nXzJhMWQxQ0NDIDwtIHdhbmdfbW9kZWwkUAoKcHJldGVzdF9kYXRhIDwtIGNiaW5kKFJUX2RhdGEsIHhpYV8yYTFkMUNDQywgeGlhXzJhMWQxZSwgd2FuZ18yYTFkMUNDQywgbG9nKFJUX2RhdGEpKQpgYGAKCuWBmuS4gOS4quWbnuW9kueci+S4gOS4i+i0oeeMruW6pgpgYGB7cn0KbG0oUlRfZGF0YSB+IGBfMmExZDFDQ0NgICsgYF8yYTFkMWVgICsgd2FuZ18yYTFkMUNDQywgZGF0YSA9IGFzX2RhdGFfZnJhbWUocHJldGVzdF9kYXRhKSkgJT4lIAogIHN1bW1hcnkoKQoKbG0obG9nKFJUX2RhdGEpIH4gYF8yYTFkMUNDQ2AgKyBgXzJhMWQxZWAgKyB3YW5nXzJhMWQxQ0NDLCBkYXRhID0gYXNfZGF0YV9mcmFtZShwcmV0ZXN0X2RhdGEpKSAlPiUgCiAgc3VtbWFyeSgpCmBgYAoK5YaN6YCQ5Liq55yL5LiA5LiL5Zue5b2SCmBgYHtyfQpjb3IocHJldGVzdF9kYXRhKQoKY29yLnRlc3QocHJldGVzdF9kYXRhJFJULCBwcmV0ZXN0X2RhdGEkd2FuZ18yYTFkMUNDQykKYGBgCgoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAi5YiG5p6Q6ICB5biI55qE5qih5Z6L5ZKM5oiR55qE5qih5Z6L5LmL6Ze055qE5beu5byCIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgojIyAxLiDogIHluIjnmoTmqKHlnovmmK/lkKblh4bnoa4/CgrlkozogIHluIjnmoTmqKHlnovnmoTlt67lvILlnKjkuo7nm67moIflh73mlbDkuYvpl7TnmoTlt67lvIIuIOWFiOajgOafpSBQLCBQRSDlkowgUlQg55qE55u45YWz5YWz57O7CgojIyMgMS4xIOafpeeci+iiq+ivlTEKCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKCnN1YjFfZGF0YSA8LXJlYWRfY3N2KCIvVXNlcnMvZGRkZDEwMDcvcHJvamVjdDJnaXQvY29nbml0aXZlX2NvbnRyb2xfbW9kZWwvZGF0YS9pbnB1dC9kYXRhX2J5X3N1Yi9zdWJfMV9wcmVwYXJlZF9kYXRhLmNzdiIpCnhpYV9tb2RlbCA8LSByZWFkX2NzdigiL1VzZXJzL2RkZGQxMDA3L3Byb2plY3QyZ2l0L2NvZ25pdGl2ZV9jb250cm9sX21vZGVsL2RhdGEvaW5wdXQvYWxsX2RhdGFfd2l0aF8yYTFkMUNDQ18yYTFkMWUuY3N2IikKd2FuZ19tb2RlbCA8LSByZWFkLmNzdigiL1VzZXJzL2RkZGQxMDA3L3Byb2plY3QyZ2l0L2NvZ25pdGl2ZV9jb250cm9sX21vZGVsL3JlZl9jb2RlL0xpbmd3YW5nX0NDQy9tb2RlbF9yZXN1bHRzL1JMQ0NfbW9kZWxfcmVzdWx0c19TUl9RX0RfYWxwaGFDQ0NfVl9XT0Jfc3ViXzEuY3N2IikKYGBgCgpgYGB7cn0KIyDnm7jlhbPliIbmnpAKUlRfZGF0YSA9IHN1YjFfZGF0YSRSVAp4aWFfMmExZDFlIDwtIHhpYV9tb2RlbCAlPiUgCiAgZmlsdGVyKFN1YmplY3RfbnVtID09IDEpICU+JSAKICBzZWxlY3QoYF8yYTFkMWVgKSAKeGlhXzJhMWQxQ0NDIDwtIHhpYV9tb2RlbCAlPiUgCiAgZmlsdGVyKFN1YmplY3RfbnVtID09IDEpICU+JSAKICBzZWxlY3QoYF8yYTFkMUNDQ2ApIAp3YW5nXzJhMWQxQ0NDIDwtIHdhbmdfbW9kZWwkUAoKcHJldGVzdF9kYXRhIDwtIGNiaW5kKFJUX2RhdGEsIHhpYV8yYTFkMUNDQywgeGlhXzJhMWQxZSwgd2FuZ18yYTFkMUNDQywgbG9nKFJUX2RhdGEpKQpgYGAKCuWBmuS4gOS4quWbnuW9kueci+S4gOS4i+i0oeeMruW6pgpgYGB7cn0KbG0oUlRfZGF0YSB+IGBfMmExZDFDQ0NgICsgYF8yYTFkMWVgICsgd2FuZ18yYTFkMUNDQywgZGF0YSA9IGFzX2RhdGFfZnJhbWUocHJldGVzdF9kYXRhKSkgJT4lIAogIHN1bW1hcnkoKQoKbG0obG9nKFJUX2RhdGEpIH4gYF8yYTFkMUNDQ2AgKyBgXzJhMWQxZWAgKyB3YW5nXzJhMWQxQ0NDLCBkYXRhID0gYXNfZGF0YV9mcmFtZShwcmV0ZXN0X2RhdGEpKSAlPiUgCiAgc3VtbWFyeSgpCmBgYAoK5YaN6YCQ5Liq55yL5LiA5LiL5Zue5b2SCmBgYHtyfQpjb3IocHJldGVzdF9kYXRhKQoKY29yLnRlc3QocHJldGVzdF9kYXRhJFJULCBwcmV0ZXN0X2RhdGEkd2FuZ18yYTFkMUNDQykKYGBgCgojIyAyLiDmibnph4/orqHnrpcKCiMjIyAyLjEg5ZCE5Y+Y6YeP5Zyo57q/5oCn5Zue5b2S5Lit55qE6LSh54yu5bqmCgrpppblhYjnnIvkuIvmr4/kuKrooqvor5XnmoTlm57lvZLotKHnjK7luqYKYGBge3J9CmZvbyA8LSBsbShSVF9kYXRhIH4gYF8yYTFkMUNDQ2AgKyBgXzJhMWQxZWAgKyB3YW5nXzJhMWQxQ0NDLCBkYXRhID0gYXNfZGF0YV9mcmFtZShwcmV0ZXN0X2RhdGEpKQpiYXIgPC0gc3VtbWFyeShmb28pCnRlbXAgPC0gYmFyJGNvZWZmaWNpZW50cwp0ZW1wWyw0XQpgYGAKYGBge3J9CmxtX3B2YWx1ZSA8LSBmdW5jdGlvbihzdWJfbnVtKXsKICAgIHN1Yl9kYXRhX3BhdGggPC0gcGFzdGUwKCIvVXNlcnMvZGRkZDEwMDcvcHJvamVjdDJnaXQvY29nbml0aXZlX2NvbnRyb2xfbW9kZWwvZGF0YS9pbnB1dC9kYXRhX2J5X3N1Yi9zdWJfIiwgc3ViX251bSwgIl9wcmVwYXJlZF9kYXRhLmNzdiIpCiAgICB3YW5nX21vZGVsX3BhdGggPC0gcGFzdGUwKCIvVXNlcnMvZGRkZDEwMDcvcHJvamVjdDJnaXQvY29nbml0aXZlX2NvbnRyb2xfbW9kZWwvcmVmX2NvZGUvTGluZ3dhbmdfQ0NDL21vZGVsX3Jlc3VsdHMvUkxDQ19tb2RlbF9yZXN1bHRzX1NSX1FfRF9hbHBoYUNDQ19WX1dPQl9zdWJfIiwKICAgICAgICAgICAgICAgICAgICAgICAgIHN1Yl9udW0sICIuY3N2IikKICAgIHN1Yl9kYXRhIDwtcmVhZF9jc3Yoc3ViX2RhdGFfcGF0aCwgY29sX3R5cGVzID0gY29scygpKQogICAgeGlhX21vZGVsIDwtIHJlYWRfY3N2KCIvVXNlcnMvZGRkZDEwMDcvcHJvamVjdDJnaXQvY29nbml0aXZlX2NvbnRyb2xfbW9kZWwvZGF0YS9pbnB1dC9hbGxfZGF0YV93aXRoXzJhMWQxQ0NDXzJhMWQxZS5jc3YiLCBjb2xfdHlwZXMgPSBjb2xzKCkpICU+JSAKICAgICAgZmlsdGVyKFN1YmplY3RfbnVtID09IHN1Yl9udW0pCiAgICB3YW5nX21vZGVsIDwtIHJlYWQuY3N2KHdhbmdfbW9kZWxfcGF0aCkKICAgIAogICAgUlRfZGF0YSA9IHN1Yl9kYXRhJFJUCiAgICB4aWFfMmExZDFlIDwtIHhpYV9tb2RlbCAlPiUgCiAgICAgIHNlbGVjdChgXzJhMWQxZWApIAogICAgeGlhXzJhMWQxQ0NDIDwtIHhpYV9tb2RlbCAlPiUgCiAgICAgIHNlbGVjdChgXzJhMWQxQ0NDYCkgCiAgICB3YW5nXzJhMWQxQ0NDIDwtIHdhbmdfbW9kZWwkUAoKICAgIHByZXRlc3RfZGF0YSA8LSBjYmluZChSVF9kYXRhLCB4aWFfMmExZDFDQ0MsIHhpYV8yYTFkMWUsIHdhbmdfMmExZDFDQ0MsIGxvZyhSVF9kYXRhKSkKICAgIAogICAgcGFyYW1ldGVycyA8LSBsbShSVF9kYXRhIH4gYF8yYTFkMWVgICsgYF8yYTFkMUNDQ2AgKyB3YW5nXzJhMWQxQ0NDLCBkYXRhID0gYXNfZGF0YV9mcmFtZShwcmV0ZXN0X2RhdGEpKSAlPiUgCiAgICAgIHN1bW1hcnkoKQogICAgCiAgICByZXR1cm4ocGFyYW1ldGVycyRjb2VmZmljaWVudHNbLDRdKQp9CmBgYAoKYGBge3J9CnJlc3VsdF9saXN0IDwtIGxpc3QoKQpmb3IgKGkgaW4gMTozNikgewogIHByaW50KGkpCiAgaWYgKGkgPT0gNikgewogICAgbmV4dAogIH0KICAKICByZXN1bHRfbGlzdFtbaV1dIDwtIGxtX3B2YWx1ZShpKQp9CmBgYArlkIjlubbnu5PmnpwKYGBge3J9CmxtX3Jlc3VsdF90YWJsZSA8LSBkby5jYWxsKHJiaW5kLCByZXN1bHRfbGlzdCkKbG1fcmVzdWx0X3RhYmxlCmBgYAoK5LuO57uT5p6c5p2l55yLLCAyYTFkMUNDQyDnmoTlj5jph4/mmL7okZfmgKflp4vnu4jmmK/mnIDpq5jnmoQKCiMjIyAyLjIg55u45YWz5oCnCgpgYGB7cn0KY29yX2VhY2ggPC0gZnVuY3Rpb24oc3ViX251bSl7CiAgICAgIHN1Yl9kYXRhX3BhdGggPC0gcGFzdGUwKCIvVXNlcnMvZGRkZDEwMDcvcHJvamVjdDJnaXQvY29nbml0aXZlX2NvbnRyb2xfbW9kZWwvZGF0YS9pbnB1dC9kYXRhX2J5X3N1Yi9zdWJfIiwgc3ViX251bSwgIl9wcmVwYXJlZF9kYXRhLmNzdiIpCiAgICB3YW5nX21vZGVsX3BhdGggPC0gcGFzdGUwKCIvVXNlcnMvZGRkZDEwMDcvcHJvamVjdDJnaXQvY29nbml0aXZlX2NvbnRyb2xfbW9kZWwvcmVmX2NvZGUvTGluZ3dhbmdfQ0NDL21vZGVsX3Jlc3VsdHMvUkxDQ19tb2RlbF9yZXN1bHRzX1NSX1FfRF9hbHBoYUNDQ19WX1dPQl9zdWJfIiwKICAgICAgICAgICAgICAgICAgICAgICAgIHN1Yl9udW0sICIuY3N2IikKICAgIHN1Yl9kYXRhIDwtcmVhZF9jc3Yoc3ViX2RhdGFfcGF0aCwgY29sX3R5cGVzID0gY29scygpKQogICAgeGlhX21vZGVsIDwtIHJlYWRfY3N2KCIvVXNlcnMvZGRkZDEwMDcvcHJvamVjdDJnaXQvY29nbml0aXZlX2NvbnRyb2xfbW9kZWwvZGF0YS9pbnB1dC9hbGxfZGF0YV93aXRoXzJhMWQxQ0NDXzJhMWQxZS5jc3YiLCBjb2xfdHlwZXMgPSBjb2xzKCkpICU+JSAKICAgICAgZmlsdGVyKFN1YmplY3RfbnVtID09IHN1Yl9udW0pCiAgICB3YW5nX21vZGVsIDwtIHJlYWQuY3N2KHdhbmdfbW9kZWxfcGF0aCkKICAgIAogICAgUlRfZGF0YSA9IHN1Yl9kYXRhJFJUCiAgICB4aWFfMmExZDFlIDwtIHhpYV9tb2RlbCAlPiUgCiAgICAgIHNlbGVjdChgXzJhMWQxZWApIAogICAgeGlhXzJhMWQxQ0NDIDwtIHhpYV9tb2RlbCAlPiUgCiAgICAgIHNlbGVjdChgXzJhMWQxQ0NDYCkgCiAgICB3YW5nXzJhMWQxQ0NDIDwtIHdhbmdfbW9kZWwkUAogICAgCiAgICByZXN1bHQgPC0gYyhjb3IoUlRfZGF0YSwgeGlhXzJhMWQxQ0NDKSwgY29yKFJUX2RhdGEsIHhpYV8yYTFkMWUpLCBjb3IoUlRfZGF0YSwgd2FuZ18yYTFkMUNDQykpCiAgICBuYW1lcyhyZXN1bHQpIDwtIGMoInhpYV8yYTFkMUNDQyIsICJ4aWFfMmExZDFlIiwgIndhbmdfMmExZDFDQ0MiKQogICAgcmV0dXJuKHJlc3VsdCkKfQpgYGAKYGBge3J9CmNvcl9lYWNoKDEpCmBgYApgYGB7cn0KcmVzdWx0X2xpc3QgPC0gbGlzdCgpCmZvciAoaSBpbiAxOjM2KSB7CiAgcHJpbnQoaSkKICBpZiAoaSA9PSA2KSB7CiAgICBuZXh0CiAgfQogIAogIHJlc3VsdF9saXN0W1tpXV0gPC0gY29yX2VhY2goaSkKfQpjb3JfcmVzdWx0X3RhYmxlID0gZG8uY2FsbChyYmluZCwgcmVzdWx0X2xpc3QpCmBgYAoKYGBge3J9CmNvcl9yZXN1bHRfdGFibGUKYGBgCgo=</div>
 
 
 

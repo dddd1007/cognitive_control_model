@@ -47,4 +47,103 @@ cor(pretest_data)
 cor.test(pretest_data$RT, pretest_data$wang_2a1d1CCC)
 ```
 
+## 2. 批量计算
+
+### 2.1 各变量在线性回归中的贡献度
+
+首先看下每个被试的回归贡献度
+```{r}
+foo <- lm(RT_data ~ `_2a1d1CCC` + `_2a1d1e` + wang_2a1d1CCC, data = as_data_frame(pretest_data))
+bar <- summary(foo)
+temp <- bar$coefficients
+temp[,4]
+```
+```{r}
+lm_pvalue <- function(sub_num){
+    sub_data_path <- paste0("/Users/dddd1007/project2git/cognitive_control_model/data/input/data_by_sub/sub_", sub_num, "_prepared_data.csv")
+    wang_model_path <- paste0("/Users/dddd1007/project2git/cognitive_control_model/ref_code/Lingwang_CCC/model_results/RLCC_model_results_SR_Q_D_alphaCCC_V_WOB_sub_",
+                         sub_num, ".csv")
+    sub_data <-read_csv(sub_data_path, col_types = cols())
+    xia_model <- read_csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_2a1d1CCC_2a1d1e.csv", col_types = cols()) %>% 
+      filter(Subject_num == sub_num)
+    wang_model <- read.csv(wang_model_path)
+    
+    RT_data = sub_data$RT
+    xia_2a1d1e <- xia_model %>% 
+      select(`_2a1d1e`) 
+    xia_2a1d1CCC <- xia_model %>% 
+      select(`_2a1d1CCC`) 
+    wang_2a1d1CCC <- wang_model$P
+
+    pretest_data <- cbind(RT_data, xia_2a1d1CCC, xia_2a1d1e, wang_2a1d1CCC, log(RT_data))
+    
+    parameters <- lm(RT_data ~ `_2a1d1e` + `_2a1d1CCC` + wang_2a1d1CCC, data = as_data_frame(pretest_data)) %>% 
+      summary()
+    
+    return(parameters$coefficients[,4])
+}
+```
+
+```{r}
+result_list <- list()
+for (i in 1:36) {
+  print(i)
+  if (i == 6) {
+    next
+  }
+  
+  result_list[[i]] <- lm_pvalue(i)
+}
+```
+合并结果
+```{r}
+lm_result_table <- do.call(rbind, result_list)
+lm_result_table
+```
+
+从结果来看, 2a1d1CCC 的变量显著性始终是最高的
+
+### 2.2 相关性
+
+```{r}
+cor_each <- function(sub_num){
+      sub_data_path <- paste0("/Users/dddd1007/project2git/cognitive_control_model/data/input/data_by_sub/sub_", sub_num, "_prepared_data.csv")
+    wang_model_path <- paste0("/Users/dddd1007/project2git/cognitive_control_model/ref_code/Lingwang_CCC/model_results/RLCC_model_results_SR_Q_D_alphaCCC_V_WOB_sub_",
+                         sub_num, ".csv")
+    sub_data <-read_csv(sub_data_path, col_types = cols())
+    xia_model <- read_csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_2a1d1CCC_2a1d1e.csv", col_types = cols()) %>% 
+      filter(Subject_num == sub_num)
+    wang_model <- read.csv(wang_model_path)
+    
+    RT_data = sub_data$RT
+    xia_2a1d1e <- xia_model %>% 
+      select(`_2a1d1e`) 
+    xia_2a1d1CCC <- xia_model %>% 
+      select(`_2a1d1CCC`) 
+    wang_2a1d1CCC <- wang_model$P
+    
+    result <- c(cor(RT_data, xia_2a1d1CCC), cor(RT_data, xia_2a1d1e), cor(RT_data, wang_2a1d1CCC))
+    names(result) <- c("xia_2a1d1CCC", "xia_2a1d1e", "wang_2a1d1CCC")
+    return(result)
+}
+```
+```{r}
+cor_each(1)
+```
+```{r}
+result_list <- list()
+for (i in 1:36) {
+  print(i)
+  if (i == 6) {
+    next
+  }
+  
+  result_list[[i]] <- cor_each(i)
+}
+cor_result_table = do.call(rbind, result_list)
+```
+
+```{r}
+cor_result_table
+```
 
