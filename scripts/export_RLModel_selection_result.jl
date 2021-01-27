@@ -12,6 +12,16 @@ function extract_CCC_optim_params(eval_results, subname)
     return eval_results[subname][10][:optim_param]
 end
 
+function extract_CCC_optim_params(CSV_path::AbstractString, subname)
+    optim_params_table = CSV.read(CSV_path, DataFrame)
+    foo = @where(optim_params_table, :Subject_name .== subname)
+    # print(foo)
+    tmp = deleteat!(names(foo),1)
+    bar = Dict([Symbol(tag) => Float64(foo[!, tag]...) for tag in tmp])
+    # print(bar)
+    return bar
+end
+
 ## 添加被试单次trial的冲突程度信息
 function add_conflict_list(sub_dataframe, env, subinfo, opt_params)
     model_result = model_recovery(env, subinfo, opt_params, model_type = :_2a1d1CCC)
@@ -37,7 +47,8 @@ temp_dataframe_stake = []
 for subname in sort(collect(keys(eval_results)))
     each_sub_data = @where(all_data, :Subject .== subname)
     env, subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict, sub_idx_dict)
-    opt_params = extract_CCC_optim_params(eval_results, subname)
+    opt_params = extract_CCC_optim_params("/Users/dddd1007/project2git/cognitive_control_model/data/input/wang_2a1d1CCC.csv", subname)
+    print(opt_params)
     each_sub_data = add_conflict_list(each_sub_data, env, subinfo, opt_params) 
     push!(temp_dataframe_stake, each_sub_data)
 end
@@ -49,5 +60,4 @@ for i in 2:length(temp_dataframe_stake)
 end
 
 # 导出数据到R中分析
-CSV.write("/Users/dddd1007/project2git/cognitive_control_model/data/output/summary/subdata_with_CCC.csv", dataframe_with_CCC_tag)
-
+CSV.write("/Users/dddd1007/project2git/cognitive_control_model/data/output/summary/subdata_with_CCC_wang_2a1d1CCC.csv", dataframe_with_CCC_tag)

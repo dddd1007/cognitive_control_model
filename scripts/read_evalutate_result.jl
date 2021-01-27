@@ -50,3 +50,13 @@ for i in _2a1d1CCC[!, :subject]
 end
 
 CSV.write("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_2a1d1CCC_2a1d1e.csv", new_dataframe)
+
+optim_para_table = DataFrame(subject = [], a_s = [], a_v = [], CCC = [], a_CCC = [], decay = [], AIC = [], MSE = [])
+for i in sort(subject_names)
+    optim_para = values(eval_results[i][10][:optim_param])
+    mse = [eval_results[i][10][:eval_result][:AIC], eval_results[i][10][:eval_result][:MSE]]
+    foo = [i, optim_para..., mse...]
+    push!(optim_para_table, foo)
+end
+
+CSV.write("/Users/dddd1007/project2git/cognitive_control_model/data/output/summary/2a1d1CCC_optim_para.csv", optim_para_table)
