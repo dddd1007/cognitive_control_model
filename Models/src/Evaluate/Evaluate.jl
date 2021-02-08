@@ -1,4 +1,4 @@
-# Evaluate the models' Performences and give the criterion 
+# Evaluate the models' Performences and give the criterion
 # of goodness of Fit
 
 #####
@@ -7,31 +7,38 @@
 
 using .Models, DataFrames
 
-# 定义评估变量关系的函数 
-function evaluate_relation(x, y, method=:regression)
-    if method == :mse
-        return (sum(abs2.(x .- y))) / length(x)
-    elseif method == :cor
-        return cor(x, y)
-    elseif method == :regression
-        data = DataFrame(x=x, y=y)
-        reg_result = lm(@formula(y ~ x), data)
-        β_value = coef(reg_result)[2]
-        aic_value = aic(reg_result)
-        bic_value = bic(reg_result)
-        r2_value = r2(reg_result)
-        mse_value = deviance(reg_result)/dof_residual(reg_result)
-        loglikelihood_value = loglikelihood(reg_result)
-        result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value,
-                      :MSE => mse_value, :Loglikelihood => loglikelihood_value)
-        return result
-    end
+# 定义评估变量关系的函数
+function evaluate_relation(x::AbstractArray, y::AbstractArray)
+    data = DataFrame(x=x, y=y)
+    reg_result = lm(@formula(y ~ x), data)
+    β_value = coef(reg_result)[2]
+    aic_value = aic(reg_result)
+    bic_value = bic(reg_result)
+    r2_value = r2(reg_result)
+    mse_value = deviance(reg_result)/dof_residual(reg_result)
+    loglikelihood_value = loglikelihood(reg_result)
+    result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value,
+                    :MSE => mse_value, :Loglikelihood => loglikelihood_value)
+    return result
+end
+
+function evaluate_relation(dataframe::DataFrame, formula::FormulaTerm)
+    reg_result = lm(formula, dataframe)
+    β_value = coef(reg_result)[2]
+    aic_value = aic(reg_result)
+    bic_value = bic(reg_result)
+    r2_value = r2(reg_result)
+    mse_value = deviance(reg_result)/dof_residual(reg_result)
+    loglikelihood_value = loglikelihood(reg_result)
+    result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value,
+                :MSE => mse_value, :Loglikelihood => loglikelihood_value)
+    return result
 end
 
 # 根据最优参数重新拟合模型
 function model_recovery(env::ExpEnv, realsub::RealSub, opt_params;
                         model_type)
-                    
+
     if model_type == :_1a
         agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[:α], opt_params[:α], 0)
     elseif model_type == :_1a1d
@@ -82,6 +89,6 @@ function fit_and_evaluate(env, realsub; model_type, number_iterations)
     p_history = model_recovery(env, realsub, optim_param, model_type=model_type)[:p_selection_history]
     eval_result = evaluate_relation(p_history, realsub.RT)
 
-    return Dict(:optim_param => optim_param, :p_history => p_history, 
+    return Dict(:optim_param => optim_param, :p_history => p_history,
                 :eval_result => eval_result, :model_type => model_type)
 end
