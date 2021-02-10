@@ -3,6 +3,86 @@ using Hyperopt, RecursiveArrayTools, StatsBase, DataFrames, GLM
 using CategoricalArrays
 
 #####
+##### 工具性函数
+#####
+
+# 定义评估变量关系的函数
+function evaluate_relation(x::AbstractArray, y::AbstractArray)
+    data = DataFrame(x=x, y=y)
+    reg_result = lm(@formula(y ~ x), data)
+    β_value = coef(reg_result)[2]
+    aic_value = aic(reg_result)
+    bic_value = bic(reg_result)
+    r2_value = r2(reg_result)
+    mse_value = deviance(reg_result)/dof_residual(reg_result)
+    loglikelihood_value = loglikelihood(reg_result)
+    result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value,
+                    :MSE => mse_value, :Loglikelihood => loglikelihood_value)
+    return result
+end
+
+function evaluate_relation(dataframe::DataFrame, formula::FormulaTerm)
+    reg_result = lm(formula, dataframe)
+    β_value = coef(reg_result)[2]
+    aic_value = aic(reg_result)
+    bic_value = bic(reg_result)
+    r2_value = r2(reg_result)
+    mse_value = deviance(reg_result)/dof_residual(reg_result)
+    loglikelihood_value = loglikelihood(reg_result)
+    result = Dict(:β => β_value, :AIC => aic_value, :BIC => bic_value, :R2 => r2_value,
+                :MSE => mse_value, :Loglikelihood => loglikelihood_value)
+    return result
+end
+
+# 根据最优参数重新拟合模型
+function model_recovery(env::ExpEnv, realsub::RealSub, opt_params;
+                        model_type)
+
+    if model_type == :_1a
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[:α], opt_params[:α], 0)
+    elseif model_type == :_1a1d
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[:α], opt_params[:α],
+                                                   opt_params[:decay])
+    elseif model_type == :_1a1d1e
+        agent = RLModels.NoSoftMax.RLLearner_witherror(opt_params[:α], opt_params[:α],
+                                                       opt_params[:α_error], opt_params[:α_error],
+                                                       opt_params[:decay])
+    elseif model_type == :_1a1d1e1CCC
+        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[:α], opt_params[:α],
+                                                     opt_params[:α_error], opt_params[:α_error],
+                                                     opt_params[:α_CCC], opt_params[:α_CCC],
+                                                     opt_params[:CCC], opt_params[:decay])
+    elseif model_type == :_1a1d1CCC
+        agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(opt_params[:α], opt_params[:α],
+                                                              opt_params[:α_CCC], opt_params[:α_CCC],
+                                                              opt_params[:CCC], opt_params[:decay])
+    elseif model_type == :_2a
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[:α_v], opt_params[:α_s], 0)
+    elseif model_type == :_2a1d
+        agent = RLModels.NoSoftMax.RLLearner_basic(opt_params[:α_v], opt_params[:α_s], opt_params[:decay])
+    elseif model_type == :_2a1d1e
+        agent = RLModels.NoSoftMax.RLLearner_witherror(opt_params[:α_v], opt_params[:α_s],
+                                                       opt_params[:α_error], opt_params[:α_error],
+                                                       opt_params[:decay])
+    elseif model_type == :_2a1d1e1CCC
+        agent = RLModels.NoSoftMax.RLLearner_withCCC(opt_params[:α_v], opt_params[:α_s],
+                                                     opt_params[:α_error], opt_params[:α_error],
+                                                     opt_params[:α_CCC], opt_params[:α_CCC],
+                                                     opt_params[:CCC], opt_params[:decay])
+    elseif model_type == :_2a1d1CCC
+        agent = RLModels.NoSoftMax.RLLearner_withCCC_no_error(opt_params[:α_v], opt_params[:α_s],
+                                                              opt_params[:α_CCC], opt_params[:α_CCC],
+                                                              opt_params[:CCC], opt_params[:decay])
+    end
+
+    if model_type == :_1a || model_type == :_2a
+        return RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub, dodecay=false)
+    else
+        return RLModels.NoSoftMax.rl_learning_sr(env, agent, realsub)
+    end
+end
+
+#####
 ##### 强化学习模型的模型拟合
 #####
 
@@ -300,4 +380,26 @@ function fit_RL_detrend_miniblock(env, realsub, looptime; model_type)
     verbose_table[!, :MSE] = ho.results
 
     return (optim_params, eval_result, verbose_table)
+end
+
+#####
+##### 整合函数进行估计
+#####
+
+function fit_and_evaluate_base(env, realsub; model_type, number_iterations)
+    optim_param, _, _ = fit_RL_base(env, realsub, number_iterations, model_type=model_type)
+    p_history = model_recovery(env, realsub, optim_param, model_type=model_type)[:p_selection_history]
+    eval_result = evaluate_relation(p_history, realsub.RT)
+
+    return Dict(:optim_param => optim_param, :p_history => p_history,
+                :eval_result => eval_result, :model_type => model_type)
+end
+
+function fit_and_evaluate_miniblock(env, realsub; model_type, number_iterations)
+    optim_param, _, _ = fit_RL_detrend_miniblock(env, realsub, number_iterations, model_type=model_type)
+    p_history = model_recovery(env, realsub, optim_param, model_type=model_type)[:p_selection_history]
+    eval_result = evaluate_relation(p_history, realsub.RT)
+
+    return Dict(:optim_param => optim_param, :p_history => p_history,
+                :eval_result => eval_result, :model_type => model_type)
 end
