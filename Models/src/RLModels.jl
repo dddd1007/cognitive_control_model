@@ -40,7 +40,7 @@ module RLModels
 using GLM, DataFrames, StatsBase
 
 export ExpEnv, RealSub, RLLearner
-export init_env_sub, evaluate_relation 
+export init_env_sub, evaluate_relation
 export update_options_weight_matrix, init_param
 export calc_CCC
 
@@ -72,6 +72,7 @@ struct RealSub
     RT::Array{Float64,1}
     corrections::Array{Int64,1}
     sub_tag::Array{String,1}
+    prop_seq::Array{Int64,1}
 end
 
 # 环境中的学习者
@@ -94,10 +95,10 @@ Init the env and subject objects for simulation.
 ```julia
 # Define the trasnform rule
 begin
-    env_idx_dict = Dict("stim_task_related" => "color", "stim_task_unrelated" => "location", 
-		                "stim_action_congruency" => "contigency", 
+    env_idx_dict = Dict("stim_task_related" => "color", "stim_task_unrelated" => "location",
+		                "stim_action_congruency" => "contigency",
 		                "env_type" => "condition", "sub_tag" => "Subject")
-	sub_idx_dict = Dict("response" => "Response", "RT" => "RT", 
+	sub_idx_dict = Dict("response" => "Response", "RT" => "RT",
 		                "corrections" => "Type", "sub_tag" => "Subject")
 end
 # Excute the transform
@@ -111,13 +112,13 @@ function init_env_sub(transformed_data::DataFrame, env_idx_dict::Dict, sub_idx_d
                      transformed_data[!, env_idx_dict["stim_action_congruency"]],
                      transformed_data[!, env_idx_dict["env_type"]],
                      transformed_data[!, env_idx_dict["sub_tag"]])
-    real_sub = RealSub(
-                       # Because of the miss action, we need the tryparse() 
+    real_sub = RealSub(# Because of the miss action, we need the tryparse()
                        # to parse "miss" to "nothing"
                        tryparse.(Float64, transformed_data[!, sub_idx_dict["response"]]),
                        tryparse.(Float64, transformed_data[!, sub_idx_dict["RT"]]),
                        transformed_data[!, sub_idx_dict["corrections"]],
-                       transformed_data[!, sub_idx_dict["sub_tag"]])
+                       transformed_data[!, sub_idx_dict["sub_tag"]],
+                       transformed_data[!, sub_idx_dict["prop_seq"]])
     println("The env and sub info of " *
             transformed_data[!, env_idx_dict["sub_tag"]][1] *
             " is generated!")
@@ -145,14 +146,12 @@ end
 
 #### 定义工具性的计算函数
 
-
-
 # 定义更新价值矩阵的函数
 
 # 具体SR联结学习的价值更新函数
 function update_options_weight_matrix(weight_vector::Array{Float64,1}, α::Float64,
     decay::Float64, sub_selection::Tuple; dodecay=true)
-    
+
     # Convert the vector to weight matrix which easy to update
     weight_matrix = reshape(weight_vector, 2, 2)'
 
@@ -211,7 +210,7 @@ function calc_CCC(weight_vector::Array{Float64,1}, sub_action::Int)
     return CCC = 2 * weight_vector[sub_action] - 1
 end
 
-#============================================================================ 
+#============================================================================
 # Module1: RLModels with Softmax                                            #
 ============================================================================#
 # module WithSoftMax
@@ -400,8 +399,8 @@ end
 #         p_softmax_history[idx] = sr_softmax(options_weight_matrix[idx, :], β,
 #                                             (env.stim_task_unrelated[idx],
 #                                              realsub.response[idx]))
- 
-#         ## Update 
+
+#         ## Update
 #         options_weight_matrix[idx + 1, :] = update_options_weight_matrix(options_weight_matrix[idx,:],
 #                                                                          α, agent.decay,
 #                                                                          (env.stim_task_unrelated[idx],
@@ -416,7 +415,7 @@ end
 
 # end # RLModels_SoftMax
 
-#============================================================================= 
+#=============================================================================
 # Module2: RLModels without selection                                        #
 =============================================================================#
 module NoSoftMax
@@ -488,11 +487,11 @@ function selection_value(
 )
     options_matrix = reshape(options_vector, 2, 2)'
     true_selection_idx = CartesianIndex(true_selection) + CartesianIndex(1, 1)
-    
+
     if debug
         println(true_selection_idx)
     end
-    
+
     return options_matrix[true_selection_idx]
 end
 
@@ -502,12 +501,12 @@ function selection_value(
     true_selection::Int,
     debug=false,)
     true_selection_idx = true_selection + 1
-    
+
     if debug
         println(true_selection_idx)
-    end 
+    end
 
-    return options_vector[true_selection_idx] 
+    return options_vector[true_selection_idx]
 end
 
 function get_action_para(env::ExpEnv, agent::RLLearner_basic, realsub::RealSub, idx::Int)
@@ -540,7 +539,7 @@ end
 
 function get_action_para(env::ExpEnv, agent::RLLearner_withCCC, realsub::RealSub, idx::Int, conflict)
 
-    if env.env_type[idx] == "v" 
+    if env.env_type[idx] == "v"
         if realsub.corrections[idx] == 1 && conflict ≥ agent.CCC
             α = agent.α_v
         elseif realsub.corrections[idx] == 1 && conflict < agent.CCC
@@ -561,13 +560,13 @@ function get_action_para(env::ExpEnv, agent::RLLearner_withCCC, realsub::RealSub
             α = agent.α_s_CCC
         end
     end
-    
+
     return(α)
 end
 
 function get_action_para(env::ExpEnv, agent::RLLearner_withCCC_no_error, realsub::RealSub, idx::Int, conflict)
 
-    if env.env_type[idx] == "v" 
+    if env.env_type[idx] == "v"
         if realsub.corrections[idx] == 1 && conflict ≥ agent.CCC
             α = agent.α_v
         elseif realsub.corrections[idx] == 1 && conflict < agent.CCC
@@ -587,8 +586,8 @@ function get_action_para(env::ExpEnv, agent::RLLearner_withCCC_no_error, realsub
         elseif realsub.corrections[idx] == 0 && -conflict < agent.CCC
             α = agent.α_s_CCC
         end
-    end 
-    
+    end
+
     return(α)
 end
 
@@ -615,7 +614,7 @@ function rl_learning_sr(
     conflict_list = []
 
     for idx = 1:total_trials_num
-        
+
         if isa(agent, RLLearner_withCCC) | isa(agent, RLLearner_withCCC_no_error)
             conflict = calc_CCC(options_weight_matrix[idx,:], (env.stim_task_unrelated[idx], env.stim_correct_action[idx]))
             α = get_action_para(env, agent, realsub, idx, conflict)
@@ -628,9 +627,9 @@ function rl_learning_sr(
         p_selection_history[idx] = selection_value(
             options_weight_matrix[idx, :],
             (env.stim_task_unrelated[idx], realsub.response[idx]))
-        
+
         ## Update
-        # Please note the first row of the value matrix 
+        # Please note the first row of the value matrix
         # represent the preparedness of the subject!
         options_weight_matrix[idx + 1, :] =
             update_options_weight_matrix(
@@ -661,7 +660,7 @@ function rl_learning_ab(env::ExpEnv, agent::RLLearner, realsub::RealSub)
     end
 
     # init learning parameters list
-    total_trials_num, options_weight_matrix, p_selection_history, PE_history = 
+    total_trials_num, options_weight_matrix, p_selection_history, PE_history =
         init_param(env, :ab)
 
     # Start learning
@@ -678,7 +677,7 @@ function rl_learning_ab(env::ExpEnv, agent::RLLearner, realsub::RealSub)
         p_selection_history[idx] = selection_value(options_weight_matrix[idx, :], env.stim_action_congruency[idx])
         ## Update
         options_weight_matrix[idx + 1, :] = update_options_weight_matrix(options_weight_matrix[idx, :], α, env.stim_action_congruency[idx])
-    
+
     end
 
     options_weight_result = options_weight_matrix[2:end, :]

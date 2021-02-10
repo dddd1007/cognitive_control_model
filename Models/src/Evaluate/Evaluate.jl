@@ -85,7 +85,7 @@ end
 
 # 快速拟合模型并评估拟合度
 function fit_and_evaluate(env, realsub; model_type, number_iterations)
-    optim_param, _, _ = fit_RL_SR(env, realsub, number_iterations, model_type=model_type)
+    optim_param, _, _ = fit_RL_base(env, realsub, number_iterations, model_type=model_type)
     p_history = model_recovery(env, realsub, optim_param, model_type=model_type)[:p_selection_history]
     eval_result = evaluate_relation(p_history, realsub.RT)
 
