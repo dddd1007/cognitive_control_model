@@ -57,41 +57,20 @@ end
 
 eval_results = Dict()
 
-#Threads.@threads
-#for sub_num in 1:36
-sub_num = 1
-# if sub_num == 27 || sub_num == 6
-#     continue
-# end
-println("========= Begin Sub " * repr(sub_num) * " ==========")
+Threads.@threads for sub_num in 1:36
 
-each_sub_data = @where(all_data, :Subject_num .== sub_num)
-each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
-                                                      sub_idx_dict)
-eval_results[each_subinfo.sub_tag[1]] = model_evaluation_miniblock(each_env, each_subinfo,
-                                                                   1)
-#end
-
-current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")
-filename = savepath * "/" * current_time * "final_selection_miniblock.jld2"
-
-@save filename eval_results
-eval_results = Dict()
-
-#Threads.@threads
-#for sub_num in 1:36
-sub_num = 1
 if sub_num == 27 || sub_num == 6
     continue
 end
+
 println("========= Begin Sub " * repr(sub_num) * " ==========")
 
 each_sub_data = @where(all_data, :Subject_num .== sub_num)
 each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
                                                       sub_idx_dict)
 eval_results[each_subinfo.sub_tag[1]] = model_evaluation_miniblock(each_env, each_subinfo,
-                                                                   1)
-#end
+                                                                   1000)
+end
 
 current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")
 filename = savepath * "/" * current_time * "final_selection_miniblock.jld2"
