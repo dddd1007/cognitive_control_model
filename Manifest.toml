@@ -376,9 +376,9 @@ version = "1.10.0+2"
 
 [[Graphics]]
 deps = ["Colors", "LinearAlgebra", "NaNMath"]
-git-tree-sha1 = "45d684ead5b65c043ad46bd5be750d61c39d7ef8"
+git-tree-sha1 = "2c1cf4df419938ece72de17f368a021ee162762e"
 uuid = "a2bd30eb-e257-5431-a919-1863eab51364"
-version = "1.0.2"
+version = "1.1.0"
 
 [[Graphite2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -388,9 +388,9 @@ version = "1.3.13+4"
 
 [[Gtk]]
 deps = ["Cairo", "Cairo_jll", "Dates", "GTK3_jll", "Glib_jll", "Graphics", "Libdl", "Pkg", "Reexport", "Serialization", "Test", "Xorg_xkeyboard_config_jll", "adwaita_icon_theme_jll", "gdk_pixbuf_jll", "hicolor_icon_theme_jll"]
-git-tree-sha1 = "f2d7243793f227527de082bece66f649e3927886"
+git-tree-sha1 = "c03f60f658fa684a8069f0e809f4a8a04d3a55db"
 uuid = "4c0ca9eb-093a-5379-98c5-f87ac0bbbf44"
-version = "1.1.5"
+version = "1.1.6"
 
 [[HTTP]]
 deps = ["Base64", "Dates", "IniFile", "MbedTLS", "Sockets", "URIs"]
@@ -682,7 +682,7 @@ version = "0.4.5"
 uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[Models]]
-deps = ["BayesianOptimization", "CSV", "DataFrames", "DataFramesMeta", "Distributions", "GLM", "Hyperopt", "RecursiveArrayTools", "Reexport", "StatsBase"]
+deps = ["BayesianOptimization", "CSV", "CategoricalArrays", "DataFrames", "DataFramesMeta", "Distributions", "GLM", "Hyperopt", "RecursiveArrayTools", "Reexport", "StatsBase"]
 path = "models"
 uuid = "73df4adf-0718-4152-b75d-f87bfd26a255"
 version = "0.4.0"
@@ -805,9 +805,9 @@ version = "0.2.4"
 
 [[PrettyTables]]
 deps = ["Crayons", "Formatting", "Markdown", "Reexport", "Tables"]
-git-tree-sha1 = "42126c4e2677cdc664baea004c98cc60a664fe40"
+git-tree-sha1 = "574a6b3ea95f04e8757c0280bb9c29f1a5e35138"
 uuid = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
-version = "0.11.0"
+version = "0.11.1"
 
 [[Printf]]
 deps = ["Unicode"]
@@ -819,9 +819,9 @@ uuid = "9abbd945-dff8-562f-b5e8-e1ebf5ef1b79"
 
 [[ProgressMeter]]
 deps = ["Distributed", "Printf"]
-git-tree-sha1 = "45640774ee2efa24e52686dbdf895e88102e68fc"
+git-tree-sha1 = "6e9c89cba09f6ef134b00e10625590746ba1e036"
 uuid = "92933f4c-e287-5a05-a399-4b506db050ca"
-version = "1.4.1"
+version = "1.5.0"
 
 [[PyCall]]
 deps = ["Conda", "Dates", "Libdl", "LinearAlgebra", "MacroTools", "Serialization", "VersionParsing"]
@@ -1035,9 +1035,9 @@ uuid = "a759f4b9-e2f1-59dc-863e-4aeb61b1ea8f"
 version = "0.5.7"
 
 [[Tokenize]]
-git-tree-sha1 = "6c487fa179194ec02c4b9fc246563eb4afc9101c"
+git-tree-sha1 = "45b1932b0ec576159181bf75df71d6d86aa9c850"
 uuid = "0796e94c-ce3b-5d07-9a54-7f471281c624"
-version = "0.5.12"
+version = "0.5.13"
 
 [[TranscodingStreams]]
 deps = ["Random", "Test"]

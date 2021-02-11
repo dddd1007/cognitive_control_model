@@ -26,5 +26,5 @@ begin
                         "correct_action" => "correct_action", "env_type" => "condition",
                         "sub_tag" => "Subject")
     sub_idx_dict = Dict("response" => "Response", "RT" => "RT", "corrections" => "Type",
-                        "sub_tag" => "Subject")
+                        "sub_tag" => "Subject", "prop_seq" => "prop")
 end
