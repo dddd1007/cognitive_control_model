@@ -1,0 +1,55 @@
+# 探索被试的反应时的趋势
+
+考虑到被试的反应时可能会影响结果估计的准确性，因此加入 miniblock 不失为一个提高估计结果的方法。但这也许反映了 RT 本身存在着一个低频的 trend 影响了分析结果。
+
+因此，我们可以考虑是否可以通过对 RT detrend 来提高估计的准确性。
+
+RT 的变化趋势可能存在两种，一种是随着实验时间的拉长，被试的行为反应会逐渐变慢，这反映了疲劳效应。另一方面，也可能存在被试在多个 block 进行反应时，其内部状态不稳定，从而存在的差异。
+
+我们尝试通过对 RT 进行频域分析，查看是否存在低频波来验证前者。而通过比较不同 miniblock 上平均 RT 的差异来验证后者。
+
+```{r}
+library(tidyverse)
+library(here)
+raw_data <- read_csv(here("data", "input", "pure_all_data.csv"))
+```
+
+我们导入单个被试的数据，查看是否存在 trend 的情况.
+
+```{r}
+sub1_data <- filter(raw_data, Subject_num == 1)
+wave_data <- sub1_data$RT
+```
+
+先把时间序列画出来
+```{r}
+library(plotly)
+wave_table <- data.frame(wave_data, index = seq_len(length(wave_data)))
+p <- ggplot(wave_table) +
+    geom_line(aes(x = index, y = wave_data))
+ggplotly(p)
+```
+
+从图像上是可以看出来反应时会随着比例上下波动的. 这种波动可能是由于练习效应导致的下降, 和环境发生变化后不适应而导致的上升. 在我们的模型当中, 由于是根据被试的行为反应来估计内部的 PE 估计值. 那么 RT 受其他因素影响的变化, 将会导致估计的 PE 不准确. 确实要进行 detrend 操作.
+
+我们来看一下快速傅立叶变换后的结果.
+
+```{r}
+library(fftw)
+dft_data <- FFT(wave_data)
+dft_amp <- abs(dft_data)
+n <- length(wave_data)
+
+Fs <- 50
+f <- (seq_len(n) - 1) * Fs / n
+
+freq_plot <- ggplot(mapping = aes(x = f[1:Fs], y = dft_amp[1:Fs])) +
+    geom_line(color = "blue") +
+    labs(
+        x = "Frequency (Hz)", y = "Magnitude",
+        title = "Frequency domain representation of the entire speech sequence"
+    ) +
+    theme(plot.title = element_text(hjust = 0.5))
+
+ggplotly(freq_plot)
+```
