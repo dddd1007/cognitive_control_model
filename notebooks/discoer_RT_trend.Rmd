@@ -32,24 +32,13 @@ ggplotly(p)
 
 从图像上是可以看出来反应时会随着比例上下波动的. 这种波动可能是由于练习效应导致的下降, 和环境发生变化后不适应而导致的上升. 在我们的模型当中, 由于是根据被试的行为反应来估计内部的 PE 估计值. 那么 RT 受其他因素影响的变化, 将会导致估计的 PE 不准确. 确实要进行 detrend 操作.
 
-我们来看一下快速傅立叶变换后的结果.
+```{r}
+rt_ts <- ts(wave_data, start = 1, end = length(wave_data), frequency = 1)
+acf_plot <- acf(RT_ts, lag.max = 330)
+```
+
+自回归的结果比较稳定, 这说明这个时间序列没有明显的 season 的特征, 也没明显的 trend 的趋势. 时间序列的稳定性较高.
 
 ```{r}
-library(fftw)
-dft_data <- FFT(wave_data)
-dft_amp <- abs(dft_data)
-n <- length(wave_data)
-
-Fs <- 50
-f <- (seq_len(n) - 1) * Fs / n
-
-freq_plot <- ggplot(mapping = aes(x = f[1:Fs], y = dft_amp[1:Fs])) +
-    geom_line(color = "blue") +
-    labs(
-        x = "Frequency (Hz)", y = "Magnitude",
-        title = "Frequency domain representation of the entire speech sequence"
-    ) +
-    theme(plot.title = element_text(hjust = 0.5))
-
-ggplotly(freq_plot)
+pacf_plot <- pacf(RT_ts)
 ```
