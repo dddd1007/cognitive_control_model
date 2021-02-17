@@ -34,11 +34,23 @@ ggplotly(p)
 
 ```{r}
 rt_ts <- ts(wave_data, start = 1, end = length(wave_data), frequency = 1)
-acf_plot <- acf(RT_ts, lag.max = 330)
+acf_plot <- acf(rt_ts, lag.max = 330)
 ```
 
 自回归的结果比较稳定, 这说明这个时间序列没有明显的 season 的特征, 也没明显的 trend 的趋势. 时间序列的稳定性较高.
 
 ```{r}
-pacf_plot <- pacf(RT_ts)
+pacf_plot <- pacf(rt_ts)
 ```
+
+试着直接 Detrend 看一下数据结果
+```{r}
+library(RSEIS)
+detrend_ts <- detrend(rt_ts)
+
+library(forecast)
+plot(detrend_ts)
+plot(rt_ts)
+```
+
+有一点点变化, 可以试试在分析中直接应用这个来跑下数据看看.

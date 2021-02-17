@@ -418,6 +418,58 @@ function fit_RL_detrend_miniblock(env, realsub, looptime; model_type)
     return (optim_params, eval_result, verbose_table)
 end
 
+function correct_AIC(model_type, AIC)
+    if model_type == :_1a
+        params_num = 1
+    elseif model_type == :_1a1d
+        params_num = 2
+    elseif model_type == :_1a1d1e
+        params_num = 3
+    elseif model_type == :_1a1d1e1CCC
+        params_num = 4
+    elseif model_type == :_1a1d1CCC
+        params_num = 3
+    elseif model_type == :_2a
+        params_num = 2
+    elseif model_type == :_2a1d
+        params_num = 3
+    elseif model_type == :_2a1d1e
+        params_num = 4
+    elseif model_type == :_2a1d1e1CCC
+        params_num = 5
+    elseif model_type == :_2a1d1CCC
+        params_num = 4
+    end
+
+    corrected_AIC = AIC + 2 * params_num - 2
+end
+
+function correct_AIC(model_type, AIC, miniblock_count)
+    if model_type == :_1a
+        params_num = 1
+    elseif model_type == :_1a1d
+        params_num = 2
+    elseif model_type == :_1a1d1e
+        params_num = 3
+    elseif model_type == :_1a1d1e1CCC
+        params_num = 4
+    elseif model_type == :_1a1d1CCC
+        params_num = 3
+    elseif model_type == :_2a
+        params_num = 2
+    elseif model_type == :_2a1d
+        params_num = 3
+    elseif model_type == :_2a1d1e
+        params_num = 4
+    elseif model_type == :_2a1d1e1CCC
+        params_num = 5
+    elseif model_type == :_2a1d1CCC
+        params_num = 4
+    end
+
+    corrected_AIC = AIC + 2 * params_num - 2 - 2 * miniblock_count
+end
+
 #####
 ##### 整合函数进行估计
 #####
@@ -426,9 +478,10 @@ function fit_and_evaluate_base(env, realsub; model_type, number_iterations)
     optim_param, _, _ = fit_RL_base(env, realsub, number_iterations, model_type=model_type)
     p_history = model_recovery(env, realsub, optim_param, model_type=model_type)[:p_selection_history]
     eval_result = evaluate_relation(p_history, realsub.RT)
+    corrected_AIC = correct_AIC(model_type, eval_result[:AIC])
 
     return Dict(:optim_param => optim_param, :p_history => p_history,
-                :eval_result => eval_result, :model_type => model_type)
+                :AIC => corrected_AIC, :MSE => eval_result[:MSE], :model_type => model_type)
 end
 
 function fit_and_evaluate_miniblock(env, realsub; model_type, number_iterations)
@@ -454,6 +507,10 @@ function fit_and_evaluate_miniblock(env, realsub; model_type, number_iterations)
     validation_formula = @formula(RT ~ predicted_var + miniblock)
     eval_result = evaluate_relation(validation_dataframe, validation_formula)
 
+    miniblock_count = length(unique(prop_seq_changed))
+    corrected_AIC = correct_AIC(model_type, eval_result[:AIC], miniblock_count)
+
     return Dict(:optim_param => optim_param, :p_history => p_history,
-                :eval_result => eval_result, :model_type => model_type)
+                :AIC => corrected_AIC, :MSE => eval_result[:MSE],
+                :model_type => model_type)
 end
