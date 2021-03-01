@@ -1,5 +1,5 @@
 using Models, DataFrames, Dates, JLD2
-using CSV: CSV
+using CSV:CSV
 
 savepath = joinpath(dirname(pathof(Models)), "..", "..", "data", "output", "RLModels",
                     "model_selection")
@@ -57,19 +57,21 @@ end
 
 eval_results = Dict()
 
-Threads.@threads for sub_num in 1:36
+for sub_num in 1:36
 
-if sub_num == 27 || sub_num == 6
-    continue
-end
+    if sub_num == 27 || sub_num == 6
+        continue
+    end
 
-println("========= Begin Sub " * repr(sub_num) * " ==========")
+    println("========= Begin Sub " * repr(sub_num) * " ==========")
 
-each_sub_data = @where(all_data, :Subject_num .== sub_num)
-each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
-                                                      sub_idx_dict)
-eval_results[each_subinfo.sub_tag[1]] = model_evaluation_miniblock(each_env, each_subinfo,
-                                                                   1000)
+    each_sub_data = @where(all_data, :Subject_num .== sub_num)
+    each_env, each_subinfo = Models.RLModels.init_env_sub(each_sub_data, env_idx_dict,
+                                                sub_idx_dict)
+
+    println("output result sub " * repr(sub_num))
+    eval_results[each_subinfo.sub_tag[1]] = model_evaluation_miniblock(each_env, each_subinfo,
+                                                            10000)
 end
 
 current_time = Dates.format(now(), "yyyy-mm-dd-HHMMSS")
