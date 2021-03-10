@@ -1,0 +1,50 @@
+---
+title: "计算模型估计的P与PE的相关性"
+output: html_notebook
+---
+
+## 导入数据
+
+```{r}
+library(tidyverse)
+library(here)
+
+raw_data <- read_csv("/Users/dddd1007/project2git/fmri_analysis2_nipype_type/data/behavioral_data/all_data_with_2a1d1CCC.csv")
+```
+
+## 比较每个被试的 P 和 PE 之间的相关性
+
+```{r}
+glimpse(raw_data)
+```
+
+这里 2a1d1CCC 是 P 值, 接下来计算 PE
+
+```{r}
+PE = vector(mode = "numeric")
+
+for(i in 1:nrow(raw_data)){
+  if(raw_data$correct_action[i] == 1){
+    PE[i] = abs(0 - raw_data$`_2a1d1CCC`[i])
+  }else if(raw_data$correct_action[i] == 0){
+    PE[i] = 1 - raw_data$`_2a1d1CCC`[i]
+  }
+}
+
+raw_data = cbind(raw_data, PE)
+cor.test(raw_data$`_2a1d1CCC`, PE)
+
+write_csv(raw_data, "/Users/dddd1007/project2git/fmri_analysis2_nipype_type/data/behavioral_data/all_data_with_2a1d1CCC_withPE.csv")
+```
+
+这里不存在相关. 考虑可能是PE的定义是有误的.
+
+确实是有误的, 应该是正确的行为反应减去估计的参数. 这个PE定义存在问题?
+
+```{r}
+raw_data %>% 
+  mutate(PE2 = 1 - `_2a1d1CCC`) -> raw_data
+
+cor.test(raw_data$`_2a1d1CCC`, raw_data$PE2)
+```
+
