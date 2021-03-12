@@ -51,12 +51,8 @@ change_block_index <- function(input_dataframe) {
 }
 
 savepath <- "/Users/dddd1007/project2git/cognitive_control_model/ref_code/Lingwang_CCC/data/wang_model_input/"
-for (i in 1:18) {
+for (i in 28:36) {
     foo <- filter(all_data, Subject_num == i)
     bar <- change_outlier(change_block_index(renamer(foo)))
     write_csv(bar, paste0(savepath, "sub_", i, "_prepared_data.csv"))
-}
-
-for (i in seq_len(18)) {
-
 }

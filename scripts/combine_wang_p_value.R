@@ -2,11 +2,14 @@ library(tidyverse)
 all_sub_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/pure_all_data.csv")
 
 result_list <- list()
-for (i in 1:18) {
-    filepath = paste0("/Users/dddd1007/project2git/cognitive_control_model/ref_code/Lingwang_CCC/model_results/1. add_block/RLCC_model_results_SR_Q_D_alphaCCC_V_WOB_sub_", i, ".csv")
+for (i in 1:36) {
+    if(i == 27){
+        next
+    }
+    filepath <- paste0("/Users/dddd1007/project2git/cognitive_control_model/ref_code/Lingwang_CCC/model_results_block/RLCC_model_results_SR_Q_D_alphaCCC_V_WOB_sub_", i, ".csv")
     sub_data <- filter(all_sub_data, Subject_num == i, Type == "hit" | Type == "incorrect")
     p_value <- read.csv(filepath)$P
-    foo = cbind(sub_data, p_value)
+    foo <- cbind(sub_data, p_value)
     result_list[[i]] <- foo
 }
 
