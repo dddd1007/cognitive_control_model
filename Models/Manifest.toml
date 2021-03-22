@@ -220,9 +220,9 @@ version = "0.4.2"
 
 [[ForwardDiff]]
 deps = ["CommonSubexpressions", "DiffResults", "DiffRules", "NaNMath", "Random", "SpecialFunctions", "StaticArrays"]
-git-tree-sha1 = "d48a40c0f54f29a5c8748cfb3225719accc72b77"
+git-tree-sha1 = "c68fb7481b71519d313114dca639b35262ff105f"
 uuid = "f6369f11-7733-5829-9624-2563aa707210"
-version = "0.10.16"
+version = "0.10.17"
 
 [[Future]]
 deps = ["Random"]
@@ -260,9 +260,9 @@ version = "2.4.1+0"
 
 [[Hyperopt]]
 deps = ["BayesianOptimization", "Distributed", "GaussianProcesses", "Juno", "LatinHypercubeSampling", "LinearAlgebra", "MacroTools", "Random", "RecipesBase", "Statistics", "Test"]
-git-tree-sha1 = "3830e7d945829fce9d760cf4603b37f663d7c76f"
+git-tree-sha1 = "7e2891642ca008a338c915368e8dfce857ef6703"
 uuid = "93e5fe13-2215-51db-baaf-2e9a34fb2712"
-version = "0.4.2"
+version = "0.4.3"
 
 [[IRTools]]
 deps = ["InteractiveUtils", "MacroTools", "Test"]
@@ -439,9 +439,9 @@ version = "2.7.0+0"
 
 [[NNlib]]
 deps = ["ChainRulesCore", "Compat", "LinearAlgebra", "Pkg", "Requires", "Statistics"]
-git-tree-sha1 = "df42d0816edfc24f5b82a728f46381613c4dff79"
+git-tree-sha1 = "ab1d43fead2ecb9aa5ae460d3d547c2cf8d89461"
 uuid = "872c559c-99b0-510c-b3b7-b6c96a88d5cd"
-version = "0.7.14"
+version = "0.7.17"
 
 [[NaNMath]]
 git-tree-sha1 = "bfe47e760d60b82b66b61d2d44128b62e3a369fb"
@@ -493,7 +493,7 @@ uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
 version = "1.0.16"
 
 [[Pkg]]
-deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs"]
+deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [[PooledArrays]]
@@ -561,9 +561,9 @@ version = "0.2.0"
 
 [[Requires]]
 deps = ["UUIDs"]
-git-tree-sha1 = "cfbac6c1ed70c002ec6361e7fd334f02820d6419"
+git-tree-sha1 = "4036a3bd08ac7e968e27c203d45f5fff15020621"
 uuid = "ae029012-a4dd-5104-9daa-d747884805df"
-version = "1.1.2"
+version = "1.1.3"
 
 [[Rmath]]
 deps = ["Random", "Rmath_jll"]
@@ -572,10 +572,10 @@ uuid = "79098fc4-a85e-5d69-aa6a-4863f24498fa"
 version = "0.6.1"
 
 [[Rmath_jll]]
-deps = ["Libdl", "Pkg"]
-git-tree-sha1 = "d76185aa1f421306dec73c057aa384bad74188f0"
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "1b7bf41258f6c5c9c31df8c1ba34c1fc88674957"
 uuid = "f50d1b31-88e8-58de-be2c-1cc44531875f"
-version = "0.2.2+1"
+version = "0.2.2+2"
 
 [[SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
@@ -691,9 +691,9 @@ version = "1.0.0"
 
 [[Tables]]
 deps = ["DataAPI", "DataValueInterfaces", "IteratorInterfaceExtensions", "LinearAlgebra", "TableTraits", "Test"]
-git-tree-sha1 = "a716dde43d57fa537a19058d044b495301ba6565"
+git-tree-sha1 = "f03fc113290ee7726b173fc7ea661260d204b3f2"
 uuid = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
-version = "1.3.2"
+version = "1.4.0"
 
 [[Tar]]
 deps = ["ArgTools", "SHA"]
@@ -758,3 +758,7 @@ version = "0.2.1"
 [[nghttp2_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
+
+[[p7zip_jll]]
+deps = ["Artifacts", "Libdl"]
+uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
