@@ -68,6 +68,26 @@ add_conflict_type_data %>%
     group_by(Subject) %>%
     summarise(prop_type_1 = n())
 ```
+随即, 我们按照比例区分 MI 和 MC 两种条件, 再查看每种条件下的比例
+```{r}
+add_conflict_type_data %>%
+    filter(conflict_type == 2) %>%
+    group_by(prop, congruency, condition) %>%
+    summarise(prop_type_2 = n()) %>% 
+    mutate(AVG = prop_type_2 / 36)
+add_conflict_type_data %>%
+    filter(conflict_type == 1) %>%
+    group_by(prop, congruency, condition) %>%
+    summarise(prop_type_1 = n()) %>% 
+    mutate(AVG = prop_type_1 / 36)
+
+add_conflict_type_data %>%
+    group_by(prop, congruency, condition) %>%
+    summarise(prop_type_1 = n()) %>% 
+    mutate(AVG = prop_type_1 / 36)
+```
+
+由于在 MI 和 MC 下比例一致, 我们可以得到一个结论, 即 CCC 产生的效应是来源于局部, 而非受到全局的比例的调节.
 
 添加 block 信息, 选择每次更改比例就相当于新block的定义
 ```{r}
@@ -259,7 +279,7 @@ ttest_two_type_trials_RT <- function(input_dataframe, index1, index2) {
 }
 ```
 
-### 2.1.1 conflict 类型相同的 follow trial 的反应时差异
+#### 2.1.1 conflict 类型相同的 follow trial 的反应时差异
 空间位置相同的前提下, 在小于 threshold 后的 trial 之后, 颜色相同的 trial 反应时应当远远小于颜色不同的 trial
 ```{r}
 ttest_two_type_trials_RT(
@@ -277,7 +297,7 @@ ttest_two_type_trials_RT(
 ```
 这个感觉好像没有什么意义?
 
-### 2.1.2 conflict 不同, 但前后刺激特征一致的 follow trial 的反应时差异
+#### 2.1.2 conflict 不同, 但前后刺激特征一致的 follow trial 的反应时差异
 ```{r}
 ttest_two_type_trials_RT(
     add_nblock_table,
@@ -330,7 +350,7 @@ report(t.test(log(add_nblock_table$RT[c2_sloc_scolor_index]), log(add_nblock_tab
  
 
 
-### 2.1.3 conflict 不同, 前后刺激空间位置相同, 颜色不同的 trial 的反应时比较
+#### 2.1.3 conflict 不同, 前后刺激空间位置相同, 颜色不同的 trial 的反应时比较
 ```{r}
 ttest_two_type_trials_RT(
     add_nblock_table,
@@ -346,7 +366,7 @@ ttest_two_type_trials_RT(
 )
 ```
 
-### 2.1.4 conflict 不同, 前后刺激空间位置不同, 颜色相同的 trial 反应时比较
+#### 2.1.4 conflict 不同, 前后刺激空间位置不同, 颜色相同的 trial 反应时比较
 ```{r}
 ttest_two_type_trials_RT(
     add_nblock_table,
@@ -384,7 +404,7 @@ ttest_two_type_trials_RT(
 - 前一个 trial 的 conflict 如小于 threshold, 则相比 conflict 为负但大于 threshold 的 trial, 其反应时明显更短.
 - 前一个 trial 的 conflict 小于 0, 则后续的 trial 仍然存在冲突, 故反应时仍然大于跟随在无冲突的 trial 后的.
 
-### 2.2 不同条件下的 diff_RT 的差异
+#### 2.2 不同条件下的 diff_RT 的差异
 ```{r}
 ttest_two_type_trials_diffRT <- function(input_dataframe, index1, index2) {
     x_name <- paste0("mean_diff_", deparse(substitute(index1)))
@@ -422,7 +442,7 @@ ttest_two_type_trials_diffRT <- function(input_dataframe, index1, index2) {
 }
 ```
 
-### 2.2.1 相同刺激特征后的 diff_RT
+#### 2.2.1 相同刺激特征后的 diff_RT
 ```{r}
 ttest_two_type_trials_diffRT(
     add_nblock_table,
