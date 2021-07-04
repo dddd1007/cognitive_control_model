@@ -12,7 +12,7 @@ library(here)
 raw_data <- read_csv(here(
     "data", "input",
     "subdata_with_alpha_decay.csv"
-)) %>% 
+)) |> 
   filter(Type == 1)
 ```
 筛选超过3个标准差的 outlier:
@@ -24,8 +24,8 @@ remove_outlier <- function(raw_table){
 }
 
 library(purrr)
-raw_data %>% 
-  split(.$Subject) %>% 
+raw_data |> 
+  split(~Subject) |> 
   map(remove_outlier) %>% 
   do.call(rbind, .) -> removed_outlier_data
 ```
@@ -51,39 +51,39 @@ add_conflict_type_data <- cbind(removed_outlier_data, conflict_type)
 
 将上述的type放于Excel并标记颜色, 发现1与2分布并不均匀, 于是考虑可能是在被试间有区别(如不同的被试可能threshold不同)或条件间存在差异, 抑或是先做和后做的run会有所不同. 因此对1和2的比例进行考量.
 ```{r}
-add_conflict_type_data %>%
-    filter(conflict_type == 2) %>%
-    group_by(Subject, condition) %>%
+add_conflict_type_data |>
+    filter(conflict_type == 2) |>
+    group_by(Subject, condition) |>
     summarise(prop_type_2 = n())
-add_conflict_type_data %>%
-    filter(conflict_type == 1) %>%
-    group_by(Subject, condition) %>%
+add_conflict_type_data |>
+    filter(conflict_type == 1) |>
+    group_by(Subject, condition) |>
     summarise(prop_type_1 = n())
-add_conflict_type_data %>%
-    filter(conflict_type == 2) %>%
-    group_by(Subject) %>%
+add_conflict_type_data |>
+    filter(conflict_type == 2) |>
+    group_by(Subject) |>
     summarise(prop_type_2 = n())
-add_conflict_type_data %>%
-    filter(conflict_type == 1) %>%
-    group_by(Subject) %>%
+add_conflict_type_data |>
+    filter(conflict_type == 1) |>
+    group_by(Subject) |>
     summarise(prop_type_1 = n())
 ```
 随即, 我们按照比例区分 MI 和 MC 两种条件, 再查看每种条件下的比例
 ```{r}
-add_conflict_type_data %>%
-    filter(conflict_type == 2) %>%
-    group_by(prop, congruency, condition) %>%
-    summarise(prop_type_2 = n()) %>% 
+add_conflict_type_data |>
+    filter(conflict_type == 2) |>
+    group_by(prop, congruency, condition) |>
+    summarise(prop_type_2 = n()) |> 
     mutate(AVG = prop_type_2 / 36)
-add_conflict_type_data %>%
-    filter(conflict_type == 1) %>%
-    group_by(prop, congruency, condition) %>%
-    summarise(prop_type_1 = n()) %>% 
+add_conflict_type_data |>
+    filter(conflict_type == 1) |>
+    group_by(prop, congruency, condition) |>
+    summarise(prop_type_1 = n()) |> 
     mutate(AVG = prop_type_1 / 36)
 
-add_conflict_type_data %>%
-    group_by(prop, congruency, condition) %>%
-    summarise(prop_type_1 = n()) %>% 
+add_conflict_type_data |>
+    group_by(prop, congruency, condition) |>
+    summarise(prop_type_1 = n()) |> 
     mutate(AVG = prop_type_1 / 36)
 ```
 
@@ -118,17 +118,17 @@ add_nblock_table <- do.call(rbind, add_nblock_list)
 
 按照每个被试的 nblock 信息再看一下分布模式
 ```{r}
-add_nblock_table %>%
-    filter(conflict_type == 2) %>%
-    group_by(Subject, nblock) %>%
-    summarise(prop_type_2 = n()) %>%
+add_nblock_table |>
+    filter(conflict_type == 2) |>
+    group_by(Subject, nblock) |>
+    summarise(prop_type_2 = n()) |>
     ggplot() +
     geom_line(aes(x = nblock, y = prop_type_2, colour = Subject))
 
-add_nblock_table %>%
-    filter(conflict_type == 1) %>%
-    group_by(Subject, nblock) %>%
-    summarise(prop_type_1 = n()) %>%
+add_nblock_table |>
+    filter(conflict_type == 1) |>
+    group_by(Subject, nblock) |>
+    summarise(prop_type_1 = n()) |>
     ggplot() +
     geom_line(aes(x = nblock, y = prop_type_1, colour = Subject))
 ```

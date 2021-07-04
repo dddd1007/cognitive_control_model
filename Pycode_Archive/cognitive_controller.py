@@ -154,4 +154,3 @@ class Bayesian_sc_learner(Bayesian_learner):
         correct_reaction = []
 
         for i in range(0, len(stim_loc)):
-
