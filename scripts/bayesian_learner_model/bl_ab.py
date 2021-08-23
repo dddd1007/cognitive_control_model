@@ -5,6 +5,10 @@ import arviz as az
 
 class bayesian_ab_learner:
     def __init__(self, observed_data):
+        import theano
+        theano.config.gcc.cxxflags = "-fbracket-depth=2048"
+        import sys
+        sys.setrecursionlimit(10**6)
         self.observed_data = observed_data
 
     def reset(self):
