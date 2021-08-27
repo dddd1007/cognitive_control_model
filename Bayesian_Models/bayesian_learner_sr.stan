@@ -15,7 +15,7 @@ model {
   k~uniform(-10,10);
   for(t in 1:N){
     if(t == 1){
-      v[t] ~ uniform(0,100);
+      v[t] ~ uniform(-100,100);
       r_l[t] ~ normal(0.5,0.45);
       r_l[t] ~ normal(0.5,0.45);
     }
@@ -23,9 +23,11 @@ model {
       v[t] ~ normal(v[t-1],exp(k));
       if(space_loc[t] == 0){
         r_l[t] ~ beta_proportion(r_l[t-1],exp(v[t]));
+        r_r[t] ~ beta_proportion(r_r[t-1],exp(v[t]));
         react[t] ~ bernoulli(r_l[t]);
       }else if(space_loc[t] == 1){
         r_r[t] ~ beta_proportion(r_r[t-1],exp(v[t]));
+        r_l[t] ~ beta_proportion(r_l[t-1],exp(v[t]));
         react[t] ~ bernoulli(r_r[t]);
       }
     }

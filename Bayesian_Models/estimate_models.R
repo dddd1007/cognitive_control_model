@@ -30,3 +30,12 @@ fit <- bayesian_ab_learner$sample(
   parallel_chains = 4,
   refresh = 500
 )
+
+result_table <- fit$summary()
+ab_v <- result_table$mean[str_detect(result_table$variable, "v")]
+cor.test(ab_v, sub1_data$I_hats)
+ab_v
+sub1_data$I_hats
+
+ab_r <- result_table$mean[str_detect(result_table$variable, "r")]
+cor.test(ab_r, sub1_data$RT)
