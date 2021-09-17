@@ -17,7 +17,7 @@ model {
     if(t == 1){
       v[t] ~ uniform(-100,100);
       r_l[t] ~ normal(0.5,0.45);
-      r_l[t] ~ normal(0.5,0.45);
+      r_r[t] ~ normal(0.5,0.45);
     }
     else{
       v[t] ~ normal(v[t-1],exp(k));

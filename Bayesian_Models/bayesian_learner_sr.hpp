@@ -187,7 +187,7 @@ class bayesian_learner_sr_model final : public model_base_crtp<bayesian_learner_
                 0.45));
             current_statement__ = 20;
             lp_accum__.add(
-              normal_lpdf<propto__>(rvalue(r_l, "r_l", index_uni(t)), 0.5,
+              normal_lpdf<propto__>(rvalue(r_r, "r_r", index_uni(t)), 0.5,
                 0.45));
           } else {
             current_statement__ = 6;
