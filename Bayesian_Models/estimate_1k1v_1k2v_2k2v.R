@@ -26,18 +26,17 @@ raw_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/i
 
 # Estimate each sub
 sub_num_list <- unique(raw_data$Subject_num)
-sub_num_list <- sub_num_list[which(sub_num_list > 28)]
 
 for (i in sub_num_list) {
   single_sub_table <- filter(raw_data, Subject_num == i)
-  
-  N = nrow(single_sub_table)
-  react = single_sub_table$correct_action
-  space_loc = single_sub_table$stim_loc_num
-  data_list = list(N = N, react = react, space_loc = space_loc)
-  
+
+  N <- nrow(single_sub_table)
+  react <- single_sub_table$correct_action
+  space_loc <- single_sub_table$stim_loc_num
+  data_list <- list(N = N, react = react, space_loc = space_loc)
+
   # model1 1k1v
-  file_save_path_1k1v = paste0(output_dir_1k1v, "sub_", as.character(i))
+  file_save_path_1k1v <- paste0(output_dir_1k1v, "sub_", as.character(i))
   dir.create(file_save_path_1k1v)
   fit1 <- sr_1k1v_learner$sample(
     data = data_list,
@@ -46,9 +45,9 @@ for (i in sub_num_list) {
     refresh = 500,
     output_dir = file_save_path_1k1v
   )
-  
+
   # model1 1k2v
-  file_save_path_1k2v = paste0(output_dir_1k2v, "sub_", as.character(i))
+  file_save_path_1k2v <- paste0(output_dir_1k2v, "sub_", as.character(i))
   dir.create(file_save_path_1k2v)
   fit2 <- sr_1k2v_learner$sample(
     data = data_list,
@@ -57,9 +56,9 @@ for (i in sub_num_list) {
     refresh = 500,
     output_dir = file_save_path_1k2v
   )
-  
+
   # model1 2k2v
-  file_save_path_2k2v = paste0(output_dir_2k2v, "sub_", as.character(i))
+  file_save_path_2k2v <- paste0(output_dir_2k2v, "sub_", as.character(i))
   dir.create(file_save_path_2k2v)
   fit3 <- sr_2k2v_learner$sample(
     data = data_list,
