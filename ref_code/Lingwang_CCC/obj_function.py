@@ -38,26 +38,26 @@ def glm_fit(model, fitpara=False):
     #                    correData['block1'], correData['block2'], correData['block3']], axis=1)
     #xData = pd.concat(2 * [correData['P'] - 1, correData['congruency'], correData['Response']], axis=1)
     if 'nblock_14' in correData.columns:
-        xData = pd.concat(2*[correData['P']-1, correData['congruency'], correData['hand'], correData['postError'],
+        xData = pd.concat([correData['P'],
 	                       correData['nblock_1'], correData['nblock_2'], correData['nblock_3'], correData['nblock_4'],
 	                       correData['nblock_5'], correData['nblock_6'], correData['nblock_7'], correData['nblock_8'],
 	                       correData['nblock_9'], correData['nblock_10'], correData['nblock_11'], correData['nblock_12'],
 	                       correData['nblock_13'], correData['nblock_14']], axis=1)
     else:
-        xData = pd.concat(2*[correData['P']-1, correData['congruency'], correData['hand'], correData['postError'],
+        xData = pd.concat([correData['P'],
 	                       correData['nblock_1'], correData['nblock_2'], correData['nblock_3'], correData['nblock_4'],
 	                       correData['nblock_5'], correData['nblock_6'], correData['nblock_7'], correData['nblock_8'],
 	                       correData['nblock_9'], correData['nblock_10'], correData['nblock_11'], correData['nblock_12'],
 	                       correData['nblock_13']], axis=1)
 
-    xData.columns.values[0] = 'P_diff'
+    xData.columns.values[0] = 'P'
 
     if model.fit_with_logRT == 0:
         yData = correData['RT']
     else:
         yData = np.log(correData['RT'])
 
-    linear_regression = LinearRegression(fit_intercept=False)
+    linear_regression = LinearRegression()
     linear_regression.fit(xData, yData)
     rtPred = linear_regression.predict(xData)
     rtPred = pd.DataFrame(rtPred, columns={'rt'})

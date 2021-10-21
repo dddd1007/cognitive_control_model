@@ -18,13 +18,15 @@ warnings.filterwarnings("ignore", category=FutureWarning, module="RLModels")
 
 
 data_folder = './data_block/'
-results_folder = './model_results_block/'
+results_folder = './model_results_final/'
 
-subjects = ['sub_1','sub_2','sub_3','sub_4','sub_5','sub_6','sub_7','sub_8',
-            'sub_9','sub_10','sub_11','sub_12','sub_13','sub_14','sub_15','sub_16',
-            'sub_17', 'sub_18']
-                     
-models = ['SR_Q_V_WOB', 'SR_Q_D_V_WOB', 'SR_Q_D_E_V_WOB', 'SR_Q_D_alphaCCC_V_WOB', 'SR_Q_D_E_alphaCCC_V_WOB']
+subjects = ['sub_1', 'sub_2', 'sub_3', 'sub_4', 'sub_5', 'sub_6', 'sub_7', 'sub_8', 'sub_9', 'sub_10', 
+            'sub_11', 'sub_12', 'sub_13', 'sub_14', 'sub_15', 'sub_16', 'sub_17', 'sub_18', 
+            'sub_19', 'sub_20', 'sub_21', 'sub_22', 'sub_23',
+            'sub_24','sub_25','sub_26','sub_28','sub_29','sub_30','sub_31','sub_32',
+            'sub_33', 'sub_34', 'sub_35', 'sub_36']
+
+models = ['SR_Q_V_WOB', 'SR_Q_D_V_WOB', 'SR_Q_D_E_V_WOB', 'SR_Q_D_alphaCCC_V_WOB', 'SR_Q_D_E_alphaCCC_V_WOB', 'AB_Q_WOB', 'AB_Q_E_WOB', 'AB_Q_alphaCCC_WOB', 'AB_Q_E_alphaCCC_WOB']
 
 #models = ['SR_Q_D_alphaCCC_V_WOB', 'SR_Q_D_E_alphaCCC_V_WOB']
 #models = ['AB_Q_WOB', 'AB_Q_E_WOB', 'AB_Q_alphaCCC_WOB', 'AB_Q_E_alphaCCC_WOB']
@@ -69,7 +71,7 @@ for s, subject in enumerate(subjects):
 
                 bestModel.save_data()
 # # group results
-RLCCmodel.group_parameter_results(subjects, models, '', '_SR')
+RLCCmodel.group_parameter_results(subjects, models, '')
 #RLCCmodel.group_parameter_results(subjects, models, 'logRT_', '_SR')
 #RLCCmodel.group_parameter_results(subjects, models, 'with_error_', '_SR')
 #RLCCmodel.group_parameter_results(subjects, models, 'logRT_with_error_', '_SR')
