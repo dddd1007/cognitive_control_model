@@ -1,0 +1,171 @@
+# 对行为数据的分析
+
+对行为数据进行分析，关注被试是否呈现出 Simon effect 与 PC 效应。对数据进行三因素方差分析，查看结果。
+
+```{r}
+library(tidyverse)
+library(apa)
+library(ggplot2)
+library(here)
+library(rstatix)
+library(ggpubr)
+library(patchwork)
+```
+
+## 0. 读取数据
+```{r}
+raw_data <- read_csv(here("data", "input",
+                          "all_data_with_sr_ab_bayesian_learner.csv"))
+```
+
+### 按条件去掉 RT 的 outlier 和错误试次
+```{r}
+data_without_error <- filter(raw_data, Type == "hit")
+data_without_outlier <- data_without_error %>%
+                        group_by(Subject, congruency, prop, condition) %>%
+                        filter(abs(RT - mean(RT)) < (sd(RT) * 3))
+```
+
+## 1. 按条件计算方差分析并绘图
+
+### RT
+
+#### Anova
+```{r}
+data_foranalysis <- data_without_outlier %>%
+    group_by(Subject_num, congruency, prop, condition) %>%
+    summarise(mean_rt = mean(RT)) %>%
+    as_tibble()
+```
+```{r}
+data_foranalysis %>%
+    anova_test(dv = mean_rt, wid = Subject_num,
+               within = c(congruency, prop, condition)) %>%
+    get_anova_table()
+```
+
+```{r}
+anova_RT_plot <- ggboxplot(data_foranalysis, 
+          x = "congruency", y = "mean_rt", 
+          fill = "condition", ylab = "RT (ms)", 
+          font.label = list(size = 14)) %>%
+          facet(facet.by = "prop")
+anova_RT_plot
+ggsave(here("data", "output", "plot",
+            "anova_RT_plot.png"),
+        plot = anova_RT_plot,
+        dpi = 300, scale = 0.65)
+
+anova_RT_plot_bar <- ggbarplot(data_foranalysis, 
+          x = "congruency", y = "mean_rt", 
+          fill = "condition", color = "condition",
+          ylab = "RT (ms)", 
+          position = position_dodge(),
+          font.label = list(size = 14)) %>%
+          facet(facet.by = "prop")
+anova_RT_plot_bar
+```
+
+#### Simple Effect
+```{r}
+data_without_outlier %>%
+    filter(prop == 80) %>%
+    group_by(Subject_num, congruency) %>%
+    summarise(mean_rt = mean(RT), .groups = "drop") %>%
+    pivot_wider(names_from = "congruency",
+                values_from = "mean_rt") -> foo1
+get_summary_stats(foo1)
+t.test(x = foo1$con, y = foo1$inc, alternative = "less", paired = TRUE) %>% t_apa()
+
+data_without_outlier %>%
+    filter(prop == 20) %>%
+    group_by(Subject_num, congruency) %>%
+    summarise(mean_rt = mean(RT), .groups = "drop") %>%
+    pivot_wider(names_from = "congruency",
+                values_from = "mean_rt") -> foo2
+get_summary_stats(foo2)
+t.test(x = foo2$con, y = foo2$inc, alternative = "greater", paired = TRUE) %>% t_apa()
+```
+
+### Error rate
+```{r}
+raw_data %>%
+    mutate(correct_action = if_else(.data$Type == "hit", 1, 0)) %>%
+    group_by(Subject_num, congruency, prop, condition) %>%
+    summarise(mean_error_action = (1 - mean(correct_action)) * 100, .groups = "drop") %>%
+    anova_test(dv = mean_error_action, wid = Subject_num,
+               within = c(congruency, prop, condition))
+```
+
+Plot
+```{r}
+raw_data %>%
+    mutate(correct_action = if_else(.data$Type == "hit", 1, 0)) %>%
+    group_by(congruency, prop, condition) %>%
+    summarise(mean_error_action = (1 - mean(correct_action)) * 100) %>%
+    ggbarplot(x = "congruency", y = "mean_error_action",
+          fill = "condition", color = "condition",
+          ylab = "Error percentage", position = position_dodge(),
+          font.label = list(size = 14)) %>%
+          facet(facet.by = "prop") -> anova_error_rate_plot
+anova_error_rate_plot
+ggsave(here("data", "output", "plot",
+            "anova_error_rate_plot.png"),
+        plot = anova_error_rate_plot,
+        dpi = 300, scale = 0.65)
+```
+
+## 2. Simon Effect 及其反转
+
+### RT
+```{r}
+data_add_simon_effect <- data_without_outlier %>%
+    group_by(Subject_num, congruency, prop, condition) %>%
+    summarise(mean_rt = mean(RT)) %>%
+    pivot_wider(names_from = congruency, values_from = mean_rt) %>%
+    mutate(simon_effect = inc - con)
+
+simon_RT_plot <- data_add_simon_effect %>%
+    as_data_frame() %>%
+    group_by(prop, condition) %>%
+    summarise(mean_simon = mean(simon_effect)) %>%
+    ggbarplot(x = "condition", y = "mean_simon", fill = "condition", color = "condition",
+              ylab = "Simon Effect (ms)", position = position_dodge(),
+              font.label = list(size = 14)) %>%
+    facet(facet.by = "prop") + geom_hline(yintercept = 0, linetype = 2, color = "darkgray", size = 1)  + rremove("legend")
+simon_RT_plot
+ggsave(here("data", "output", "plot",
+            "simon_RT_plot.png"), 
+        plot = simon_RT_plot,
+        dpi = 300, scale = 0.65)
+```
+
+### Error Rate
+```{r}
+raw_data %>%
+    mutate(correct_action = if_else(.data$Type == "hit", 1, 0)) %>%
+    group_by(congruency, prop, condition) %>%
+    summarise(mean_error_action = (1 - mean(correct_action)) * 100) %>%
+    pivot_wider(names_from = congruency, values_from = mean_error_action) %>%
+    mutate(simon_effect_error = inc - con) %>%
+    ggbarplot(x = "condition", y = "simon_effect_error", fill = "condition", color = "condition",
+              ylab = "Simon Effect (Error rate)", position = position_dodge(),
+              font.label = list(size = 14)) %>%
+    facet(facet.by = "prop") + geom_hline(yintercept = 0, linetype = 2, color = "darkgray", size = 1)  + rremove("legend") -> simon_error_rate_plot
+simon_error_rate_plot
+ggsave(here("data", "output", "plot",
+            "simon_error_rate_plot.png"),
+        plot = simon_error_rate_plot,
+        dpi = 300, scale = 0.65)
+```
+
+## 3. 拼图
+```{r}
+library(patchwork)
+beh_result_plot <- (anova_RT_plot | anova_error_rate_plot) / (simon_RT_plot | simon_error_rate_plot) + plot_annotation(tag_levels = 'A')
+beh_result_plot
+ggsave(here("data", "output", "plot",
+            "beh_result_plot.png"),
+        plot = beh_result_plot,
+        dpi = 300, scale = 0.65)
+```

@@ -1,0 +1,79 @@
+library(cmdstanr)
+library(posterior)
+library(bayesplot)
+library(tidyverse)
+
+check_cmdstan_toolchain()
+
+sr_1k1v_stanfile <- "/Users/dddd1007/project2git/cognitive_control_model/Bayesian_Models/bayesian_learner_sr_1k1v.stan"
+sr_1k2v_stanfile <- "/Users/dddd1007/project2git/cognitive_control_model/Bayesian_Models/bayesian_learner_sr_1k2v.stan"
+sr_2k2v_stanfile <- "/Users/dddd1007/project2git/cognitive_control_model/Bayesian_Models/bayesian_learner_sr_2k2v.stan"
+
+sr_1k1v_learner <- cmdstan_model(sr_1k1v_stanfile)
+sr_1k2v_learner <- cmdstan_model(sr_1k2v_stanfile)
+sr_2k2v_learner <- cmdstan_model(sr_2k2v_stanfile)
+
+output_dir_1k1v <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/compare_1k1v_1k2v_2k2v/1k1v_more_warmup/"
+output_dir_1k2v <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/compare_1k1v_1k2v_2k2v/1k2v_more_warmup/"
+output_dir_2k2v <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/compare_1k1v_1k2v_2k2v/2k2v_more_warmup/"
+
+#####
+##### Estimate Model
+#####
+
+# Load data
+raw_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_I_hats.csv")
+
+# Estimate each sub
+sub_iter_list <- unique(raw_data$Subject_num)
+
+for (i in sub_iter_list) {
+  single_sub_table <- filter(raw_data, Subject_num == i)
+
+  N <- nrow(single_sub_table)
+  react <- single_sub_table$correct_action
+  space_loc <- single_sub_table$stim_loc_num
+  data_list <- list(N = N, react = react, space_loc = space_loc)
+
+  # model1 1k1v
+  file_save_path_1k1v <- paste0(output_dir_1k1v, "sub_", as.character(i))
+  dir.create(file_save_path_1k1v)
+  fit1 <- sr_1k1v_learner$sample(
+    data = data_list,
+    chains = 4,
+    parallel_chains = 4,
+    iter_sampling = 10000,
+    iter_warmup = 5000,
+    save_warmup = 0,
+    refresh = 500,
+    output_dir = file_save_path_1k1v
+  )
+
+  # model1 1k2v
+  file_save_path_1k2v <- paste0(output_dir_1k2v, "sub_", as.character(i))
+  dir.create(file_save_path_1k2v)
+  fit2 <- sr_1k2v_learner$sample(
+    data = data_list,
+    chains = 4,
+    parallel_chains = 4,
+    iter_sampling = 10000,
+    iter_warmup = 5000,
+    save_warmup = 0,
+    refresh = 500,
+    output_dir = file_save_path_1k2v
+  )
+
+  # model1 2k2v
+  file_save_path_2k2v <- paste0(output_dir_2k2v, "sub_", as.character(i))
+  dir.create(file_save_path_2k2v)
+  fit3 <- sr_2k2v_learner$sample(
+    data = data_list,
+    chains = 4,
+    parallel_chains = 4,
+    iter_sampling = 10000,
+    iter_warmup = 5000,
+    save_warmup = 0,
+    refresh = 500,
+    output_dir = file_save_path_2k2v
+  )
+}

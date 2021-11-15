@@ -1,0 +1,105 @@
+# 模型拟合结果的分析
+
+我们将从以下结果来探讨模型拟合结果：
+
+- 模型的估计结果是否符合实验设计
+- 模型在 inc/con, prop 和 volatile 上的估计结果是否存在差异
+
+## 1. 模型估计的变量结果是否符合实验设计
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(here)
+library(ggsci)
+library(ggthemes)
+library(rstatix)
+library(ggpubr)
+library(patchwork)
+
+rl_data <- read.csv(here("data", "input", "all_data_with_rl_model.csv"))
+bl_data <- read.csv(here("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_sr_ab_bayesian_learner.csv"))
+```
+
+查看数据
+```{r}
+head(rl_data)
+```
+
+为绘图创建新的数据集，包括：
+
+- 被试的编号
+- 当前试次的编号
+- 当前试次的比例
+- 反应时
+- 贝叶斯模型估计出的 P
+- 强化学习估计出的 P （SR_Decay）
+
+```{r}
+merged_data <- inner_join(rl_data, bl_data, by = c("Subject", "Trial"))
+plot_data <- data.frame(
+    subject = merged_data$Subject_num.y,
+    trials = merged_data$Trial,
+    prop = merged_data$prop.x * 0.01,
+    condition = merged_data$condition.x,
+    RT = merged_data$RT.y,
+    rl_p_ll_rr = (merged_data$SR_Decay_ll + merged_data$SR_Decay_rr) / 2,
+    bl_p_ll_rr = (merged_data$sr_ll + merged_data$sr_rr) / 2,
+    bl_p = merged_data$sr_r_selected,
+    rl_p = merged_data$SR_Decay
+)
+```
+
+添加被试的实验设计条件信息，便于绘图分片
+```{r}
+subject_list <- unique(plot_data$subject)
+added_condition_data <- list()
+count_num <- 1
+for (i in subject_list) {
+    tmp_data <- filter(plot_data, subject == i)
+    exp_condition <- paste(tmp_data$prop[1], tmp_data$condition[1], sep = "_")
+    added_condition_data[[count_num]] <- cbind(tmp_data,
+                                              exp_condition = exp_condition)
+    count_num <- count_num + 1
+}
+plot_data <- bind_rows(added_condition_data, .id = "column_label")
+```
+
+将宽数据变成长数据
+```{r}
+tmp_part1 <- plot_data %>%
+             select(-rl_p_ll_rr, -bl_p_ll_rr) %>%
+             pivot_longer(bl_p:rl_p, names_to = "model_type", values_to = "p") %>%
+             separate(model_type, c("model_type", NA), sep = "_")
+tmp_part2 <- plot_data %>%
+             select(-bl_p, -rl_p) %>%
+             pivot_longer(bl_p_ll_rr:rl_p_ll_rr, names_to = "model_type_2",
+                          values_to = "ll_rr") %>%
+             separate(model_type_2, c("model_type", NA, NA, NA), sep = "_")
+plot_data <- left_join(tmp_part1, tmp_part2, by = c("subject", "trials", "model_type", "RT", "condition", "exp_condition", "prop")) %>%
+             select(-starts_with("column_label")) %>%
+             filter(exp_condition == "0.8_s" | exp_condition == "0.8_v")
+```
+
+为模型的估计结果绘图
+挑选少数几个被试呈现使结果变得更加容易看清
+```{r}
+plot_data %>%
+    filter(subject %in% c(1, 11)) -> foo
+    
+model_estimate_plot <- ggline(data = foo, y = "ll_rr", x = "trials", color = "model_type",
+           plot_type = "l", size = 1,
+           ylab = "Probability of learning object", xlab = "Trials",
+           facet.by = c("exp_condition", "model_type"),
+           panel.labs = list(exp_condition = c("S-V", "V-S"),
+                             model_type = c("Bayesian Learner",
+                                            "Reinforcement Learning")))
+model_estimate_plot$layers <- c(geom_line(aes(x = trials, y = prop), color = "darkgray"),
+                                model_estimate_plot$layers)
+model_estimate_plot
+ggsave(here("data", "output", "plot",
+            "model_estimate.png"),
+       width = 3000, height = 1500, units = "px",
+       plot = model_estimate_plot,
+       dpi = 350)
+```

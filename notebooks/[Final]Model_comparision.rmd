@@ -1,0 +1,206 @@
+# 对强化学习和贝叶斯模型的拟合优度进行计算
+
+## 0.导入需要的包和数据
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(here)
+library(ggsci)
+library(ggthemes)
+library(rstatix)
+library(ggpubr)
+library(patchwork)
+library(fastDummies)
+
+rl_data <- read.csv(here("data", "input", "all_data_with_rl_model.csv"))
+bl_data <- read.csv(here("/Users/dddd1007/p roject2git/cognitive_control_model/data/input/all_data_with_sr_ab_bayesian_learner.csv"))
+
+merged_data <- inner_join(rl_data, bl_data, by = c("Subject", "Trial"))
+bl_rl_data <- data.frame(
+    subject = merged_data$Subject_num.y,
+    trials = merged_data$Trial, 
+    block = merged_data$block.x,
+    run = merged_data$run.x,
+    congruency = merged_data$congruency.x,
+    type = merged_data$Type.x,
+    prop = merged_data$prop.x * 0.01,
+    condition = merged_data$condition.x,
+    RT = merged_data$RT.y,
+    rl_ab = merged_data$AB,
+    rl_sr = merged_data$SR,
+    rl_sr_decay = merged_data$SR_Decay,
+    bl_ab = merged_data$ab_r_selected,
+    bl_sr = merged_data$sr_r_selected
+)
+bl_rl_data <- filter(bl_rl_data, type == "hit") %>%
+                     group_by(subject, congruency, prop, condition) %>%
+                     filter(abs(RT - mean(RT)) < (sd(RT) * 3))
+
+# check what data was filtered
+filter(bl_rl_data, type == "hit") %>%
+                     group_by(subject, congruency, prop, condition) %>%
+                     filter(abs(RT - mean(RT)) > (sd(RT) * 3)) %>%
+                     summarise(filtered_lines = n())
+```
+
+添加 miniblock 信息
+```{r}
+result_list <- list()
+subject_list <- unique(bl_rl_data$subject)
+sub_count <- 1
+for (i in subject_list) {
+    tmp_data <- filter(bl_rl_data, subject == i)
+    mini_num <- 1
+    mini_block <- vector(mode = "numeric", length = nrow(tmp_data))
+    mini_block[1] <- 1
+    for (line_num in 2:nrow(tmp_data)) {
+        if (tmp_data$prop[line_num] != tmp_data$prop[line_num - 1]) {
+            mini_num <- mini_num + 1
+        }
+        mini_block[line_num] <- mini_num
+    }
+    tmp_data$mini_block <- mini_block
+    result_list[[sub_count]] <- tmp_data
+    sub_count <- sub_count + 1
+}
+bl_rl_data_miniblock <- bind_rows(result_list, .id = "column_label")
+```
+
+对各模型估计参数的模型拟合优度进行计算
+```{r}
+rl_ab_result_AIC <- vector(mode = "numeric", 
+                           length = length(subject_list))
+rl_sr_result_AIC <- vector(mode = "numeric", 
+                           length = length(subject_list))
+rl_sr_decay_result_AIC <- vector(mode = "numeric", 
+                           length = length(subject_list))
+bl_ab_result_AIC <- vector(mode = "numeric", 
+                           length = length(subject_list))
+bl_sr_result_AIC <- vector(mode = "numeric", 
+                           length = length(subject_list))
+
+for (i in seq_len(length(subject_list))) {
+    tmp_data <- dummy_columns(filter(bl_rl_data_miniblock,
+                                     subject == subject_list[i]),
+                              "mini_block") %>%
+                select(-mini_block)
+
+    bl_ab_data <- select(tmp_data, RT, bl_ab, starts_with("mini_block"))
+    model_bl_ab <- lm(RT ~., data = bl_ab_data)
+
+    bl_sr_data <- select(tmp_data, RT, bl_sr, starts_with("mini_block"))
+    model_bl_sr <- lm(RT ~., data = bl_sr_data)
+
+    rl_ab_data <- select(tmp_data, RT, rl_ab, starts_with("mini_block"))
+    model_rl_ab <- lm(RT ~., data = rl_ab_data)
+
+    rl_sr_data <- select(tmp_data, RT, rl_sr, starts_with("mini_block"))
+    model_rl_sr <- lm(RT ~., data = rl_sr_data)
+
+    rl_sr_decay_data <- select(tmp_data, RT, rl_sr_decay, starts_with("mini_block"))
+    model_rl_sr_decay <- lm(RT ~., data = rl_sr_decay_data)
+
+    bl_ab_result_AIC[i] <- AIC(model_bl_ab)
+    bl_sr_result_AIC[i] <- AIC(model_bl_sr)
+    rl_ab_result_AIC[i] <- AIC(model_rl_ab)
+    rl_sr_result_AIC[i] <- AIC(model_rl_sr)
+    rl_sr_decay_result_AIC[i] <- AIC(model_rl_sr_decay)
+}
+```
+
+```{r}
+AIC_result_table <- data.frame(bl_ab = bl_ab_result_AIC,
+                               bl_sr = bl_sr_result_AIC,
+                               rl_ab = rl_ab_result_AIC,
+                               rl_sr = rl_sr_result_AIC,
+                               rl_sr_decay = rl_sr_decay_result_AIC)
+```
+
+## 使用单变量模型再算一下
+```{r}
+library(lme4)
+library(lmerTest)
+rl_ab_result_AIC <- vector(mode = "numeric",
+                           length = length(subject_list))
+rl_sr_result_AIC <- vector(mode = "numeric",
+                           length = length(subject_list))
+rl_sr_decay_result_AIC <- vector(mode = "numeric",
+                           length = length(subject_list))
+bl_ab_result_AIC <- vector(mode = "numeric",
+                           length = length(subject_list))
+bl_sr_result_AIC <- vector(mode = "numeric",
+                           length = length(subject_list))
+
+for (i in seq_len(length(subject_list))) {
+    tmp_data <- dummy_columns(filter(bl_rl_data_miniblock,
+                                     subject == subject_list[i]),
+                              "mini_block")
+
+    model_bl_ab <- lm(RT ~ bl_ab, data = tmp_data)
+    model_bl_sr <- lm(RT ~ bl_sr, data = tmp_data)
+    model_rl_ab <- lm(RT ~ rl_ab, data = tmp_data)
+    model_rl_sr <- lm(RT ~ rl_sr, data = tmp_data)
+    model_rl_sr_decay <- lm(RT ~ rl_sr_decay, data = tmp_data)
+
+    bl_ab_result_AIC[i] <- AIC(model_bl_ab)
+    bl_sr_result_AIC[i] <- AIC(model_bl_sr)
+    rl_ab_result_AIC[i] <- AIC(model_rl_ab)
+    rl_sr_result_AIC[i] <- AIC(model_rl_sr)
+    rl_sr_decay_result_AIC[i] <- AIC(model_rl_sr_decay)
+}
+
+AIC_result_table <- data.frame(bl_ab = bl_ab_result_AIC,
+                               bl_sr = bl_sr_result_AIC,
+                               rl_ab = rl_ab_result_AIC,
+                               rl_sr = rl_sr_result_AIC,
+                               rl_sr_decay = rl_sr_decay_result_AIC)
+```
+
+## 使用实验设计作为miniblock再算一下
+```{r}
+rl_ab_result_AIC <- vector(mode = "numeric",
+                           length = length(subject_list))
+rl_sr_result_AIC <- vector(mode = "numeric",
+                           length = length(subject_list))
+rl_sr_decay_result_AIC <- vector(mode = "numeric",
+                           length = length(subject_list))
+bl_ab_result_AIC <- vector(mode = "numeric",
+                           length = length(subject_list))
+bl_sr_result_AIC <- vector(mode = "numeric",
+                           length = length(subject_list))
+
+data_for_analysis <- unite(bl_rl_data, "miniblock",
+                           block, run, sep = "_")
+for (i in seq_len(length(subject_list))) {
+    tmp_data <- dummy_columns(filter(data_for_analysis,
+                                     subject == subject_list[i]),
+                              "miniblock") %>%
+                              select(-miniblock)
+    bl_ab_data <- select(tmp_data, RT, bl_ab, starts_with("miniblock"))
+    model_bl_ab <- lm(RT ~., data = bl_ab_data)
+
+    bl_sr_data <- select(tmp_data, RT, bl_sr, starts_with("miniblock"))
+    model_bl_sr <- lm(RT ~., data = bl_sr_data)
+
+    rl_ab_data <- select(tmp_data, RT, rl_ab, starts_with("miniblock"))
+    model_rl_ab <- lm(RT ~., data = rl_ab_data)
+
+    rl_sr_data <- select(tmp_data, RT, rl_sr, starts_with("miniblock"))
+    model_rl_sr <- lm(RT ~., data = rl_sr_data)
+
+    rl_sr_decay_data <- select(tmp_data, RT, rl_sr_decay, starts_with("miniblock"))
+    model_rl_sr_decay <- lm(RT ~., data = rl_sr_decay_data)
+
+    bl_ab_result_AIC[i] <- AIC(model_bl_ab)
+    bl_sr_result_AIC[i] <- AIC(model_bl_sr)
+    rl_ab_result_AIC[i] <- AIC(model_rl_ab)
+    rl_sr_result_AIC[i] <- AIC(model_rl_sr)
+    rl_sr_decay_result_AIC[i] <- AIC(model_rl_sr_decay)
+}
+
+AIC_result_table <- data.frame(bl_ab = bl_ab_result_AIC,
+                               bl_sr = bl_sr_result_AIC,
+                               rl_ab = rl_ab_result_AIC,
+                               rl_sr = rl_sr_result_AIC,
+                               rl_sr_decay = rl_sr_decay_result_AIC)
+```
