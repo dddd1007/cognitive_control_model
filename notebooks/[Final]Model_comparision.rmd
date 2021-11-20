@@ -38,9 +38,9 @@ bl_rl_data <- data.frame(
     bl_ab = merged_data$ab_r_selected,
     bl_sr = merged_data$sr_r_selected
 )
-bl_rl_data <- filter(bl_rl_data, type == "hit") %>%
-    group_by(subject, congruency, prop, condition) %>%
-    filter(abs(RT - mean(RT)) < (sd(RT) * 3))
+# bl_rl_data <- filter(bl_rl_data, type == "hit") %>%
+#     group_by(subject, congruency, prop, condition) %>%
+#     filter(abs(RT - mean(RT)) < (sd(RT) * 3))
 
 # check what data was filtered
 filter(bl_rl_data, type == "hit") %>%
@@ -144,7 +144,16 @@ AIC_result_table <- data.frame(
 )
 ```
 
-## 1.2 使用单一模型估计值进行预测
+```{r}
+estimated_by_RT_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/estimate_with_RT_decay/extracted_data/sub_1_sr_learner.csv")
+sub1_estimated_by_RT <- estimated_by_RT_data$r_selected
+bl_sr_data_new <- select(tmp_data, RT, bl_sr, starts_with("mini_block"))
+bl_sr_data_new$r_selected <- sub1_estimated_by_RT
+model_bl_sr_new <- lm(RT ~ ., data = bl_sr_data_new)
+AIC(model_bl_sr_new)
+```
+
+### 1.2 使用单一模型估计值进行预测
 ```{r}
 library(lme4)
 library(lmerTest)
@@ -198,4 +207,30 @@ AIC_result_table <- data.frame(
     rl_sr = rl_sr_result_AIC,
     rl_sr_decay = rl_sr_decay_result_AIC
 )
+```
+
+## 2. 使用多模型估计的结果预测行为
+```{r}
+# RT
+
+lm(RT ~ rl_ab + rl_sr + rl_sr_decay + bl_ab + bl_sr, data = bl_rl_data) %>%
+    summary()
+
+lm(RT ~ bl_sr + rl_ab + rl_sr + rl_sr_decay, data = bl_rl_data) %>%
+    summary()
+
+lm(RT ~ rl_sr_decay + bl_sr + rl_sr, data = bl_rl_data) %>%
+    summary()
+
+lm(RT ~ rl_sr_decay, data = bl_rl_data) %>%
+    summary()
+
+bl_rl_data_miniblock %>%
+    dummy_columns("mini_block") %>%
+    select(-"mini_block") %>%
+    select(RT, bl_ab, bl_sr,
+           rl_ab, rl_sr, rl_sr_decay,
+           starts_with("mini_block")) %>%
+    lm(RT ~ . - 1, data = .) %>%
+    summary()
 ```
