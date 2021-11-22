@@ -36,11 +36,14 @@ bl_rl_data <- data.frame(
     rl_sr = merged_data$SR,
     rl_sr_decay = merged_data$SR_Decay,
     bl_ab = merged_data$ab_r_selected,
-    bl_sr = merged_data$sr_r_selected
+    bl_ab_RT = merged_data$ab_RT_r_selected,
+    bl_sr = merged_data$sr_r_selected,
+    bl_sr_RT = merged_data$sr_RT_r_selected,
+    bl_sr_RT_decay = merged_data$sr_RT_decay_r_selected
 )
-# bl_rl_data <- filter(bl_rl_data, type == "hit") %>%
-#     group_by(subject, congruency, prop, condition) %>%
-#     filter(abs(RT - mean(RT)) < (sd(RT) * 3))
+bl_rl_data <- filter(bl_rl_data, type == "hit") #%>%
+    #group_by(subject, congruency, prop, condition) %>%
+    #filter(abs(RT - mean(RT)) < (sd(RT) * 3))
 
 # check what data was filtered
 filter(bl_rl_data, type == "hit") %>%
@@ -93,13 +96,24 @@ bl_ab_result_AIC <- vector(
     mode = "numeric",
     length = length(subject_list)
 )
+bl_ab_RT_result_AIC <- vector(
+    mode = "numeric",
+    length = length(subject_list)
+)
 bl_sr_result_AIC <- vector(
     mode = "numeric",
     length = length(subject_list)
 )
+bl_sr_RT_result_AIC <- vector(
+    mode = "numeric",
+    length = length(subject_list)
+)
+bl_sr_RT_decay_result_AIC <- vector(
+    mode = "numeric",
+    length = length(subject_list)
+)
 
-# for (i in seq_len(length(subject_list))) {
-    i <- 1
+for (i in seq_len(length(subject_list))) {
     tmp_data <- dummy_columns(
         filter(
             bl_rl_data_miniblock,
@@ -112,8 +126,17 @@ bl_sr_result_AIC <- vector(
     bl_ab_data <- select(tmp_data, RT, bl_ab, starts_with("mini_block"))
     model_bl_ab <- lm(RT ~ . , data = bl_ab_data)
 
+    bl_ab_RT_data <- select(tmp_data, RT, bl_ab_RT, starts_with("mini_block"))
+    model_bl_ab_RT <- lm(RT ~ . , data = bl_ab_RT_data)
+
     bl_sr_data <- select(tmp_data, RT, bl_sr, starts_with("mini_block"))
     model_bl_sr <- lm(RT ~ ., data = bl_sr_data)
+
+    bl_sr_RT_data <- select(tmp_data, RT, bl_sr_RT, starts_with("mini_block"))
+    model_bl_sr_RT <- lm(RT ~ ., data = bl_sr_RT_data)
+
+    bl_sr_RT_decay_data <- select(tmp_data, RT, bl_sr_RT_decay, starts_with("mini_block"))
+    model_bl_sr_RT_decay <- lm(RT ~ ., data = bl_sr_RT_decay_data)
 
     rl_ab_data <- select(tmp_data, RT, rl_ab, starts_with("mini_block"))
     model_rl_ab <- lm(RT ~ . - 1, data = rl_ab_data)
@@ -128,16 +151,22 @@ bl_sr_result_AIC <- vector(
     model_rl_sr_decay <- lm(RT ~ ., data = rl_sr_decay_data)
 
     bl_ab_result_AIC[i] <- AIC(model_bl_ab)
+    bl_ab_RT_result_AIC[i] <- AIC(model_bl_ab_RT)
     bl_sr_result_AIC[i] <- AIC(model_bl_sr)
+    bl_sr_RT_result_AIC[i] <- AIC(model_bl_sr_RT)
+    bl_sr_RT_decay_result_AIC[i] <- AIC(model_bl_sr_RT_decay)
     rl_ab_result_AIC[i] <- AIC(model_rl_ab)
     rl_sr_result_AIC[i] <- AIC(model_rl_sr)
     rl_sr_decay_result_AIC[i] <- AIC(model_rl_sr_decay)
-
+}
 
 # gather the result
 AIC_result_table <- data.frame(
     bl_ab = bl_ab_result_AIC,
+    bl_ab_RT = bl_ab_RT_result_AIC,
     bl_sr = bl_sr_result_AIC,
+    bl_sr_RT = bl_sr_RT_result_AIC,
+    bl_sr_RT_decay = bl_sr_RT_decay_result_AIC,
     rl_ab = rl_ab_result_AIC,
     rl_sr = rl_sr_result_AIC,
     rl_sr_decay = rl_sr_decay_result_AIC

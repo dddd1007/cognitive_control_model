@@ -20,10 +20,9 @@ raw_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/i
 
 # Estimate each sub
 sub_num_list <- unique(raw_data$Subject_num)
-# sub_num_list <- sub_num_list[-1]
+sub_num_list <- sub_num_list[-1]
 
-# for (i in sub_num_list) {
-    i = 1 
+for (i in sub_num_list) {
     print(paste0("Estimating model for subject ", i))
     single_sub_table <- filter(raw_data, Subject_num == i)
 
@@ -48,4 +47,4 @@ sub_num_list <- unique(raw_data$Subject_num)
         save_warmup = 0,
         output_dir = file_save_path
     )
-# }
+}

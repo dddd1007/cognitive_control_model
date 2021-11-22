@@ -1,7 +1,7 @@
 library(tidyverse)
 
 sub_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_I_hats.csv")
-stan_verbose_loc <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/estimate_with_RT"
+stan_verbose_loc <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/ab_with_RT/"
 
 sub_num_list <- sort(unique(sub_data$sub_num))
 
@@ -22,20 +22,10 @@ for (sub_num in unique(sub_data$Subject_num)) {
     }
 
     stan_data <- bind_rows(stan_data_list, .id = "column_label")
+    r_con_data <- select(stan_data, starts_with("r"))
+    r_con_mean <- apply(r_con_data, 2, mean)
+    r_inc_mean <- 1 - r_con_mean
 
-    # 分条件将数据读取并求均值
-
-    # r_l指刺激物空间位置在左侧时，右手按键的概率
-    rlr_data <- select(stan_data, starts_with("r_l"))
-    rlr_mean <- apply(rlr_data, 2, mean)
-    rll_mean <- 1 - rlr_mean
-
-    # r_r指刺激物空间位置在右侧时，右手按键的概率
-    rrr_data <- select(stan_data, starts_with("r_r"))
-    rrr_mean <- apply(rrr_data, 2, mean)
-    rrl_mean <- 1 - rrr_mean
-
-    # 获取 v 的列表
     v_data <- select(stan_data, starts_with("v"))
     v_mean <- apply(v_data, 2, mean)
 
@@ -44,29 +34,25 @@ for (sub_num in unique(sub_data$Subject_num)) {
     beta  <- mean(stan_data$beta)
     sigma <- mean(stan_data$sigma)
 
-    # 根据被试的行为选出对应的r
 
     r_selected <- vector(mode = "numeric", length = nrow(single_sub_data))
     for (i in seq_len(nrow(single_sub_data))) {
         tmp <- single_sub_data[i, ]
-        if (tmp$stim_loc == "left" & tmp$Response == 0) {
-            r_selected[i] <- rll_mean[i]
-        } else if (tmp$stim_loc == "left" & tmp$Response == 1) {
-            r_selected[i] <- rlr_mean[i]
-        } else if (tmp$stim_loc == "right" & tmp$Response == 0) {
-            r_selected[i] <- rrl_mean[i]
-        } else if (tmp$stim_loc == "right" & tmp$Response == 1) {
-            r_selected[i] <- rrr_mean[i]
+        if (tmp$congruency == "con") {
+            r_selected[i] <- r_con_mean[i]
+        } else if (tmp$congruency == "inc") {
+            r_selected[i] <- r_inc_mean[i]
         }
     }
-    #####
+
     result <- data.frame(
-        ll = rll_mean, lr = rlr_mean, rl = rrl_mean, rr = rrr_mean,
-        v = v_mean, r_selected = r_selected, 
-        alpha = alpha, beta = beta, sigma = sigma
+        r_con = r_con_mean, r_inc = r_inc_mean,
+        v = v_mean, r_selected = r_selected
     )
-    result_filename <- paste0(read_loc, "extracted_data/",
-                              "sub_", sub_num, "_sr_learner.csv")
+    result_filename <- paste0(
+        stan_verbose_loc, "extracted_data/",
+        "sub_", sub_num, "_ab_with_RT_learner.csv"
+    )
     print(paste0("Save data to ", result_filename))
     write_csv(result, result_filename)
 }

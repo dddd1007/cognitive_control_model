@@ -9,7 +9,7 @@ sr_1k1v_with_RT_stanfile <- "/Users/dddd1007/project2git/cognitive_control_model
 
 sr_1k1v_with_RT_learner <- cmdstan_model(sr_1k1v_with_RT_stanfile)
 
-output_dir <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/estimate_by_RT/"
+output_dir <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/estimate_with_RT/"
 
 #####
 ##### Estimate Model
