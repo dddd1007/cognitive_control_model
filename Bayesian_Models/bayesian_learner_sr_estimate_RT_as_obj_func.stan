@@ -1,9 +1,11 @@
 data {
   int<lower=1> N;            // trial number
+  int keep_seq_len;
   int stim_space_loc[N];     // stim space location
   int corr_reaction[N];      // sub's correct reaction
   int real_reaction[N];      // real reaction
   real RT[N];                // reaction time
+  int keep_seq[keep_seq_len];           // The index of data which will enroll in the optimal stage
 }
 
 parameters {
@@ -20,6 +22,7 @@ parameters {
 // Ref from https://mc-stan.org/docs/2_28/stan-users-guide/linear-regression.html
 
 model {
+  vector[N] r_selected;
   k~uniform(-10,10);
   for(t in 1:N){
     if(t == 1){
@@ -30,15 +33,15 @@ model {
       // estiamte RT
       if(stim_space_loc[t] == 0){
         if(real_reaction[t] == 0){
-          RT[t] ~ normal(alpha + beta * r_l[t], sigma);
+          r_selected[t] = r_l[t];
         }else if(real_reaction[t] == 1){
-          RT[t] ~ normal(alpha + beta * (1 - r_l[t]), sigma);
+          r_selected[t] = (1 - r_l[t]);
         }
       }else if(stim_space_loc[t] == 1){
         if(real_reaction[t] == 0){
-          RT[t] ~ normal(alpha + beta * r_r[t], sigma);
+          r_selected[t] = r_r[t];
         }else if(real_reaction[t] == 1){
-          RT[t] ~ normal(alpha + beta * (1 - r_r[t]), sigma);
+          r_selected[t] = (1 - r_r[t]);
         }
       }
     }else{
@@ -49,9 +52,9 @@ model {
         corr_reaction[t] ~ bernoulli(r_l[t]);
         
         if(real_reaction[t] == 0){
-          RT[t] ~ normal(alpha + beta * r_l[t], sigma);
+          r_selected[t] = r_l[t];
         }else if(real_reaction[t] == 1){
-          RT[t] ~ normal(alpha + beta * (1 - r_l[t]), sigma);
+          r_selected[t] = (1 - r_l[t]);
         }
 
       }else if(stim_space_loc[t] == 1){
@@ -60,11 +63,12 @@ model {
         corr_reaction[t] ~ bernoulli(r_r[t]);
 
         if(real_reaction[t] == 0){
-          RT[t] ~ normal(alpha + beta * r_r[t], sigma);
+          r_selected[t] = r_r[t];
         }else if(real_reaction[t] == 1){
-          RT[t] ~ normal(alpha + beta * (1 - r_r[t]), sigma);
+          r_selected[t] = (1 - r_r[t]);
         }
       }
     }
   }
+  RT[keep_seq] ~ normal(alpha + beta * r_selected[keep_seq],sigma);
 }
