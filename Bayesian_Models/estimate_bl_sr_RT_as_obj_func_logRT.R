@@ -9,7 +9,7 @@ sr_estimate_RT_as_obj_func_stanfile <- "/Users/dddd1007/project2git/cognitive_co
 
 sr_estimate_RT_as_obj_func_learner <- cmdstan_model(sr_estimate_RT_as_obj_func_stanfile)
 
-output_dir <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/SR_RT_as_obj_func/"
+output_dir <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/SR_RT_as_obj_func_logRT/"
 
 ##### helper func
 generate_keep_seq <- function(input_dataframe, filter_type = "no_error"){
@@ -35,8 +35,7 @@ raw_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/i
 sub_num_list <- unique(raw_data$Subject_num)
 # sub_num_list <- sub_num_list[-1]
 
-# for (i in sub_num_list) {
-    i = 1
+for (i in sub_num_list) {
     print(paste0("Estimating model for subject ", i))
     single_sub_table <- filter(raw_data, Subject_num == i)
     
@@ -44,7 +43,7 @@ sub_num_list <- unique(raw_data$Subject_num)
     stim_space_loc <- single_sub_table$stim_loc_num
     corr_reaction <- single_sub_table$correct_action
     real_reaction <- single_sub_table$Response
-    RT <- single_sub_table$RT
+    RT <- log(single_sub_table$RT) # !!! Here I transform RT to logRT !!!
     keep_seq <- generate_keep_seq(single_sub_table, filter_type = "no_error")
 
     data_list <- list(N = N,
@@ -65,4 +64,4 @@ sub_num_list <- unique(raw_data$Subject_num)
         save_warmup = 0,
         output_dir = file_save_path
     )
-# }
+}
