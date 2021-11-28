@@ -25,6 +25,7 @@ merged_data <- inner_join(rl_data, bl_data, by = c("Subject", "Trial"))
 bl_rl_data <- data.frame(
     subject = merged_data$Subject_num.y,
     trials = merged_data$Trial,
+    hand = merged_data$Response.x,
     block = merged_data$block.x,
     run = merged_data$run.x,
     congruency = merged_data$congruency.x,
@@ -37,19 +38,21 @@ bl_rl_data <- data.frame(
     rl_sr_decay = merged_data$SR_Decay,
     bl_ab = merged_data$ab_r_selected,
     bl_ab_RT = merged_data$ab_RT_r_selected,
+    bl_ab_logRT = merged_data$ab_logRT_r_selected,
     bl_sr = merged_data$sr_r_selected,
+    bl_sr_softmaxed = merged_data$softmaxed_r,
+    bl_sr_softmaxed_2 = merged_data$softmaxed_r_2,
     bl_sr_RT = merged_data$sr_RT_r_selected,
-    bl_sr_RT_decay = merged_data$sr_RT_decay_r_selected
+    bl_sr_RT_decay = merged_data$sr_RT_decay_r_selected,
+    bl_sr_logRT = merged_data$sr_logRT_r_selected,
+    bl_sr_logRT_decay = merged_data$sr_logRT_decay_r_selected
 )
-bl_rl_data <- filter(bl_rl_data, type == "hit") #%>%
-    #group_by(subject, congruency, prop, condition) %>%
-    #filter(abs(RT - mean(RT)) < (sd(RT) * 3))
 
-# check what data was filtered
-filter(bl_rl_data, type == "hit") %>%
+# post_error_idx <- which(bl_rl_data$type != "hit") - 1
+# bl_rl_data_without_post_error <- bl_rl_data[-post_error_idx, ]
+bl_rl_data_without_errors_outlier <- filter(bl_rl_data, type == "hit") %>%
     group_by(subject, congruency, prop, condition) %>%
-    filter(abs(RT - mean(RT)) > (sd(RT) * 3)) %>%
-    summarise(filtered_lines = n())
+    filter(abs(RT - mean(RT)) < (sd(RT) * 3))
 ```
 
 ## 1. 方法一 对各个模型的估计结果对反应时的预测计算拟合优度
@@ -61,7 +64,7 @@ result_list <- list()
 subject_list <- unique(bl_rl_data$subject)
 sub_count <- 1
 for (i in subject_list) {
-    tmp_data <- filter(bl_rl_data, subject == i)
+    tmp_data <- filter(bl_rl_data_without_errors_outlier, subject == i)
     mini_num <- 1
     mini_block <- vector(mode = "numeric", length = nrow(tmp_data))
     mini_block[1] <- 1
@@ -96,23 +99,10 @@ bl_ab_result_AIC <- vector(
     mode = "numeric",
     length = length(subject_list)
 )
-bl_ab_RT_result_AIC <- vector(
-    mode = "numeric",
-    length = length(subject_list)
-)
 bl_sr_result_AIC <- vector(
     mode = "numeric",
     length = length(subject_list)
 )
-bl_sr_RT_result_AIC <- vector(
-    mode = "numeric",
-    length = length(subject_list)
-)
-bl_sr_RT_decay_result_AIC <- vector(
-    mode = "numeric",
-    length = length(subject_list)
-)
-
 for (i in seq_len(length(subject_list))) {
     tmp_data <- dummy_columns(
         filter(
@@ -124,37 +114,22 @@ for (i in seq_len(length(subject_list))) {
         select(-mini_block)
 
     bl_ab_data <- select(tmp_data, RT, bl_ab, starts_with("mini_block"))
-    model_bl_ab <- lm(RT ~ . , data = bl_ab_data)
-
-    bl_ab_RT_data <- select(tmp_data, RT, bl_ab_RT, starts_with("mini_block"))
-    model_bl_ab_RT <- lm(RT ~ . , data = bl_ab_RT_data)
+    model_bl_ab <- lm(RT ~ . -1, data = bl_ab_data)
 
     bl_sr_data <- select(tmp_data, RT, bl_sr, starts_with("mini_block"))
-    model_bl_sr <- lm(RT ~ ., data = bl_sr_data)
-
-    bl_sr_RT_data <- select(tmp_data, RT, bl_sr_RT, starts_with("mini_block"))
-    model_bl_sr_RT <- lm(RT ~ ., data = bl_sr_RT_data)
-
-    bl_sr_RT_decay_data <- select(tmp_data, RT, bl_sr_RT_decay, starts_with("mini_block"))
-    model_bl_sr_RT_decay <- lm(RT ~ ., data = bl_sr_RT_decay_data)
+    model_bl_sr <- lm(RT ~ . -1, data = bl_sr_data)
 
     rl_ab_data <- select(tmp_data, RT, rl_ab, starts_with("mini_block"))
-    model_rl_ab <- lm(RT ~ . - 1, data = rl_ab_data)
+    model_rl_ab <- lm(RT ~ . -1, data = rl_ab_data)
 
     rl_sr_data <- select(tmp_data, RT, rl_sr, starts_with("mini_block"))
-    model_rl_sr <- lm(RT ~ ., data = rl_sr_data)
+    model_rl_sr <- lm(RT ~ . -1, data = rl_sr_data)
 
-    rl_sr_decay_data <- select(
-        tmp_data, RT, rl_sr_decay,
-        starts_with("mini_block")
-    )
-    model_rl_sr_decay <- lm(RT ~ ., data = rl_sr_decay_data)
+    rl_sr_decay_data <- select(tmp_data, RT, rl_sr_decay, starts_with("mini_block"))
+    model_rl_sr_decay <- lm(RT ~ . -1, data = rl_sr_decay_data)
 
     bl_ab_result_AIC[i] <- AIC(model_bl_ab)
-    bl_ab_RT_result_AIC[i] <- AIC(model_bl_ab_RT)
     bl_sr_result_AIC[i] <- AIC(model_bl_sr)
-    bl_sr_RT_result_AIC[i] <- AIC(model_bl_sr_RT)
-    bl_sr_RT_decay_result_AIC[i] <- AIC(model_bl_sr_RT_decay)
     rl_ab_result_AIC[i] <- AIC(model_rl_ab)
     rl_sr_result_AIC[i] <- AIC(model_rl_sr)
     rl_sr_decay_result_AIC[i] <- AIC(model_rl_sr_decay)
@@ -163,14 +138,74 @@ for (i in seq_len(length(subject_list))) {
 # gather the result
 AIC_result_table <- data.frame(
     bl_ab = bl_ab_result_AIC,
-    bl_ab_RT = bl_ab_RT_result_AIC,
     bl_sr = bl_sr_result_AIC,
-    bl_sr_RT = bl_sr_RT_result_AIC,
-    bl_sr_RT_decay = bl_sr_RT_decay_result_AIC,
     rl_ab = rl_ab_result_AIC,
     rl_sr = rl_sr_result_AIC,
     rl_sr_decay = rl_sr_decay_result_AIC
 )
+```
+
+使用 softmax 函数优化P值, 查看最小的 AIC 取值
+```{r}
+softmax_func <- function(beta, r){
+  softmaxed_value <- exp(beta * r) / (exp(beta * r) + exp(beta * (1-r)))
+  return(softmaxed_value)
+}
+get_softmaxed_value <- function(beta, r_vector){
+  softmaxed_r_vector <- vector(mode = "numeric", length = length(r_vector))
+  for (i in 1:length(r_vector)) {
+    softmaxed_r_vector[i] <- softmax_func(beta, r_vector[i])
+  }
+  return(softmaxed_r_vector)
+}
+
+softmaxed_result <- matrix(nrow = length(subject_list), ncol = 5)
+for (i in seq_len(length(subject_list))) {
+    tmp_data <- dummy_columns(
+        filter(
+            bl_rl_data_miniblock,
+            subject == subject_list[i]
+        ),
+        "mini_block"
+    ) %>%
+        select(-mini_block)
+    
+    # beta_band
+    beta_band <- seq(-100, 100, 0.01)
+    
+    # calc bl_ab
+    bl_ab_data <- select(tmp_data, RT, bl_ab, starts_with("mini_block"))
+    bl_ab_r <- bl_ab_data$bl_ab
+    bl_ab_softmax_parameters_matrix <- matrix(nrow = length(beta_band), ncol = 2)
+    bl_ab_softmax_parameters_matrix[,1] <- beta_band
+    for (j in 1:length(beta_band)) {
+      bl_ab_data$bl_ab <- get_softmaxed_value(beta_band[j], bl_ab_r)
+      model_bl_ab_softmaxed <- lm(RT ~ . -1, data = bl_ab_data)
+      AIC_result <- AIC(model_bl_ab_softmaxed)
+      bl_ab_softmax_parameters_matrix[j, 2] <- AIC_result
+    }
+    min_idx <- which(bl_ab_softmax_parameters_matrix[,2] ==
+                       min(bl_ab_softmax_parameters_matrix[,2]))
+    softmaxed_result[i, 1] <- subject_list[i]
+    softmaxed_result[i, 2] <- beta_band[min_idx]
+    softmaxed_result[i, 3] <- bl_ab_softmax_parameters_matrix[min_idx, 2]
+    
+    # calc bl_sr
+    bl_sr_data <- select(tmp_data, RT, bl_sr, starts_with("mini_block"))
+    bl_sr_r <- bl_sr_data$bl_sr
+    bl_sr_softmax_parameters_matrix <- matrix(nrow = length(beta_band), ncol = 2)
+    bl_sr_softmax_parameters_matrix[,1] <- beta_band
+    for (j in 1:length(beta_band)) {
+      bl_sr_data$bl_sr <- get_softmaxed_value(beta_band[j], bl_sr_r)
+      model_bl_sr_softmaxed <- lm(RT ~ . -1, data = bl_sr_data)
+      AIC_result <- AIC(model_bl_sr_softmaxed)
+      bl_sr_softmax_parameters_matrix[j, 2] <- AIC_result
+    }
+    min_idx <- which(bl_sr_softmax_parameters_matrix[,2] ==
+                       min(bl_sr_softmax_parameters_matrix[,2]))
+    softmaxed_result[i, 4] <- beta_band[min_idx]
+    softmaxed_result[i, 5] <- bl_sr_softmax_parameters_matrix[min_idx, 2]
+}
 ```
 
 ```{r}
@@ -263,3 +298,16 @@ bl_rl_data_miniblock %>%
     lm(RT ~ . - 1, data = .) %>%
     summary()
 ```
+
+## 3. 查看logRT和RT作为目标函数的因变量, 在P值估计上的差异
+
+```{r}
+bl_rl_data %>%
+    group_by(subject) %>%
+    summarise(
+        RT_corr = cor(bl_sr_RT, bl_sr_logRT),
+        RT_decay_corr = cor(bl_sr_RT_decay, bl_sr_logRT_decay)
+    )
+```
+
+## 4. 测试 AIC 最小能到多小
