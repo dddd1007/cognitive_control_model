@@ -4,11 +4,11 @@ data {
 }
 
 parameters {
-  real alpha;
-  real<lower=0.01, upper=0.99> p[N + 1];
+  real<lower = 0, upper = 1> alpha;
 }
 
 model {
+  vector[N+1] p;
   p[1] = 0.5;
   for(t in 1:N){
     p[t + 1] = p[t] + alpha * (consistency[t] - p[t]);
