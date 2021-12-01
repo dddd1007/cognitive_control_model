@@ -5,7 +5,6 @@ raw_data = CSV.read("/Users/dddd1007/project2git/cognitive_control_model/data/in
 raw_data = @where(raw_data, :Type .== "hit")
 
 estimate_parameter = CSV.read("/Users/dddd1007/project2git/fmri_analysis2_nipype_type/data/inputs/behavioral_data/estimated_parameters_Wang_CCC.csv", DataFrame)
-include("/Users/dddd1007/project2git/cognitive_control_model/scripts/helper/import_all_data.jl")
 Models.DataManipulate.transform_data!(raw_data, transform_rule)
 
 # for sub_num in 1:16
