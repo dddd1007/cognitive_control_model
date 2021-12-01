@@ -44,7 +44,7 @@ function calc_fit_idx(model_fitting, fit_idx)
 end
 
 ## Calc goodness of fit
-function calc_rl_fit_goodness(rl_ab_data; fit_idx="loglikelihood")
+function calc_rl_fit_goodness(rl_ab_data::rl_ab_data; fit_idx="loglikelihood")
     rl_model_result = ab_model(rl_ab_data.α, rl_ab_data.stim_consistency_seq)
     predicted_probability = rl_model_result["Predicted sequence"]
     lm_data = DataFrame(; stim_feature_seq=rl_ab_data.stim_consistency_seq,
@@ -57,7 +57,7 @@ function calc_rl_fit_goodness(rl_ab_data; fit_idx="loglikelihood")
     return (fit_goodness)
 end
 
-function calc_rl_fit_goodness(rl_ab_volatility_data; fit_idx="loglikelihood")
+function calc_rl_fit_goodness(rl_ab_volatility_data::rl_ab_volatility_data; fit_idx="loglikelihood")
     rl_model_result = ab_model(rl_ab_volatility_data.α_s, rl_ab_volatility_data.α_v,
                                rl_ab_volatility_data.stim_consistency_seq,
                                rl_ab_volatility_data.exp_volatility_seq)
@@ -72,7 +72,7 @@ function calc_rl_fit_goodness(rl_ab_volatility_data; fit_idx="loglikelihood")
     return (fit_goodness)
 end
 
-function calc_rl_fit_goodness(rl_sr_data; fit_idx="loglikelihood")
+function calc_rl_fit_goodness(rl_sr_data::rl_sr_data; fit_idx="loglikelihood")
     rl_model_result = sr_model(rl_sr_data.α, rl_sr_data.stim_loc_seq,
                                rl_sr_data.reaction_loc_seq)
     predicted_probability = rl_model_result["Predicted sequence"]
@@ -86,7 +86,7 @@ function calc_rl_fit_goodness(rl_sr_data; fit_idx="loglikelihood")
     return (fit_goodness)
 end
 
-function calc_rl_fit_goodness(rl_sr_volatility_data; fit_idx="loglikelihood")
+function calc_rl_fit_goodness(rl_sr_volatility_data::rl_sr_volatility_data; fit_idx="loglikelihood")
     rl_model_result = sr_model(rl_sr_volatility_data.α_s, rl_sr_volatility_data.α_v,
                                rl_sr_volatility_data.stim_loc_seq,
                                rl_sr_volatility_data.reaction_loc_seq,
