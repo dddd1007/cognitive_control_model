@@ -155,6 +155,7 @@ for i in collect(1:length(sub_num_list))
     α_v_l_list = Vector{Float64}(undef, length(all_params_combine))
     α_v_r_list = Vector{Float64}(undef, length(all_params_combine))
     likelihood_list = Vector{Float64}(undef, length(all_params_combine))
+    mse_list = Vector{Float64}(undef, length(all_params_combine))
     aic_list = Vector{Float64}(undef, length(all_params_combine))
     sub_list = Vector{Float64}(undef, length(all_params_combine))
 
