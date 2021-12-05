@@ -1,13 +1,14 @@
 library(tidyverse)
 
-sub_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_I_hats.csv")
-stan_verbose_loc <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/ab/process/"
+sub_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/pure_all_sub_data.csv")
+stan_verbose_loc <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bl_estimate_by_full_data/ab/"
 
 sub_num_list <- sort(unique(sub_data$Subject_num))
 for (sub_num in sub_num_list) {
+    # sub_num = 22
     print(paste0("Extract data from subject ", sub_num))
     # 读取单个被试的数据
-    csv_files <- dir(paste0(stan_verbose_loc, "sub", sub_num),
+    csv_files <- dir(paste0(stan_verbose_loc, "sub_", sub_num),
         pattern = ".csv", full.names = TRUE
     )
     single_sub_data <- filter(sub_data, Subject_num == sub_num)
@@ -22,6 +23,9 @@ for (sub_num in sub_num_list) {
     r_con_data <- select(stan_data, starts_with("r"))
     r_con_mean <- apply(r_con_data, 2, mean)
     r_inc_mean <- 1 - r_con_mean
+    # con/inc 向量实际上为更新后的数值, 代表对下个试次的估计, 故应在前补 0.5
+    r_con_mean <- c(0.5, r_con_mean)
+    r_inc_mean <- c(0.5, r_inc_mean)
 
     v_data <- select(stan_data, starts_with("v"))
     v_mean <- apply(v_data, 2, mean)
@@ -39,7 +43,8 @@ for (sub_num in sub_num_list) {
     }
 
     result <- data.frame(
-        r_con = r_con_mean, r_inc = r_inc_mean,
+        r_con = r_con_mean[1:(length(r_con_mean) - 1)],
+        r_inc = r_inc_mean[1:(length(r_con_mean) - 1)],
         v = v_mean, r_selected = r_selected
     )
     result_filename <- paste0(

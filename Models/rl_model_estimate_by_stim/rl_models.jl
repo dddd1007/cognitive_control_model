@@ -178,7 +178,7 @@ end
 function sr_sep_alpha_model(α_l::Float64, α_r::Float64, stim_loc_seq::Vector{Int},
                             reaction_loc_seq::Vector{Int}; drop_last_one=true)
     # Init predict code sequence
-    predict_seq = Vector{Float64}(undef, (length(stim_loc_seq) + 1))
+    predict_seq = Vector{Float64}(undef, length(stim_loc_seq))
     prediction_error_seq = Vector{Float64}(undef, length(stim_loc_seq))
     predict_seq_l = [0.5]
     predict_seq_r = [0.5]
@@ -190,14 +190,14 @@ function sr_sep_alpha_model(α_l::Float64, α_r::Float64, stim_loc_seq::Vector{I
     for i in 1:length(stim_loc_seq)
         if stim_loc_seq[i] == 0 # Stim come from left
             PE = reaction_loc_seq[i] - predict_l_l
+            predict_seq[i] = predict_l_l
             predict_l_l = predict_l_l + α_l * PE
-            predict_seq[i + 1] = predict_l_l
             push!(predict_seq_l, predict_l_l + α_l * PE)
             prediction_error_seq[i] = PE
         else
             PE = reaction_loc_seq[i] - predict_r_l
+            predict_seq[i] = predict_r_l
             predict_r_l = predict_r_l + α_r * PE
-            predict_seq[i + 1] = predict_r_l
             push!(predict_seq_r, predict_r_l + α_r * PE)
             prediction_error_seq[i] = PE
         end
@@ -205,7 +205,7 @@ function sr_sep_alpha_model(α_l::Float64, α_r::Float64, stim_loc_seq::Vector{I
 
     # Return the result
     if drop_last_one
-        return Dict("Predicted sequence" => predict_seq[1:(length(predict_seq) - 1)],
+        return Dict("Predicted sequence" => predict_seq,
                     "Prediciton error" => prediction_error_seq,
                     "Predicied Left sequence" => predict_seq_l[1:(length(predict_seq_l) - 1)],
                     "Predicied Right sequence" => predict_seq_r[1:(length(predict_seq_r) - 1)])
@@ -223,7 +223,7 @@ function sr_sep_alpha_volatility_model(α_s_l::Float64, α_s_r::Float64,
                                        reaction_loc_seq::Vector{Int},
                                        exp_volatility_seq::Vector{Int}; drop_last_one=true)
     # Init predict code sequence
-    predict_seq = Vector{Float64}(undef, (length(stim_loc_seq) + 1))
+    predict_seq = Vector{Float64}(undef, length(stim_loc_seq))
     prediction_error_seq = Vector{Float64}(undef, length(stim_loc_seq))
     predict_seq_l = [0.5]
     predict_seq_r = [0.5]
@@ -235,29 +235,29 @@ function sr_sep_alpha_volatility_model(α_s_l::Float64, α_s_r::Float64,
     for i in 1:length(stim_loc_seq)
         if exp_volatility_seq[i] == 0
             if stim_loc_seq[i] == 0 # Stim come from left
+                predict_seq[i] = predict_l_l
                 PE = reaction_loc_seq[i] - predict_l_l
                 predict_l_l = predict_l_l + α_s_l * PE
-                predict_seq[i + 1] = predict_l_l
                 push!(predict_seq_l, predict_l_l + α_s_l * PE)
                 prediction_error_seq[i] = PE
             else
+                predict_seq[i] = predict_r_l
                 PE = reaction_loc_seq[i] - predict_r_l
                 predict_r_l = predict_r_l + α_s_r * PE
-                predict_seq[i + 1] = predict_r_l
                 push!(predict_seq_r, predict_r_l + α_s_r * PE)
                 prediction_error_seq[i] = PE
             end
         else
             if stim_loc_seq[i] == 0 # Stim come from left
+                predict_seq[i] = predict_l_l
                 PE = reaction_loc_seq[i] - predict_l_l
                 predict_l_l = predict_l_l + α_v_l * PE
-                predict_seq[i + 1] = predict_l_l
                 push!(predict_seq_l, predict_l_l + α_v_l * PE)
                 prediction_error_seq[i] = PE
             else
+                predict_seq[i] = predict_r_l
                 PE = reaction_loc_seq[i] - predict_r_l
                 predict_r_l = predict_r_l + α_v_r * PE
-                predict_seq[i + 1] = predict_r_l
                 push!(predict_seq_r, predict_r_l + α_v_r * PE)
                 prediction_error_seq[i] = PE
             end
@@ -266,7 +266,7 @@ function sr_sep_alpha_volatility_model(α_s_l::Float64, α_s_r::Float64,
 
     # Return the result
     if drop_last_one
-        return Dict("Predicted sequence" => predict_seq[1:(length(predict_seq) - 1)],
+        return Dict("Predicted sequence" => predict_seq,
                     "Prediciton error" => prediction_error_seq,
                     "Predicied Left sequence" => predict_seq_l[1:(length(predict_seq_l) - 1)],
                     "Predicied Right sequence" => predict_seq_r[1:(length(predict_seq_r) - 1)])

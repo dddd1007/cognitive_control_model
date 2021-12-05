@@ -1,6 +1,6 @@
 data {
   int<lower=1> N;    // trial number
-  int corr_react[N];      // sub's correct reaction
+  int corr_react[N]; // sub's correct reaction
   int space_loc[N];  // stim space location
 }
 
