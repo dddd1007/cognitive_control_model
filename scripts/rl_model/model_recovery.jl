@@ -47,6 +47,12 @@ for i in sub_num_list
     model_result = sr_sep_alpha_model(sr_params.α_l[1], sr_params.α_r[1], stim_loc_seq, reaction_loc_seq)
     sr_p_value = [sr_p_value; model_result["Predicted sequence"]]
     sr_pe_value = [sr_pe_value; model_result["Prediciton error"]]
+
+    # sr_v model
+    sr_v_params = @subset(sr_v_optim_params, :sub .== i)
+    model_result = sr_sep_alpha_volatility_model(sr_v_params.α_s_l[1], sr_v_params.α_s_r[1], sr_v_params.α_v_l[1], sr_v_params.α_v_r[1], stim_loc_seq, reaction_loc_seq, exp_volatility_seq)
+    sr_v_p_value = [sr_v_p_value; model_result["Predicted sequence"]]
+    sr_v_pe_value = [sr_v_pe_value; model_result["Prediciton error"]]
 end
 
 insertcols!(all_sub_data, :rl_ab_p => ab_p_value, :rl_ab_pe => ab_pe_value, :rl_ab_v_p => ab_v_p_value, :rl_ab_v_pe => ab_v_pe_value, :rl_sr_p => sr_p_value, :rl_sr_pe => sr_pe_value)

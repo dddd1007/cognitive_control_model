@@ -8,6 +8,8 @@ all_sub_data = CSV.read("/Users/dddd1007/project2git/cognitive_control_model/dat
                         DataFrame)
 sub_num_list = unique(all_sub_data[!, "Subject_num"]);
 
+
+#################### Model Estimation ####################
 # 拟合 rl_ab 模型
 α_grid = collect(0.01:0.01:1.0);
 all_sub_param_likelihoood = DataFrame(; α=[], likelihood=[], aic=[], sub=[])
@@ -138,8 +140,8 @@ CSV.write("/Users/dddd1007/project2git/cognitive_control_model/data/output/rl_mo
 ## 拟合 rl_sr_sep_alpha_volatility 模型
 all_sub_param_likelihoood_volatility = DataFrame(; α_s_l=[], α_s_r=[], α_v_l=[], α_v_r=[],
                                                  likelihood=[], aic=[], mse=[], sub=[])
-all_params_combine = collect(Iterators.product(0.01:0.01:0.5, 0.01:0.01:0.5, 0.01:0.01:0.5,
-                                               0.01:0.01:0.5));
+all_params_combine = collect(Iterators.product(0.1:0.01:0.4, 0.1:0.01:0.4, 0.1:0.01:0.4,
+                                               0.1:0.01:0.4));
 
 
 for i in collect(1:length(sub_num_list))
