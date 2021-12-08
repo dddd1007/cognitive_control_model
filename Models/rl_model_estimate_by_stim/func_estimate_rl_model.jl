@@ -179,7 +179,7 @@ function calc_rl_fit_goodness(rl_sr_sep_alpha_volatility_data::rl_sr_sep_alpha_v
                               fit_idx="loglikelihood")
     rl_model_result = sr_sep_alpha_volatility_model(rl_sr_sep_alpha_volatility_data.α_s_l,
                                                     rl_sr_sep_alpha_volatility_data.α_s_r,
-                                                    rl_sr_sep_alpha_volatility_data.α_v_r,
+                                                    rl_sr_sep_alpha_volatility_data.α_v_l,
                                                     rl_sr_sep_alpha_volatility_data.α_v_r,
                                                     rl_sr_sep_alpha_volatility_data.stim_loc_seq,
                                                     rl_sr_sep_alpha_volatility_data.reaction_loc_seq,
