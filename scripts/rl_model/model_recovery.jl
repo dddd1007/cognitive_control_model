@@ -55,5 +55,5 @@ for i in sub_num_list
     sr_v_pe_value = [sr_v_pe_value; model_result["Prediciton error"]]
 end
 
-insertcols!(all_sub_data, :rl_ab_p => ab_p_value, :rl_ab_pe => ab_pe_value, :rl_ab_v_p => ab_v_p_value, :rl_ab_v_pe => ab_v_pe_value, :rl_sr_p => sr_p_value, :rl_sr_pe => sr_pe_value)
+insertcols!(all_sub_data, :rl_ab_p => ab_p_value, :rl_ab_pe => ab_pe_value, :rl_ab_v_p => ab_v_p_value, :rl_ab_v_pe => ab_v_pe_value, :rl_sr_p => sr_p_value, :rl_sr_pe => sr_pe_value, :rl_sr_v_p => sr_v_p_value, :rl_sr_v_pe => sr_v_pe_value)
 CSV.write("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_rl_model_estimate_by_stim.csv", all_sub_data)

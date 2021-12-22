@@ -15,7 +15,7 @@ library(patchwork)
 ## 0. 读取数据
 ```{r}
 raw_data <- read_csv(here("data", "input",
-                          "all_data_with_sr_ab_bayesian_learner.csv"))
+                          "all_data_with_RL_BL_estimate_result.csv"))
 ```
 
 ### 按条件去掉 RT 的 outlier 和错误试次
@@ -168,4 +168,15 @@ ggsave(here("data", "output", "plot",
             "beh_result_plot.png"),
         plot = beh_result_plot,
         dpi = 300, scale = 0.65)
+```
+
+## 4. 无关维度信息的学习过程
+当反转的时候, simon effect 应该逐渐变化
+
+分析方法:
+    1. 将 miniblock 提取出来
+    2. 按条件分组
+    3. 计算小的 simon 效应, 即首先将 miniblock 下较少比例的试次条件找出, 然后每次遇到该条件后, 计算一次 simon 效应
+```{r}
+
 ```
