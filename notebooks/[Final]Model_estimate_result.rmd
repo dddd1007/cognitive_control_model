@@ -2,8 +2,8 @@
 
 我们将从以下结果来探讨模型拟合结果：
 
-- 模型的估计结果是否符合实验设计
-- 模型在 inc/con, prop 和 volatile 上的估计结果是否存在差异
+-   模型的估计结果是否符合实验设计
+-   模型在 inc/con, prop 和 volatile 上的估计结果是否存在差异
 
 ## 1. 模型估计的变量结果是否符合实验设计
 
@@ -17,40 +17,42 @@ library(rstatix)
 library(ggpubr)
 library(patchwork)
 
-rl_data <- read.csv(here("data", "input", "all_data_with_rl_model.csv"))
-bl_data <- read.csv(here("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_sr_ab_bayesian_learner.csv"))
+all_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_RL_BL_estimate_result.csv")
+rl_model_param_sets <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/output/rl_model_estimate_by_stim/rl_sr_sep_alpha_volatility_param_set.csv")
 ```
 
 查看数据
+
 ```{r}
-head(rl_data)
+head(all_data)
+head(rl_model_param_sets)
 ```
 
 为绘图创建新的数据集，包括：
 
-- 被试的编号
-- 当前试次的编号
-- 当前试次的比例
-- 反应时
-- 贝叶斯模型估计出的 P
-- 强化学习估计出的 P （SR_Decay）
+-   被试的编号
+-   当前试次的编号
+-   当前试次的比例
+-   反应时
+-   贝叶斯模型估计出的 P
+-   强化学习估计出的 P （SR_Decay）
 
 ```{r}
-merged_data <- inner_join(rl_data, bl_data, by = c("Subject", "Trial"))
 plot_data <- data.frame(
-    subject = merged_data$Subject_num.y,
-    trials = merged_data$Trial,
-    prop = merged_data$prop.x * 0.01,
-    condition = merged_data$condition.x,
-    RT = merged_data$RT.y,
-    rl_p_ll_rr = (merged_data$SR_Decay_ll + merged_data$SR_Decay_rr) / 2,
-    bl_p_ll_rr = (merged_data$sr_ll + merged_data$sr_rr) / 2,
-    bl_p = merged_data$sr_r_selected,
-    rl_p = merged_data$SR_Decay
+    subject = all_data$Subject_num,
+    trials = all_data$Trial,
+    prop = all_data$prop * 0.01,
+    condition = all_data$condition,
+    RT = all_data$RT,
+    rl_p_ll_rr = (all_data$rl_sr_v_ll + all_data$rl_sr_v_rr) / 2,
+    bl_p_ll_rr = (all_data$bl_sr_ll + all_data$bl_sr_rr) / 2,
+    bl_p = all_data$bl_sr_r_selected,
+    rl_p = all_data$rl_sr_p_selected
 )
 ```
 
 添加被试的实验设计条件信息，便于绘图分片
+
 ```{r}
 subject_list <- unique(plot_data$subject)
 added_condition_data <- list()
@@ -66,6 +68,7 @@ plot_data <- bind_rows(added_condition_data, .id = "column_label")
 ```
 
 将宽数据变成长数据
+
 ```{r}
 tmp_part1 <- plot_data %>%
              select(-rl_p_ll_rr, -bl_p_ll_rr) %>%
@@ -81,8 +84,8 @@ plot_data <- left_join(tmp_part1, tmp_part2, by = c("subject", "trials", "model_
              filter(exp_condition == "0.8_s" | exp_condition == "0.8_v")
 ```
 
-为模型的估计结果绘图
-挑选少数几个被试呈现使结果变得更加容易看清
+为模型的估计结果绘图 挑选少数几个被试呈现使结果变得更加容易看清
+
 ```{r}
 plot_data %>%
     filter(subject %in% c(1, 11)) -> foo
@@ -97,9 +100,77 @@ model_estimate_plot <- ggline(data = foo, y = "ll_rr", x = "trials", color = "mo
 model_estimate_plot$layers <- c(geom_line(aes(x = trials, y = prop), color = "darkgray"),
                                 model_estimate_plot$layers)
 model_estimate_plot
-ggsave(here("data", "output", "plot",
-            "model_estimate.png"),
+ggsave("/Users/dddd1007/project2git/cognitive_control_model/data/output/plot/model_estimate.png",
        width = 3000, height = 1500, units = "px",
        plot = model_estimate_plot,
        dpi = 350)
+```
+
+## 2. 对模型估计参数是否符合实验设计预期进行分析
+
+根据预期假设, 无论是强化学习模型, 还是贝叶斯模型, 均能够反映环境的稳定或不稳定特征. 
+
+对于贝叶斯学习者模型, 应当是在稳定/不稳定环境下, 估计出的 v 参数应存在差异.
+对于强化学习模型, 应当是估计的参数在稳定不稳定环境下, 学习率存在差异.
+
+```{r}
+# For bayesian learner data
+
+##
+# Step 1 : Making a ttest to compare the v under volatile / stable condition
+# Step 2 : Plot the mean of v under each condition for every subjects
+
+# get the mean of each sub under each conditions
+bl_v_condition_sep <- select(all_data, "Subject_num", "condition", "bl_sr_v") %>%
+        group_by(Subject_num, condition) %>%
+        summarise(v_mean = mean(bl_sr_v), .groups = 'drop')
+bl_v_condition_sep$condition <- factor(bl_v_condition_sep$condition)
+paired_plot_data <- pivot_wider(bl_v_condition_sep,
+                                names_from = "condition", values_from = "v_mean")
+get_summary_stats(paired_plot_data, type = "common")
+print("=== TTEST RESULT ===")
+select(all_data, "Subject_num", "condition", "bl_sr_v") %>%
+        group_by(Subject_num, condition) %>%
+        summarise(v_mean = mean(bl_sr_v), .groups = 'drop') %>%
+        t_test(v_mean~condition, paired = TRUE)
+select(all_data, "Subject_num", "condition", "bl_sr_v") %>%
+        group_by(Subject_num, condition) %>%
+        summarise(v_mean = mean(bl_sr_v), .groups = 'drop') %>%
+        cohens_d(v_mean~condition, paired = TRUE)
+
+bl_v_plot <- ggpaired(paired_plot_data, cond1 = "s", cond2 = "v", color = "condition", 
+              line.color = "gray", line.size = 0.3, ylab = "v means",
+              ylim = c(4.55, 5.75)) + stat_pvalue_manual(paird_ttest, label = "p", y.position = 5.75)
+bl_v_plot
+```
+
+```{r}
+# for reinforcement learning
+
+## compare the mean alpha between stable and volatile condition
+rl_model_param_sets %>%
+    select(sub, "alpha_s", "alpha_v") -> plot_data
+names(plot_data) <- c("sub", "s", "v")
+
+rl_alpha_ttest <- plot_data %>%
+    pivot_longer(cols = c("s", "v"), names_to = "type",
+                 values_to = "alpha") %>%
+    t_test(alpha~type, paired = TRUE)
+
+plot_data %>%
+    pivot_longer(cols = c("s", "v"), names_to = "type",
+                 values_to = "alpha") %>%
+    cohens_d(alpha~type, paired = TRUE)
+
+rl_alpha_plot <- ggpaired(plot_data,
+                          cond1 = "s", cond2 = "v",
+                          color = "condition",
+                          line.color = "gray",
+                          line.size = 0.3, ylab = "alpha means") + stat_pvalue_manual(rl_alpha_ttest, label = "p", y.position = 0.205)
+rl_alpha_plot
+```
+
+```{r}
+# patchwork
+ggsave("/Users/dddd1007/project2git/cognitive_control_model/data/output/plot/model_parameters_test.png", bl_v_plot + rl_alpha_plot, width = 1800, height = 1500, units = "px", dpi = 350)
 ```

@@ -193,11 +193,13 @@ function sr_sep_alpha_model(α_l::Float64, α_r::Float64, stim_loc_seq::Vector{I
             predict_seq[i] = predict_l_l
             predict_l_l = predict_l_l + α_l * PE
             push!(predict_seq_l, predict_l_l + α_l * PE)
+            push!(predict_seq_r, predict_r_l)
             prediction_error_seq[i] = PE
         else
             PE = reaction_loc_seq[i] - predict_r_l
             predict_seq[i] = predict_r_l
             predict_r_l = predict_r_l + α_r * PE
+            push!(predict_seq_l, predict_l_l)
             push!(predict_seq_r, predict_r_l + α_r * PE)
             prediction_error_seq[i] = PE
         end
@@ -239,11 +241,13 @@ function sr_sep_alpha_volatility_model(α_s_l::Float64, α_s_r::Float64,
                 PE = reaction_loc_seq[i] - predict_l_l
                 predict_l_l = predict_l_l + α_s_l * PE
                 push!(predict_seq_l, predict_l_l + α_s_l * PE)
+                push!(predict_seq_r, predict_r_l)
                 prediction_error_seq[i] = PE
             else
                 predict_seq[i] = predict_r_l
                 PE = reaction_loc_seq[i] - predict_r_l
                 predict_r_l = predict_r_l + α_s_r * PE
+                push!(predict_seq_l, predict_l_l)
                 push!(predict_seq_r, predict_r_l + α_s_r * PE)
                 prediction_error_seq[i] = PE
             end
@@ -253,11 +257,13 @@ function sr_sep_alpha_volatility_model(α_s_l::Float64, α_s_r::Float64,
                 PE = reaction_loc_seq[i] - predict_l_l
                 predict_l_l = predict_l_l + α_v_l * PE
                 push!(predict_seq_l, predict_l_l + α_v_l * PE)
+                push!(predict_seq_r, predict_r_l)
                 prediction_error_seq[i] = PE
             else
                 predict_seq[i] = predict_r_l
                 PE = reaction_loc_seq[i] - predict_r_l
                 predict_r_l = predict_r_l + α_v_r * PE
+                push!(predict_seq_l, predict_l_l)
                 push!(predict_seq_r, predict_r_l + α_v_r * PE)
                 prediction_error_seq[i] = PE
             end

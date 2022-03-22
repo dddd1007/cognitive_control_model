@@ -6,7 +6,6 @@
 library(tidyverse)
 library(apa)
 library(ggplot2)
-library(here)
 library(rstatix)
 library(ggpubr)
 library(patchwork)
@@ -14,8 +13,7 @@ library(patchwork)
 
 ## 0. 读取数据
 ```{r}
-raw_data <- read_csv(here("data", "input",
-                          "all_data_with_RL_BL_estimate_result.csv"))
+raw_data <- read_csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_RL_BL_estimate_result.csv")
 ```
 
 ### 按条件去掉 RT 的 outlier 和错误试次
@@ -51,10 +49,10 @@ anova_RT_plot <- ggboxplot(data_foranalysis,
           font.label = list(size = 14)) %>%
           facet(facet.by = "prop")
 anova_RT_plot
-ggsave(here("data", "output", "plot",
-            "anova_RT_plot.png"),
-        plot = anova_RT_plot,
-        dpi = 300, scale = 0.65)
+# ggsave(here("data", "output", "plot",
+#             "anova_RT_plot.png"),
+#         plot = anova_RT_plot,
+#         dpi = 300, scale = 0.65)
 
 anova_RT_plot_bar <- ggbarplot(data_foranalysis, 
           x = "congruency", y = "mean_rt", 
@@ -109,10 +107,10 @@ raw_data %>%
           font.label = list(size = 14)) %>%
           facet(facet.by = "prop") -> anova_error_rate_plot
 anova_error_rate_plot
-ggsave(here("data", "output", "plot",
-            "anova_error_rate_plot.png"),
-        plot = anova_error_rate_plot,
-        dpi = 300, scale = 0.65)
+# ggsave(here("data", "output", "plot",
+#             "anova_error_rate_plot.png"),
+#         plot = anova_error_rate_plot,
+#         dpi = 300, scale = 0.65)
 ```
 
 ## 2. Simon Effect 及其反转
@@ -134,10 +132,10 @@ simon_RT_plot <- data_add_simon_effect %>%
               font.label = list(size = 14)) %>%
     facet(facet.by = "prop") + geom_hline(yintercept = 0, linetype = 2, color = "darkgray", size = 1)  + rremove("legend")
 simon_RT_plot
-ggsave(here("data", "output", "plot",
-            "simon_RT_plot.png"), 
-        plot = simon_RT_plot,
-        dpi = 300, scale = 0.65)
+# ggsave(here("data", "output", "plot",
+#             "simon_RT_plot.png"),
+#         plot = simon_RT_plot,
+#         dpi = 300, scale = 0.65)
 ```
 
 ### Error Rate
@@ -153,10 +151,10 @@ raw_data %>%
               font.label = list(size = 14)) %>%
     facet(facet.by = "prop") + geom_hline(yintercept = 0, linetype = 2, color = "darkgray", size = 1)  + rremove("legend") -> simon_error_rate_plot
 simon_error_rate_plot
-ggsave(here("data", "output", "plot",
-            "simon_error_rate_plot.png"),
-        plot = simon_error_rate_plot,
-        dpi = 300, scale = 0.65)
+# ggsave(here("data", "output", "plot",
+#             "simon_error_rate_plot.png"),
+#         plot = simon_error_rate_plot,
+#         dpi = 300, scale = 0.65)
 ```
 
 ## 3. 拼图
@@ -164,19 +162,94 @@ ggsave(here("data", "output", "plot",
 library(patchwork)
 beh_result_plot <- (anova_RT_plot | anova_error_rate_plot) / (simon_RT_plot | simon_error_rate_plot) + plot_annotation(tag_levels = 'A')
 beh_result_plot
-ggsave(here("data", "output", "plot",
-            "beh_result_plot.png"),
-        plot = beh_result_plot,
-        dpi = 300, scale = 0.65)
+# ggsave(here("data", "output", "plot",
+#             "beh_result_plot.png"),
+#         plot = beh_result_plot,
+#         dpi = 300, scale = 0.65)
 ```
 
 ## 4. 无关维度信息的学习过程
-当反转的时候, simon effect 应该逐渐变化
+当反转的时候, simon effect 应该逐渐变化，或者是各条件的反应时也会随着比例呈现逐步变化的趋势。我们尝试使用 moving window 内的均值将其描述出来。
 
-分析方法:
-    1. 将 miniblock 提取出来
-    2. 按条件分组
-    3. 计算小的 simon 效应, 即首先将 miniblock 下较少比例的试次条件找出, 然后每次遇到该条件后, 计算一次 simon 效应
 ```{r}
+sub_1_data <- filter(raw_data, Subject_num == 1)
 
+library(data.table)
+sub_1_table = data.table::as.data.table(filter(sub_1_data, congruency == "con"))
+```
+```{r}
+windowed_mean <- frollmean(sub_1_table[, RT], 20)
+
+plot_dataframe <- data.frame(x = 1:length(windowed_mean), y = windowed_mean)
+ggplot(plot_dataframe) + geom_line(aes(x, y))
+```
+
+选出 v80 开始的被试
+```{r}
+selected_data <- raw_data %>%
+        filter(Trial == 1, logfile_name == "v_80")
+selected_sub_list <- selected_data$Subject_num
+
+calc_con_moving_window_mean <- function (dataframe, moving_window_len) {
+  prep_data <- dataframe %>%
+    filter(congruency == "con")
+  prep_data <- data.table::as.data.table(prep_data)
+  windowed_mean <- frollmean(prep_data[, RT], moving_window_len)
+  return(windowed_mean)
+}
+
+selected_sub_list <- c(1,9,13,17,25,29)
+result_list <- list()
+raw_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/pure_all_sub_data.csv")
+for (i in seq_len(length(selected_sub_list))) {
+  result_list[[i]] <- calc_con_moving_window_mean(filter(raw_data, Subject_num == selected_sub_list[i]), 20)
+}
+
+con_RT_matrix <- do.call(rbind, result_list)
+mean_RT <- apply(con_RT_matrix, 2, mean, na.rm = TRUE)
+plot_data_con <- data.frame(idx = 1:length(mean_RT), mean_RT)
+v80_minisimon <- ggplot(plot_data_con) + geom_line(aes(x = idx, y = mean_RT))
+v80_minisimon + theme_pubr()
+```
+```{r}
+calc_inc_moving_window_mean <- function (dataframe, moving_window_len) {
+  prep_data <- dataframe %>%
+    filter(congruency == "inc")
+  prep_data <- data.table::as.data.table(prep_data)
+  windowed_mean <- frollmean(prep_data[, RT], moving_window_len)
+  return(windowed_mean)
+}
+
+selected_sub_list <- c(1,9,13,17,25,29)
+result_list <- list()
+raw_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/pure_all_sub_data.csv")
+for (i in seq_len(length(selected_sub_list))) {
+  result_list[[i]] <- calc_inc_moving_window_mean(filter(raw_data, Subject_num == selected_sub_list[i]), 20)
+}
+
+inc_RT_matrix <- do.call(rbind, result_list)
+mean_RT <- apply(inc_RT_matrix, 2, mean, na.rm = TRUE)
+plot_data_inc <- data.frame(idx = 1:length(mean_RT), mean_RT)
+ggplot(plot_data_inc) + geom_line(aes(x = idx, y = mean_RT))
+```
+
+```{r}
+# 整合两组数据
+con_inc_data <- data.frame(idx = plot_data_con$idx, con = plot_data_con$mean_RT,
+                           inc = plot_data_inc$mean_RT)
+total_plot_data <- tidyr::pivot_longer(con_inc_data, cols = !idx, names_to = "Type", values_to = "RT")
+
+ggplot(total_plot_data) + 
+  geom_line(aes(x = idx, y = RT, color = Type)) + 
+  theme_pubr()
+
+# detrending?
+library(zoo)
+detrending_data <- data.frame(con = diff(plot_data_con$mean_RT),
+                              inc = diff(plot_data_inc$mean_RT))
+detrending_data$idx <- 1:nrow(detrending_data)
+detrending_plot_data <- tidyr::pivot_longer(detrending_data, 
+                                            cols = !idx, names_to = "Type",
+                                            values_to = "RT")
+ggplot(detrending_plot_data) + geom_line(aes(x = idx, y = RT, color = Type))
 ```
