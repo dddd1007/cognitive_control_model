@@ -1,21 +1,25 @@
+---
+title: "Behavioral_data_analysis"
+author: "Xiaokai Xia"
+format: html
+editor: visual
+---
+
 # 对行为数据的分析
 
 对行为数据进行分析，关注被试是否呈现出 Simon effect 与 PC 效应。对数据进行三因素方差分析，查看结果。
 
 ```{r}
 library(tidyverse)
-library(broom)
-library(flextable)
 library(apa)
 library(here)
 library(ggplot2)
 library(rstatix)
 library(ggpubr)
 library(patchwork)
-library(gghalves)
 ```
 
-## 读取数据
+## 0. 读取数据
 
 ```{r}
 raw_data <- read_csv("/Users/dddd1007/project2git/cognitive_control_model/data/input/all_data_with_RL_BL_estimate_result.csv")
@@ -30,37 +34,28 @@ data_without_outlier <- data_without_error %>%
                         filter(abs(RT - mean(RT)) < (sd(RT) * 3))
 ```
 
-## 方差分析及绘图
+## 1. 按条件计算方差分析并绘图
 
 ### RT
 
 #### Anova
 
 ```{r}
-RA_RT_anova <- data_without_outlier %>%
+data_foranalysis <- data_without_outlier %>%
     group_by(Subject_num, congruency, prop, condition) %>%
     summarise(mean_rt = mean(RT)) %>%
     as_tibble()
 
-RA_RT_anova %>%
+data_foranalysis %>%
     anova_test(dv = mean_rt, wid = Subject_num,
                within = c(congruency, prop, condition)) %>%
-    get_anova_table() -> RT_anova_table
-RT_anova_table
-
-print("== Describe data ==")
-RA_RT_anova %>%
-  group_by(congruency) %>%
-  summarise(mean_RT = mean(mean_rt))
-RA_RT_anova %>%
-  group_by(prop) %>%
-  summarise(mean_RT = mean(mean_rt))
+    get_anova_table()
 ```
 
 #### Plot
 
 ```{r}
-# anova_RT_plot <- ggboxplot(RA_RT_anova, 
+# anova_RT_plot <- ggboxplot(data_foranalysis, 
 #           x = "congruency", y = "mean_rt", 
 #           fill = "condition", ylab = "RT (ms)", 
 #           font.label = list(size = 14)) %>%
@@ -71,7 +66,7 @@ RA_RT_anova %>%
 #         plot = anova_RT_plot,
 #         dpi = 300, scale = 0.65)
 # 
-data_forplot <- unite(RA_RT_anova, col = "factor",
+data_forplot <- unite(data_foranalysis, col = "factor",
                       congruency, condition, sep = "/", remove = FALSE)
 data_forplot$factor <- as.factor(data_forplot$factor)
 anova_RT_plot_bar <- ggbarplot(data_forplot,
@@ -109,24 +104,16 @@ t.test(x = foo2$con, y = foo2$inc, alternative = "greater", paired = TRUE) %>% t
 
 ### Error rate
 
-#### Anova
 ```{r}
 raw_data %>%
     mutate(correct_action = if_else(.data$Type == "hit", 1, 0)) %>%
     group_by(Subject_num, congruency, prop, condition) %>%
     summarise(mean_error_action = (1 - mean(correct_action)) * 100, .groups = "drop") %>%
     anova_test(dv = mean_error_action, wid = Subject_num,
-               within = c(congruency, prop, condition)) -> error_rate_anova_table
-error_rate_anova_table
-
-#output anova result
-set_flextable_defaults(digits = 3)
-save_as_docx("RT" = flextable(RT_anova_table), 
-             "error_rate" = flextable(error_rate_anova_table), 
-             path = here("data", "output", "plot", "anova_table.docx"))
+               within = c(congruency, prop, condition))
 ```
 
-#### Plot
+Plot
 
 ```{r}
 # raw_data %>%
@@ -221,6 +208,8 @@ simon_error_rate_plot
 #         plot = simon_error_rate_plot,
 #         dpi = 300, scale = 0.65)
 ```
+
+## 3. 拼图
 
 ```{r}
 library(patchwork)
@@ -358,56 +347,7 @@ for (i in unique(data_without_outlier$Subject_num)) {
             data = single_sub_data))[[1]]
   count_num <- count_num + 1
 }
-
-print("== T Test == ")
-t.test(x = unlist(bl_result_list), 
-       y = unlist(rl_result_list), 
-       alternative = "greater", paired = TRUE) %>% 
-  t_apa()
-t.test(x = unlist(bl_result_list), 
-       y = unlist(rl_result_list), 
-       alternative = "greater", paired = TRUE)
-
-library()
-summary(unlist(bl_result_list))
-summary(unlist(rl_result_list))
-
-RA_confint <- data.frame(BL = unlist(bl_result_list), 
-                         RL = unlist(rl_result_list))
-
-
-bl.model <- lm(BL ~ 1, RA_confint)
-confint(bl.model, level=0.95)
-rl.model <- lm(RL ~ 1, RA_confint)
-confint(rl.model, level=0.95)
-
-
-
-print("== End T Test ==")
-
-RA_boxplot_PE_to_Beh <- data.frame(coef_value = c(unlist(bl_result_list),
-                                                  unlist(rl_result_list)),
-                                   model_type = c(rep("Bayesian Learner",
-                                                      length(bl_result_list)),
-                                                  rep("Reinforcement Learning",
-                                                      length(rl_result_list))))
-```
-
-```{r}
-# Plot for regression result 
-ggplot(RA_boxplot_PE_to_Beh) + 
-  geom_boxplot(aes(x = model_type, 
-                   y = coef_value, 
-                   fill = model_type)) + 
-  geom_dotplot(aes(x = model_type, y = coef_value), 
-               binaxis='y', 
-               stackdir='center',
-               alpha = 0.3) + 
-  theme_pubr() + 
-  guides(fill=guide_legend("Model")) +
-  labs(x = "Model Type", y = "Beta of regression") -> boxplot_PE_reg
-boxplot_PE_reg
-
+RA_
 ```
 
 采用更为准确的方式查看被试行为反应与模型估计参数的一致性：
@@ -418,7 +358,9 @@ Model-based behavioral analysis 将不同的被试反应时分 bin，然后算�
 data_without_outlier %>% 
     select(Subject_num, RT, bl_sr_PE, rl_sr_v_pe) %>% 
     mutate(bin = cut(RT, breaks = seq(100,1600,200))) -> RA_sep_bin_analysis
+```
 
+```{r}
 RA_sep_bin_analysis %>%
   group_by(bin) %>%
   summarise(mean_RT = mean(RT), 
@@ -430,20 +372,5 @@ RA_sep_bin_analysis %>%
   ggplot() +
   geom_point(aes(x = mean_RT, y = PE, shape = Model_Type), size = 2) +
   geom_smooth(aes(x = mean_RT, y = PE, color = Model_Type)) +
-  facet_grid(Model_Type ~ ., 
-             labeller = as_labeller(c("mean_BL_PE" = "Bayesian Learner", 
-                                      "mean_RL_PE" = "Reinforcement Learning"))) + 
-  theme_pubr() + xlab("RT") +
-  scale_color_discrete(labels = c("Bayesian Learner", "Reinforcement Learning")) +
-  scale_shape_discrete(labels = c("Bayesian Learner", "Reinforcement Learning")) +
-  guides(color = guide_legend("Model"),
-         shape = guide_legend("Model")) -> smooth_PE_RT_relation
-smooth_PE_RT_relation
-```
-
-```{r}
-ggsave(here("data", "output", "plot", "model_based_beh.png"), 
-       boxplot_PE_reg + smooth_PE_RT_relation + plot_annotation(tag_levels = 'A'),
-       width = 9.5, height = 6,
-       dpi = 300)
+  facet_grid(Model_Type ~ .) + theme_pubr()
 ```
