@@ -5,11 +5,11 @@ library(tidyverse)
 
 check_cmdstan_toolchain()
 
-sr_1k1v_stanfile <- "/Users/dddd1007/project2git/cognitive_control_model/Models/stan_src/Bayesian_Models/bayesian_learner_sr_1k1v_neg_v.stan"
+sr_1k1v_stanfile <- "/Users/dddd1007/project2git/cognitive_control_model/Models/stan_src/Bayesian_Models/bayesian_learner_sr_1k1v_no_update_otherside.stan"
 
 sr_1k1v_learner <- cmdstan_model(sr_1k1v_stanfile)
 
-output_dir_1k1v <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/1k1v_neg_v/"
+output_dir_1k1v <- "/Users/dddd1007/project2git/cognitive_control_model/data/output/bayesian_learner_samplers/1k1v_no_otherside/"
 
 #####
 ##### Estimate Model
@@ -22,6 +22,7 @@ raw_data <- read.csv("/Users/dddd1007/project2git/cognitive_control_model/data/i
 sub_num_list <- unique(raw_data$Subject_num)
 
 for (i in sub_num_list) {
+  
   print(paste0("==== Begin Subject ", as.character(i), " ====="))
   single_sub_table <- filter(raw_data, Subject_num == i)
 

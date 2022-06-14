@@ -129,7 +129,7 @@ paired_plot_data <- pivot_wider(bl_v_condition_sep,
                                 names_from = "condition", values_from = "v_mean")
 get_summary_stats(paired_plot_data, type = "common")
 print("=== TTEST RESULT ===")
-select(all_data, "Subject_num", "condition", "bl_sr_v") %>%
+bl_v_ttest <- select(all_data, "Subject_num", "condition", "bl_sr_v") %>%
         group_by(Subject_num, condition) %>%
         summarise(v_mean = mean(bl_sr_v), .groups = 'drop') %>%
         t_test(v_mean~condition, paired = TRUE)
@@ -140,7 +140,7 @@ select(all_data, "Subject_num", "condition", "bl_sr_v") %>%
 
 bl_v_plot <- ggpaired(paired_plot_data, cond1 = "s", cond2 = "v", color = "condition", 
               line.color = "gray", line.size = 0.3, ylab = "v means",
-              ylim = c(4.55, 5.75)) + stat_pvalue_manual(paird_ttest, label = "p", y.position = 5.75)
+              ylim = c(-5.7, -4.4)) + stat_pvalue_manual(bl_v_ttest, label = "p", y.position = -4.4)
 bl_v_plot
 ```
 

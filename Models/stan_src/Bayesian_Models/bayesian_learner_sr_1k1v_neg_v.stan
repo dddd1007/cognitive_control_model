@@ -15,7 +15,7 @@ model {
   k~uniform(-10,10);
   for(t in 1:N){
     if(t == 1){
-      v[t] ~ uniform(-100,100);
+      v[t] ~ uniform(-10,0);
       r_l[t] ~ normal(0.5,0.45);
       r_r[t] ~ normal(0.5,0.45);
     }
