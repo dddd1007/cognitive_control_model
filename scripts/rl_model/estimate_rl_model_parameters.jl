@@ -78,8 +78,8 @@ CSV.write("/Users/dddd1007/project2git/cognitive_control_model/data/output/rl_mo
           optim_params_set)
 
 ## 拟合 rl_sr_volatility 模型
-α_s_grid = collect(0.01:0.01:1.0);
-α_v_grid = collect(0.01:0.01:1.0);
+α_s_grid = collect(0.01:0.01:0.5);
+α_v_grid = collect(0.01:0.01:0.5);
 all_sub_param_likelihoood_volatility = DataFrame(; α_s=[], α_v=[], likelihood=[], aic=[],
                                                  sub=[])
 
