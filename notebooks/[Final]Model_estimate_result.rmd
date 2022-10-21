@@ -26,6 +26,12 @@ rl_model_param_sets <- read.csv("/Users/dddd1007/project2git/cognitive_control_m
 ```{r}
 head(all_data)
 head(rl_model_param_sets)
+
+all_data %>%
+  filter(Subject_num == 1) %>%
+  ggplot(aes(x = 1:nrow(.), y = bl_sr_ll)) +
+  geom_line() + theme_pubr()
+
 ```
 
 为绘图创建新的数据集，包括：
@@ -88,9 +94,13 @@ plot_data <- left_join(tmp_part1, tmp_part2, by = c("subject", "trials", "model_
 
 ```{r}
 plot_data %>%
-    filter(subject %in% c(1, 11)) -> foo
-    
-model_estimate_plot <- ggline(data = foo, y = "ll_rr", x = "trials", color = "model_type",
+    filter(subject == 11) -> foo
+```
+
+```{r}
+foo
+model_estimate_plot #<- 
+    ggline(data = foo, y = "ll_rr", x = "trials", color = "model_type",
            plot_type = "l", size = 1,
            ylab = "Probability of learning object", xlab = "Trials",
            facet.by = c("exp_condition", "model_type"),
@@ -108,10 +118,9 @@ ggsave("/Users/dddd1007/project2git/cognitive_control_model/data/output/plot/mod
 
 ## 2. 对模型估计参数是否符合实验设计预期进行分析
 
-根据预期假设, 无论是强化学习模型, 还是贝叶斯模型, 均能够反映环境的稳定或不稳定特征. 
+根据预期假设, 无论是强化学习模型, 还是贝叶斯模型, 均能够反映环境的稳定或不稳定特征.
 
-对于贝叶斯学习者模型, 应当是在稳定/不稳定环境下, 估计出的 v 参数应存在差异.
-对于强化学习模型, 应当是估计的参数在稳定不稳定环境下, 学习率存在差异.
+对于贝叶斯学习者模型, 应当是在稳定/不稳定环境下, 估计出的 v 参数应存在差异. 对于强化学习模型, 应当是估计的参数在稳定不稳定环境下, 学习率存在差异.
 
 ```{r}
 # For bayesian learner data
@@ -173,4 +182,17 @@ rl_alpha_plot
 ```{r}
 # patchwork
 ggsave("/Users/dddd1007/project2git/cognitive_control_model/data/output/plot/model_parameters_test.png", bl_v_plot + rl_alpha_plot, width = 1800, height = 1500, units = "px", dpi = 350)
+```
+
+## 3. 根据 con/inc 对 PE 和 RT 的关系分别绘图
+
+```{r}
+ggplot(all_data) +
+  stat_smooth(aes(x = bl_sr_PE, y = RT, color = congruency)) +
+  theme_pubr() +
+  xlab("Prediction error of S-R") + ylab("RTs")
+ggplot(all_data) +
+  stat_smooth(aes(x = rl_sr_v_pe, y = RT, color = congruency)) +
+  theme_pubr() +
+  xlab("Prediction error of S-R") + ylab("RTs")
 ```

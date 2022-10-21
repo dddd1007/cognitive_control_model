@@ -161,10 +161,10 @@ function calc_rl_fit_goodness(rl_sr_volatility_data::rl_sr_volatility_data;
 
     lm_data_l = DataFrame(;
                           stim_feature_seq=rl_sr_volatility_data.reaction_loc_seq[stim_loc_left],
-                          predicted_probability=predicted_probability["Predicied Left sequence"])
+                          predicted_probability=rl_model_result["Predicied Left sequence"])
     lm_data_r = DataFrame(;
                           stim_feature_seq=rl_sr_volatility_data.reaction_loc_seq[stim_loc_right],
-                          predicted_probability=predicted_probability["Predicied Right sequence"])
+                          predicted_probability=rl_model_result["Predicied Right sequence"])
     fit_l = glm(@formula(stim_feature_seq ~ predicted_probability), lm_data_l, Binomial(),
                 ProbitLink())
     fit_r = glm(@formula(stim_feature_seq ~ predicted_probability), lm_data_r, Binomial(),
