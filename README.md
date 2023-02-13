@@ -16,3 +16,8 @@ This project try to build the
 - RL : Reinforcement Learning. A way of learning for each subjects.
 - BI : Bayesian Inference. A way of learning for each subjects.
 - BG : Beyesian Generative Model. A way of learning for each subjects.
+
+## Code of each Model
+
+- [Bayesian learner model](https://github.com/dddd1007/cognitive_control_model/blob/master/Models/stan_src/Bayesian_Models/bayesian_learner_sr_1k1v_neg_v.stan)
+- [Reinforcement learning](https://github.com/dddd1007/cognitive_control_model/tree/master/Models/rl_model_estimate_by_stim)
