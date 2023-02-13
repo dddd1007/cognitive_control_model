@@ -13,8 +13,7 @@ This project try to build the
 - AB : Abstruct concept. The Learning object of subjects. In this project, it refer to the con/inc.
 - SR : S-R Associations. The Learning object of subjects. It refer to a concrete concept.
 - RL : Reinforcement Learning. A way of learning for each subjects.
-- BI : Bayesian Inference. A way of learning for each subjects.
-- BG : Beyesian Generative Model. A way of learning for each subjects.
+- BL : Bayesian Learner. A way of learning for each subjects.
 
 ## Code of each Model
 
